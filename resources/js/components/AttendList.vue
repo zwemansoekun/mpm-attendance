@@ -25,17 +25,17 @@
                 <!-- //form -->
                     <div class="row">
                         <div class="col-md-4">
-                              <button type="button" class="btn btn-primary">Primary1</button>
+                              <button type="button" class="btn btn-primary">出勤簿生成</button>
                         </div>
                          <div class="col-md-4 offset-md-2">
-                            <button type="button" class="btn btn-primary">Primary2</button>
+                            <button type="button" class="btn btn-primary">全て自動計算</button>
                          </div> 
                     </div>                 
                  
                     <div class="row mt-3">
                           <div class="col-md-4"></div>
                           <div class="col-md-4 offset-md-2">
-                              <button type="button" class="btn btn-primary pull-right">Primary3</button>
+                              <button type="button" class="btn btn-primary pull-right">空のところだけ自動計算</button>
                           </div>
                     </div>
 
@@ -55,28 +55,18 @@
                             <th scope="col">AM</th>
                             <th scope="col">PM</th>
                             <th scope="col">Total Hours</th>
-                            <th scope="col"></th>
+                            <th scope="col" class="w-25 p-3"></th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                            <th scope="row">1</th>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>@mdo</td>
-                            </tr>
-                            <tr>
-                            <th scope="row">2</th>
-                            <td>Jacob</td>
-                            <td>Thornton</td>
-                            <td>@fat</td>
-                            </tr>
-                            <tr>
-                            <th scope="row">3</th>
-                            <td>Larry</td>
-                            <td>the Bird</td>
-                            <td>@twitter</td>
-                            </tr>
+                        <tbody>                           
+                            
+                            <tr v-bind:key="index" v-for="index in day_count">                                
+                                <th scope="row">{{index}} {{ days[new Date(year+"/"+month+"/"+index).getDay()]}}</th>
+                                <td>Mark</td>
+                                <td>Otto</td>
+                                <td>@mdo</td>
+                                <td></td>
+                            </tr>  
                          </tbody>
                     </table>
 
@@ -94,7 +84,11 @@
                 emps:[],
                 dates:[],
                 emp_no:'',
-                emp_name:''
+                emp_name:'',
+                year:'',
+                month:'',
+                day_count:'',
+                days:['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
             }
         },
         created() {
@@ -120,14 +114,29 @@
                if(val!='' && this.select_date!=''){
                    this.attendForm();
                }
-               let split_name=val.split(" ");
-               this.emp_no=split_name[0];
-               this.emp_name=split_name[1]+" "+split_name[2];
+                if(val!=''){
+                     let split_name=val.split(" ");
+                     this.emp_no=split_name[0];
+                     val=val.replace(this.emp_no,'');
+                    this.emp_name=val;
+                }  
             },
             select_date:function (val) {
                 if(val!='' && this.select_employee!=''){
                      this.attendForm();
                 }
+                  if(val!=''){
+                     let split_date=val.split("/");
+                     console.log(split_date);
+                     this.year=split_date[0];
+                     console.log(this.year);
+                     val=val.replace(this.year+"/",'');
+                    this.month=val;
+                    console.log(this.month);
+                    this.day_count=new Date(this.year, this.month, 0).getDate()
+                    console.log(this.day_count);
+                 
+                }  
             },           
         },
         methods: {
