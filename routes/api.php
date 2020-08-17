@@ -17,3 +17,13 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('/setting',  'SettingController@index');
+Route::post('/setting/updateMoney',  'SettingController@update');
+Route::post('/setting/updateAm',  'SettingController@updateAm');
+Route::post('/setting/updatePm',  'SettingController@updatePm');
+
+Route::get('/delayTimes',  'DelayTimeController@index');
+Route::post('/delayTime/updateAm/{id}',  'DelayTimeController@saveAm');
+Route::post('/delayTime/updatePm/{id}',  'DelayTimeController@savePm');
+Route::post('/delayTime/store',  'DelayTimeController@store');

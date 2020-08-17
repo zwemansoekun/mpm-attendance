@@ -15,7 +15,7 @@ class CreateDelayTimesTable extends Migration
     {
         Schema::create('delay_times', function (Blueprint $table) {
             $table->id();
-            $table->date('month');
+            $table->string('month');
             $table->integer('am');
             $table->integer('pm');
             $table->decimal('money',10, 2);
