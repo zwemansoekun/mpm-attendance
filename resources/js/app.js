@@ -5,6 +5,9 @@
  */
 
 require('./bootstrap');
+window.$ = require('jquery')
+window.JQuery = require('jquery')
+
 
 window.Vue = require('vue');
 import App from './App.vue';
