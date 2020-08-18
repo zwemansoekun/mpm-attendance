@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Setting;
 use App\DelayTime;
-use Illuminate\Http\Request;
-use Barryvdh\Debugbar\Facade as Debugbar;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Barryvdh\Debugbar\Facade as Debugbar;
 
 class SettingController extends Controller
 {
