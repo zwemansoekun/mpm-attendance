@@ -3,7 +3,7 @@
             
         <div class="container mt-5">
             <div class="alert alert-success" role="alert" v-if="data_check_messg">
-                 <strong >updated.</strong> 
+                 <strong >データは成功しました。</strong> 
             </div>
             <!-- //form -->
             <form @submit.prevent="updateMoney">
@@ -143,20 +143,17 @@
                 this.axios
                 .post('http://127.0.0.1:8000/api/setting/updateMoney', this.setting)
                 .then((response) => {
-                    if (response.data.money === parseInt(response.data.money, 10))
-                        response.data.money=response.data.money+".00";
 
                     this.setting = response.data;
+                    this.errorAm = null;
+                    this.errorPm = null;
                     
                     this.data_check_messg = true;
                     setTimeout(() => {
                         this.data_check_messg = false;
                     },2000)
-                    //this.$router.push({name: 'setting'}).catch(()=>{});
-                })
-                .catch(error => console.log(error))
-                .finally(()=> this.loading = false)
-                
+
+                }) 
            },
             updateAm(){
                 this.errorAm = null;
@@ -168,34 +165,41 @@
                 this.axios
                 .post('http://127.0.0.1:8000/api/setting/updateAm', this.setting)
                 .then((response) => {
+
+                    this.setting = response.data;
+                    this.errorMoney = null;
+                    this.errorPm = null;
                    
                     this.data_check_messg = true;
                     setTimeout(() => {
                         this.data_check_messg = false;
                     },2000)
-                    //this.$router.push({name: 'setting'});
                 })
             },
             updatePm(){
                 this.errorPm = null;
                 if(this.setting.pm == 0){
                    return this.errorPm = 'PM遅刻許容時間デフォルト値を入力してください。';
-                }else if(!this.validateNumber(this.setting.am) ){
+                }else if(!this.validateNumber(this.setting.pm) ){
                     return this.errorPm = 'PM遅刻許容時間デフォルト値を数式で入力してください。';
                 }
                 this.axios
                 .post('http://127.0.0.1:8000/api/setting/updatePm', this.setting)
                 .then((response) => {
+
+                    this.setting = response.data;
+                    this.errorMoney = null;
+                    this.errorAm = null;
                    
                     this.data_check_messg = true;
                     setTimeout(() => {
                         this.data_check_messg = false;
                     },2000)
-                    //this.$router.push({name: 'setting'});
+
                 })
             },
             updateDelayAm(id , delayTime){
-                if(delayTime.am =="" || delayTime.am == undefined || delayTime.am == 0){
+                if(delayTime.am == 0){
                     Vue.set(delayTime,"amDelayErrorMsg", "AM遅刻許容時間を入力してください。");
                     Vue.set(delayTime,"amDelayError",true);
                     return ;
