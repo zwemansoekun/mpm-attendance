@@ -11,7 +11,7 @@
                 <tr class="d-flex">
                     <td class="col-6">為替レートデフォルト値(JPN/MMK)</td>
                     <td class="col-3">
-                        {{ errorMoney }}
+                        <label class="text-danger" v-if="errorMoney">{{ errorMoney }}</label>
                         <input class="form-control" v-model.number="setting.money">
                     </td>
                     <td class="col-3 align-center">
@@ -26,7 +26,7 @@
                 <tr class="d-flex">
                     <td class="col-6">AM遅刻許容時間デフォルト値（分)</td>
                      <td class="col-3">
-                          {{ errorAm }}
+                        <label class="text-danger" v-if="errorAm">{{ errorAm }}</label> 
                         <input type="text" class="form-control" v-model="setting.am">
                     </td>
                     <td class="col-3">
@@ -36,7 +36,7 @@
                 <tr class="d-flex">
                     <td class="col-6">PM遅刻許容時間デフォルト値（分）</td>
                      <td class="col-3">
-                          {{ errorPm }}
+                         <label class="text-danger" v-if="errorPm">{{ errorPm }}</label>
                         <input type="text" class="form-control" v-model="setting.pm">
                     </td>
                     <td class="col-3">
@@ -61,7 +61,7 @@
                         </td>
                         <td>
                             <div class="row" v-if="d.amDelayError">
-                                <div class="col">{{d.amDelayErrorMsg}}</div>
+                                <div class="col text-danger">{{d.amDelayErrorMsg}}</div>
                              </div>
                             <div class="row">
                                 <div class="col">
@@ -72,7 +72,7 @@
                         </td>
                         <td>
                             <div class="row" v-if="d.pmDelayError">
-                                <div class="col">{{d.pmDelayErrorMsg}}</div>
+                                <div class="col text-danger">{{d.pmDelayErrorMsg}}</div>
                             </div>
                             <div class="row">
                                 <div class="col">
