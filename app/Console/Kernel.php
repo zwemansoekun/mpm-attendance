@@ -2,8 +2,11 @@
 
 namespace App\Console;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Carbon\Carbon;
+use App\DelayTime;
 
 class Kernel extends ConsoleKernel
 {
@@ -14,6 +17,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         //
+        'App\Console\Commands\ScheduleDelayTime',
     ];
 
     /**
@@ -23,8 +27,10 @@ class Kernel extends ConsoleKernel
      * @return void
      */
     protected function schedule(Schedule $schedule)
-    {
-        // $schedule->command('inspire')->hourly();
+    {           
+        $schedule->command('command:delayTimes')
+            ->monthly();
+
     }
 
     /**

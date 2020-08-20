@@ -6,7 +6,7 @@ use App\Setting;
 use App\DelayTime;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Response;
 use Barryvdh\Debugbar\Facade as Debugbar;
 
 class SettingController extends Controller
@@ -20,21 +20,21 @@ class SettingController extends Controller
         $setting = Setting::find(1);
         $setting->money = $request->input('money');
         $setting->save();
-        return response()->json($setting);
+        return response()->json(Setting::find(1));
     }
 
     public function updateAm(Request $request){
         $setting = Setting::find(1);
         $setting->am = $request->input('am');
         $setting->save();
-        return response()->json($setting);
+        return response()->json(Setting::find(1));
     }
 
     public function updatePm(Request $request){
         $setting = Setting::find(1);
         $setting->pm = $request->input('pm');
         $setting->save();
-        return response()->json($setting);
+        return response()->json(Setting::find(1));
     }
 
     public function delayTime(Request $request){
