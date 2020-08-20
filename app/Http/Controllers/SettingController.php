@@ -37,4 +37,10 @@ class SettingController extends Controller
         return response()->json(Setting::find(1));
     }
 
+    public function delayTime(Request $request){
+
+        $get_ampm=DelayTime::select("*")->where("month",'like', '%' . $request->route('year') .'/'. $request->route('month') . '%')->first();      
+        return $get_ampm !== null ? $get_ampm : [] ;//Route::current()->parameters('month')
+    }
+
 }
