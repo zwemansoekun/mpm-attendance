@@ -5,8 +5,9 @@
  */
 
 require('./bootstrap');
-window.$ = require('jquery')
-window.JQuery = require('jquery')
+// window.$ = require('jquery')
+window.$=window.JQuery= require('jquery')//window.JQuery
+window.jcm = require('jquery-contextmenu-common');
 
 
 window.Vue = require('vue');

@@ -22,6 +22,8 @@ Route::get('/setting',  'SettingController@index');
 Route::post('/setting/updateMoney',  'SettingController@update');
 Route::post('/setting/updateAm',  'SettingController@updateAm');
 Route::post('/setting/updatePm',  'SettingController@updatePm');
+Route::get('/setting/delayTime/{year}/{month}','SettingController@delayTime')->where(['year' => '[0-9]+', 'month' =>'[0-9]+']);
+
 
 Route::get('/delayTimes',  'DelayTimeController@index');
 Route::post('/delayTime/updateAm/{id}',  'DelayTimeController@saveAm');

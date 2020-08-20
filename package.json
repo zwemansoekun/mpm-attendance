@@ -25,6 +25,8 @@
     },
     "dependencies": {
         "eslint-plugin-vue": "^6.2.2",
+        "jquery-contextmenu": "^3.0.0-beta.2",
+        "jquery-contextmenu-common": "^1.0.2",
         "vue-axios": "^2.1.5",
         "vue-router": "^3.3.4"
     }

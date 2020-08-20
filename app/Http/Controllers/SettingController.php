@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Setting;
 use App\DelayTime;
-use Illuminate\Http\Request;
-use Barryvdh\Debugbar\Facade as Debugbar;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+use Barryvdh\Debugbar\Facade as Debugbar;
 
 class SettingController extends Controller
 {
@@ -34,6 +35,12 @@ class SettingController extends Controller
         $setting->pm = $request->input('pm');
         $setting->save();
         return response()->json($setting);
+    }
+
+    public function delayTime(Request $request){
+
+        $get_ampm=DelayTime::select("*")->where("month",'like', '%' . $request->route('year') .'/'. $request->route('month') . '%')->first();      
+        return $get_ampm !== null ? $get_ampm : [] ;//Route::current()->parameters('month')
     }
 
 }
