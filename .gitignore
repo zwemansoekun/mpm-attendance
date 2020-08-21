@@ -12,6 +12,6 @@ npm-debug.log
 yarn-error.log
 .editorconfig
 .env.example
-/public/css
-/public/js
+public/css
+public/js
 package-lock.json

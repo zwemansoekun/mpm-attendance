@@ -126,7 +126,7 @@
                                                    <!-- // style="width: 371.05px;height:50px;background-color:#FFDAB9"                  -->
                                                     <!-- style="width: 371.05px;height:50px;" -->
                                               <!-- :style="`{background-color:${checkBgColor(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()],null)}`" -->
-                                                <td style="width: 371.05px;height:50px;" class="abcde"> 
+                                                <td style="width: 371.05px;height:50px;" class="abcde" oncontextmenu="return false;"> 
                                                 </td>   
                                                 <!-- <td style="width: 200px" > 
                                                 </td>  -->
@@ -198,7 +198,7 @@
              
                 this.dates=response.data;
             
-            });
+            }); 
         },
         computed: {
             
@@ -249,78 +249,56 @@
               this.mouse_rclick();
         },      
         methods: {   
-            mouse_rclick:function(){
-
-
-           jQuery.contextMenu({
-            selector: '.abcde', 
-            callback: function(key, options) {
-                var m = "clicked: " + key;
-                window.console && console.log(m) || alert(m); 
-            },
-            items: {
-                "edit": {name: "Edit", icon: "edit"},
-                "cut": {name: "Cut", icon: "cut"},
-               copy: {name: "Copy", icon: "copy"},
-                "paste": {name: "Paste", icon: "paste"},
-                "delete": {name: "Delete", icon: "delete"},
-                "sep1": "---------",
-                "quit": {name: "Quit", icon: function(){
-                    return 'context-menu-icon context-menu-icon-quit';
-                }}
-            }
-        });
-
-        jQuery('.abcde').on('click', function(e){
-            console.log('clicked', this);
-        })    
-
-
-                    jQuery(document).on("contextmenu", ".abcde", function(e){
-                        alert('Context Menu event has fired!');
-                           $.contextMenu({
-                    // define which elements trigger this menu
-                    selector: ".abcde",
-                    // define the elements of the menu
-                    items: {
-                        foo: {name: "Foo", callback: function(key, opt){ alert("Foo!"); }},
-                        bar: {name: "Bar", callback: function(key, opt){ alert("Bar!") }}
+            mouse_rclick:function(){ 
+            var menu = [{
+                    name: 'create',
+                    // img: 'images/create.png',
+                    title: 'create button',
+                    fun: function () {
+                        alert('i am add button')
                     }
-                    // there's more, have a look at the demos and docs...
-            });
-                        return false;
+                    }, {
+                    name: 'update',
+                    // img: 'images/update.png',
+                    title: 'update button',
+                    fun: function () {
+                        alert('i am update button')
+                    }
+                }, {
+                    name: 'delete',
+                    // img: 'images/delete.png',
+                    title: 'delete button',
+                    fun: function () {
+                        alert('i am delete button')
+                    }
+                }];
+
+                jQuery(document).ready(function(){
+                    jQuery(document).on("contextmenu", ".abcde", function(e){
+                            jQuery(this).contextMenu(menu,{
+                                'triggerOn':'click',
+                                'displayAround': 'cursor',
+                                'mouseClick': 'right'
+                            });
                     });
+                }) 
             },
             checkBgColor:function(year,month,dayindex,index){
                           
-                // console.log(parseInt(dayindex)+"/"+month+"/"+year);
+             
                 let custom_date=year+"/"+("0" + month).slice(-2)+("0" +parseInt(dayindex)).slice(-2);                
                 let val=this.days[new Date(year+'/'+month+'/'+parseInt(dayindex)).getDay()];
                 let cur_date=new Date().getFullYear()+"/"+("0" + parseInt(new Date().getMonth()+1)).slice(-2)+"/"+("0" +new Date().getDate()).slice(-2); 
-                // console.log(this.days[new Date(year+'/'+month+'/'+(parseInt(dayindex)+1)).getDay()]);
-                // console.log(new Date(year+'/'+month+'/'+(parseInt(dayindex)+1)).getDate());
-                // console.log(index);
-
-            // if(new Date().getDate()+"/"+parseInt(new Date().getMonth()+1)+"/"+new Date().getFullYear()>custom_date){
-            //            return '#FFDAB9';   
-            // }else{
-            //         //   return '#FFDAB9';
-            // }
-
-
-               if(index==1){
-                //    console.log('cur_date',cur_date);
-                //    console.log('cus_date',custom_date);
-                  return (val!=="Sat" && val!=="Sun" && cur_date>custom_date)? '#FFDAB9' : '';
-               }else if(index==true && cur_date>custom_date){
-                  return '#FFDAB9';
-               }
-
                
+                if(index==1){                
+                    return (val!=="Sat" && val!=="Sun" && cur_date>custom_date)? '#FFDAB9' : '';
+                }else if(index==true && cur_date>custom_date){
+                    return '#FFDAB9';
+                }
+
             },
-            checkColor:function(val,index){
-                
-                // console.log(val.am_pm);
+            checkColor:function(val,index){                
+           
                 if( (index==0 || index==2) && val!=null){
                      let val_split=val!==''?val.am_pm.split(":"):'';
                       if(val_split!='' && ( (val_split[0]==8 && val_split[1]>0 && val_split[1]<6) || (val_split[0]==13 && val_split[1]>0 && val_split[1]<16) ) ){
@@ -367,20 +345,14 @@
                     this.ampm_arr=[];
                      
                 if(this.year!='' && this.month!='' && this.emp_no!=''){                    
-                    // this.axios
-                    // .get("http://localhost:5000/attendances/countDay/"+this.emp_no+"/"+this.year+this.month)                 
-                    // .then(response => {
-                    //     console.log(response);
-                    //     this.countDay=response.data;
-                    //     console.log(this.dates);
-                    // });
+                   
                     this.dayCount=new Date(this.year,this.month, 0).getDate();
 
                     this.axios
                     .get("http://localhost:5000/attendances/ampm/"+this.emp_no+"/"+this.year+this.month)                 
                     .then(response => { 
 
-                        // console.log(response.data.length);    
+                    
                         if(response.data.length===0){
                             this.form_open=false;
                                 
@@ -414,7 +386,7 @@
                                 }
                         });
                         that.memory='';       
-                        // console.log("a",that.ampm_arr);
+                  
                         for(let i=1;i<=this.dayCount;i++){
                             for(let j = 0; j < that.ampm_arr.length; j++) {
                                     let connect_to_dayampm = that.ampm_arr[j];                                         
@@ -423,8 +395,7 @@
                                     if(new Date(that.year+"/"+that.month+"/"+i).getDate()===new Date(connect_to_dayampm[k].recordedDateTime).getDate()){
                                         
                                         that.ampm_by_day.push(connect_to_dayampm[k]); 
-                                        // that.memory=new Date(connect_to_dayampm[k].recordedDateTime).getDate();
-                                   
+                                     
                                         if (connect_to_dayampm.length - 1 === k) {        
                                       
                                             if(that.ampm_by_day.length<5 && that.ampm_by_day.length!==4){                                            
@@ -432,27 +403,23 @@
                                                 for(let a=0;a<add_arr;a++){                                             
                                                     that.ampm_by_day.push(null); //{"am_pm":"00:00","hour":"00","minute":"00"}
                                                 }
-                                            }
-                                            // console.log("app",that.ampm_by_day);
+                                            }                                       
                                             let store_arr=[];
                                        
                                             for(let i=0;i<that.ampm_by_day.length;i++){
-
-                                            //   console.log(that.ampm_by_day[i].hour);
-
+                                        
                                                 if(that.ampm_by_day[i]!=null){
                                                     if(that.ampm_by_day[i].hour<12){        
-                                                        // console.log("0",that.ampm_by_day[i]);                                            
+                                                                                            
                                                        store_arr[0]=that.ampm_by_day[i]?that.ampm_by_day[i]:null;                                                  
                                                     }else if(that.ampm_by_day[i].hour>=12 && that.ampm_by_day[i].minute>=0  && that.ampm_by_day[i].hour<13 && store_arr[1]==undefined && store_arr[0]!=undefined ){  //&& store_arr[0]!==undefined
-                                                        //   console.log("1",that.ampm_by_day[i]);   
+                                                    
                                                         store_arr[1]=that.ampm_by_day[i]?that.ampm_by_day[i]:null;                                                       
                                                     }else if( ( (that.ampm_by_day[i].hour>=12 && that.ampm_by_day[i].minute>=0 ) || (that.ampm_by_day[i].hour>=12 && that.ampm_by_day[i].minute>=0   ) )&& that.ampm_by_day[i].hour<17 && store_arr[2]==null){ //&& store_arr[1]!==undefined   //&& store_arr[1]===undefined                                                    
-                                                        //   console.log(that.ampm_by_day[i]);
-                                                        //   console.log("2",that.ampm_by_day[i]);   
+                                                      
                                                        store_arr[2]=that.ampm_by_day[i]?that.ampm_by_day[i]:null;                                                     
                                                     }else if(that.ampm_by_day[i].hour>=17 && that.ampm_by_day[i].minute>=0){
-                                                        //   console.log("3",that.ampm_by_day[i]);   
+                                                
                                                         store_arr[3]=that.ampm_by_day[i]?that.ampm_by_day[i]:null;                                                      
                                                     }
                                                     if(store_arr[0]==undefined){
@@ -469,9 +436,7 @@
                                                     }
                                         
                                                 }
-                                            }                               
-                                            
-                                            // console.log("store_arr",store_arr);
+                                            } 
 
                                             that.ampm_by_day_arr.push(store_arr);
                                             that.status=1; 
@@ -506,40 +471,26 @@
 
               let pm1=jQuery("."+index).find('.pm1_2').text().trim();
               let pm2=jQuery("."+index).find('.pm2_3').text().trim();
-              
-            //   this.ampm_time_check();          
-                //  console.log(pm2);
-                let ap_split1=am1!==''?am1.split(":"):'';
-                let ap_split2=am2!==''?am2.split(":"):'';
-                let ap_split3=pm1!==''?pm1.split(":"):'';
-                let ap_split4=pm2!==''?pm2.split(":"):'';
-            //  console.log(ap_split4);
-            //testing
-                // console.log(sec_index);
-                if(am1=='' && am2==''){                   
-                    jQuery("."+sec_index).find("[name=am1]").parent().attr('colspan','2').find("[name=am1]").remove();//.text("-").attr('rowspan','2')  .find('[name=am2]').parents().remove();
-                    jQuery("."+sec_index).find("[name=am2]").parent().remove();
-                    jQuery("."+sec_index).find('td:first').css({'text-align':'center','width':'220px'}).text("-");
-                }else if(pm1== '' && pm2==''){
-                    jQuery("."+sec_index).find("[name=pm1]").parent().attr('colspan','2').find("[name=pm1]").remove();//.text("-").attr('rowspan','2')  .find('[name=am2]').parents().remove();
-                    jQuery("."+sec_index).find("[name=pm2]").parent().remove();
-                    jQuery("."+sec_index).find('td:nth-child(3)').css({'text-align':'center','width':'220px'}).text("-");
-                }
+           
+              let ap_split1=am1!==''?am1.split(":"):'';
+              let ap_split2=am2!==''?am2.split(":"):'';
+              let ap_split3=pm1!==''?pm1.split(":"):'';
+              let ap_split4=pm2!==''?pm2.split(":"):'';
+         
+              if(am1=='' && am2==''){                   
+                jQuery("."+sec_index).find("[name=am1]").parent().attr('colspan','2').find("[name=am1]").remove();//.text("-").attr('rowspan','2')  .find('[name=am2]').parents().remove();
+                jQuery("."+sec_index).find("[name=am2]").parent().remove();
+                jQuery("."+sec_index).find('td:first').css({'text-align':'center','width':'220px'}).text("-");
+              }else if(pm1== '' && pm2==''){
+                jQuery("."+sec_index).find("[name=pm1]").parent().attr('colspan','2').find("[name=pm1]").remove();//.text("-").attr('rowspan','2')  .find('[name=am2]').parents().remove();
+                jQuery("."+sec_index).find("[name=pm2]").parent().remove();
+                jQuery("."+sec_index).find('td:nth-child(3)').css({'text-align':'center','width':'220px'}).text("-");
+              }
 
                 this.ampm_time_check(ap_split1,"am1",sec_index);     
                 this.ampm_time_check(ap_split2,"am2",sec_index);   
                 this.ampm_time_check(ap_split3,"pm1",sec_index);   
-                this.ampm_time_check(ap_split4,"pm2",sec_index);   
-
-                // if( (ap_split[0]<=8 && ap_split[1]<60) || (ap_split[0]>=8 && ap_split[1]<6) ){
-                //     if(ap_split[0]<=8)
-                //     ap_split[0]=8;ap_split[1]="00";
-
-                // }else if(ap_split[0]>=8 && ap_split[1]>=6){ 
-                //     ap_split[0]=8;ap_split[1]="30";    
-                // }
-                // console.log(jQuery("."+index).closest("."+sec_index).find(".am1"));
-             
+                this.ampm_time_check(ap_split4,"pm2",sec_index); 
 
             },
             ampm_time_check(ap_split,name,sec_index){
@@ -564,9 +515,7 @@
                     }else if(ap_split[0]==13 && (ap_split[1]>=16 && ap_split[1]<=30 ) ){
                         ap_split[0]=13;ap_split[1]="30"; 
                     }
-                }
-
-               
+                }               
                     jQuery("."+sec_index).find("[name="+name+"]").val(ap_split[0]+":"+ap_split[1]);
             },           
         }, 

@@ -9,9 +9,10 @@
 
     <title>{{ config('app.name', 'Management Partners Myanmar') }}</title>
 
-    <!-- Scripts -->
-    @auth
-    <script src="{{ asset('js/app.js') }}" defer></script>
+    <!-- Scripts -->       
+    @auth    
+        <script src="{{ asset('js/app.js') }}" defer></script>      
+        <script src="{{ asset('js/contextMenu.min.js') }}" defer></script>   
     @endauth 
     
     <!-- Fonts -->
@@ -20,6 +21,7 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/contextMenu.css') }}" rel="stylesheet">
 </head>
 <body>
     {{-- <div id="app"> --}}
