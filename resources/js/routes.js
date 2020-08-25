@@ -1,5 +1,6 @@
 import AttendList from './components/AttendList.vue';
 import Setting from './components/Setting.vue';
+import SalaryHistory from './components/SalaryHistory.vue';
 
 export const routes = [
     {
@@ -11,5 +12,10 @@ export const routes = [
         name: 'setting',
         path: '/setting',
         component: Setting
+    },
+    {
+        name: 'salaryHistory',
+        path: '/salaryHistory',
+        component: SalaryHistory
     }  
 ];
