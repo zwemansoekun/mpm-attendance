@@ -16,7 +16,8 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.contextMenu.min.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.contextMenu.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.ui.position.js"></script> 
-        {{-- <script src="{{ asset('js/contextMenu.min.js') }}" defer></script>    --}}
+        {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.2/jquery.validate.js"></script> --}}
+        <script src="{{ asset('js/jquery.validate.js') }}" defer></script>   
     @endauth 
     
     <!-- Fonts -->
