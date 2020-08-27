@@ -9,17 +9,25 @@
 
     <title>{{ config('app.name', 'Management Partners Myanmar') }}</title>
 
-    <!-- Scripts -->
-    @auth
-    <script src="{{ asset('js/app.js') }}" defer></script>
+    <!-- Scripts -->       
+    @auth    
+        <script src="{{ asset('js/app.js') }}" defer></script>     
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.contextMenu.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.contextMenu.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.ui.position.js"></script> 
+        {{-- <script src="{{ asset('js/contextMenu.min.js') }}" defer></script>    --}}
     @endauth 
     
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+    <link href=" https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+   
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    {{-- <link href="{{ asset('css/contextMenu.css') }}" rel="stylesheet"> --}}
 </head>
 <body>
     {{-- <div id="app"> --}}
