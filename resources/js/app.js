@@ -7,6 +7,8 @@
 require('./bootstrap');
 window.$=window.JQuery= require('jquery')//window.JQuery
 window.Vue = require('vue');
+jQuery.noConflict(); 
+
 import App from './App.vue';
 import VueRouter from 'vue-router';
 import VueAxios from 'vue-axios';

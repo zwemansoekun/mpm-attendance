@@ -31,22 +31,27 @@
                 <!-- //form -->                      
                     <div class="row">
                         <div class="col-md-4">
-                              <button type="button" class="btn btn-primary">出勤簿生成</button>
+                              <button type="button" class="btn btn-secondary" onclick="this.blur();">出勤簿生成</button>
                         </div>
                          <div class="col-md-4 offset-md-2">
-                              <button type="button" class="btn btn-primary" style="width: 220px;">全て自動計算</button>
+                              <button type="button" class="btn btn-secondary" style="width: 220px;" onclick="this.blur();" @click="allButtonClick()">全て自動計算</button>
                          </div> 
                     </div>                 
-                 
+                    <form id="form" class="" @submit.prevent="attendSave">
                     <div class="row mt-3">
-                        <div class="col-md-4"></div>
+                        <div class="col-md-4">
+                              <button type="submit" class="btn btn-primary" onclick="this.blur();" >登録</button>
+                        </div>
                         <div class="col-md-4 offset-md-2">
-                            <button type="button" class="btn btn-primary" style="width: 220px;">空のところだけ自動計算</button>
+                            <button type="button" class="btn btn-secondary" onclick="this.blur();" @click="filterInput()" style="width: 220px;color: red;">空のところだけ自動計算</button>
                         </div>
                     </div>
                     <div>
 
                     </div>
+                    <!-- v-on:submit.prevent="attendSave" -->
+                     
+
                     <div class="row mt-5">
                         <div class="col-md-4"> {{this.select_date}}</div>                          
                     </div>  
@@ -91,18 +96,43 @@
                                                 </td>                                                                      
                                             </tr>
                                         
-                                            <tr  :class="`index_${dayindex}`">                                           
-                                                <td  style="width: 200px;padding:0px" ><input name="am1" class="form-control input-sm"  style="text-align: center;" type="text"></td>
+                                            <tr  :class="`index_${dayindex}`">   
+
+                                                <td  style="width: 200px;padding:0px" v-bind:key="index"  v-for="(date,index) in day" :class="date==null?([0,1].includes(index)==true?'paid-leave1':'paid-leave2'):''">   
+                                                    <div v-if="date!== null">                                        
+                                                        <template v-if="index<2" >
+                                                             <input :name="`am${index+1}`"  @change="updateInput" class="form-control input-sm"  style="text-align: center;" type="text">                                                   
+                                                        </template>
+                                                        <template v-else>
+                                                            <input :name="`pm${index-1}`"  @change="updateInput"  class="form-control input-sm"  style="text-align: center;" type="text">   
+                                                        </template>
+                                                    </div>
+                                                     <div v-else>
+                                                        <template v-if="index<2" >
+                                                             <input :name="`am${index+1}`"   class="form-control input-sm"  style="text-align: center;" type="text" readonly>                                                   
+                                                        </template>
+                                                        <template v-else>
+                                                            <input :name="`pm${index-1}`"   class="form-control input-sm"  style="text-align: center;" type="text" readonly>   
+                                                        </template>
+                                                     </div>
+                                                </td>
+
+
+                                                <!-- <td  style="width: 200px;padding:0px" ><input name="am1" class="form-control input-sm"  style="text-align: center;" type="text"></td>
                                                 <td  style="width: 200px;padding:0px" ><input name="am2" class="form-control input-sm"  style="text-align: center;" type="text"></td>      
                                                 <td  style="width: 200px;padding:0px" ><input name="pm1" class="form-control input-sm"  style="text-align: center;" type="text"></td>      
-                                                <td  style="width: 200px;padding:0px" ><input name="pm2" class="form-control input-sm"  style="text-align: center;" type="text"></td>  
-                                                <td  style="width: 200px;padding:0px" ><input name="thour" class="form-control input-sm" style="text-align: center;" type="text"></td>           
-                                                <td  style="width: 200px;padding:0px;" ><button type="button" class="btn btn-secondary" @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,$event)">自動計算</button></td>                                                     
+                                                <td  style="width: 200px;padding:0px" ><input name="pm2" class="form-control input-sm"  style="text-align: center;" type="text"></td>   -->
+                                                
+                                                <td  style="width: 200px;padding:0px" >
+                                                    <input name="thour" class="form-control input-sm" style="text-align: center;" type="text">
+                                                    <input name="date" class="form-control input-sm" style="text-align: center;" type="hidden" :value="`${year}-${month}-${dayindex+1}`">
+                                                </td>           
+                                                <td  style="width: 200px;padding:0px;" ><button type="button" onclick="this.blur();" :id="`autobut${dayindex}`" class="btn btn-secondary" @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">自動計算</button></td>                                                     
                                             </tr>
 
                                         </div>
                                         <div v-else>                                           
-                                            <tr > 
+                                            <tr :class="`mainIndex_${dayindex}`"> 
                                                 <!-- {{name_of_day}} -->
                                                    <!-- // style="width: 371.05px;height:50px;background-color:#FFDAB9"                  -->
                                                     <!-- style="width: 371.05px;height:50px;" -->
@@ -121,23 +151,24 @@
                                                     
                                                 </td>                                                                      
                                             </tr>                                        
-                                             <tr > 
+                                             <tr :class="`index_${dayindex}`"> 
                                                 <!-- {{name_of_day}} -->
                                                    <!-- // style="width: 371.05px;height:50px;background-color:#FFDAB9"                  -->
                                                     <!-- style="width: 371.05px;height:50px;" -->
                                               <!-- :style="`{background-color:${checkBgColor(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()],null)}`" -->
-                                                <td style="width: 371.05px;height:50px;" class="abcde" oncontextmenu="return false;"> 
+                                                <td style="width: 371.05px;height:50px;" :class="['Sat','Sun'].includes(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])==false?'paid-leave1':''" > 
+                                                    <!-- <span class="context-menu-one btn btn-neutral">right click me</span> -->
                                                 </td>   
                                                 <!-- <td style="width: 200px" > 
                                                 </td>  -->
-                                                <td style="width: 368.05px;height:50px;" > 
+                                                <td style="width: 368.05px;height:50px;" :class="['Sat','Sun'].includes(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])==false?'paid-leave2':''" > 
                                                 </td> 
                                                 <!-- <td style="width: 200px" >  -->
                                                 <!-- </td>    -->
                                                 <td style="width: 182px;height:50px;">  
                                                 </td>  
                                                 <td style="width: 200px;height:50px;" >  
-                                                    <button v-if="['Sat','Sun'].includes(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])==false" type="button" class="btn btn-secondary" @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,$event)">自動計算</button>  
+                                                    <button v-if="['Sat','Sun'].includes(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])==false" onclick="this.blur();" type="button" class="btn btn-secondary" @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">自動計算</button>  
                                                 </td>                                                                      
                                             </tr>                  
 
@@ -150,6 +181,7 @@
                                 </tr>
                          </tbody>
                     </table>
+                     </form>
             </div>
     </div>    
 </template>
@@ -179,7 +211,18 @@
                 form_open:false,
                 data_check_messg:false,
                 default_ampm:{"am":'',"pm":''},
-                name_of_day:true
+                name_of_day:true,
+                model_check:[
+                        {
+                           0: [
+                                 {"am1":22},
+                                 {"am2":33},
+                                 {"pm1":44},
+                                 {"pm2":55},
+                           ]    
+                        }
+                  
+                ]
                 // checkColor:''           
             }
         },
@@ -198,7 +241,8 @@
              
                 this.dates=response.data;
             
-            }); 
+            });    
+
         },
         computed: {
             
@@ -242,46 +286,113 @@
             // }
         },
          mounted(){
+                  
               this.day_name();
               this.ampm_index();       
               this.checkColor();
               this.checkBgColor();
               this.mouse_rclick();
+            //   this.check_input();
         },      
-        methods: {   
-            mouse_rclick:function(){ 
-            var menu = [{
-                    name: 'create',
-                    // img: 'images/create.png',
-                    title: 'create button',
-                    fun: function () {
-                        alert('i am add button')
-                    }
-                    }, {
-                    name: 'update',
-                    // img: 'images/update.png',
-                    title: 'update button',
-                    fun: function () {
-                        alert('i am update button')
-                    }
-                }, {
-                    name: 'delete',
-                    // img: 'images/delete.png',
-                    title: 'delete button',
-                    fun: function () {
-                        alert('i am delete button')
-                    }
-                }];
+        methods: {  
+            attendSave:function(){
+                console.log('hello');
+                console.log($('#form').serializeArray());//serialize   //serializeArray
+            },
+            updateInput:function(event){ 
 
-                jQuery(document).ready(function(){
-                    jQuery(document).on("contextmenu", ".abcde", function(e){
-                            jQuery(this).contextMenu(menu,{
-                                'triggerOn':'click',
-                                'displayAround': 'cursor',
-                                'mouseClick': 'right'
-                            });
+                   let am1,am2,pm1,pm2='';let total_am,total_pm=0;
+                   am1=$(event.target).parent().parent().parent().find('[name=am1]').val()!=undefined?$(event.target).parent().parent().parent().find('[name=am1]').val().split(":"):'';
+                   am2=$(event.target).parent().parent().parent().find('[name=am2]').val()!=undefined?$(event.target).parent().parent().parent().find('[name=am2]').val().split(":"):'';
+                   pm1=$(event.target).parent().parent().parent().find('[name=pm1]').val()!=undefined?$(event.target).parent().parent().parent().find('[name=pm1]').val().split(":"):'';
+                   pm2=$(event.target).parent().parent().parent().find('[name=pm2]').val()!=undefined?$(event.target).parent().parent().parent().find('[name=pm2]').val().split(":"):'';
+
+
+                
+                  const {t_hr, t_min}=this.totalHourCal(am1,am2,pm1,pm2,total_am,total_pm);  
+                  let res=isNaN((parseFloat(t_hr)+parseFloat(t_min)).toFixed(2))?'':(parseFloat(t_hr)+parseFloat(t_min)).toFixed(2);
+                  jQuery(event.target).parent().parent().parent().find("[name='thour']").val(res);
+            }, 
+            allButtonClick:function(){ 
+                $('[id^=autobut]').click();
+            },  
+            filterInput:function(){
+                // let count=1;
+                $('table tbody').find('td input').filter(function () {
+                     return this.value === ""
+                }).addClass('checkColumn').parent().parent().find('[type=button]').click().parent().parent().find('td input').removeClass('checkColumn');
+                //  console.log(  );
+                // if( $('table tbody').find('td input').length==0) {
+                //     console.log(jQuery(this));
+                // }
+            },
+            mouse_rclick:function(){ 
+        
+                let class_name='';let parent_class_name=''; 
+                let that=this; 
+                $(function() {
+
+                    jQuery(document).on("contextmenu","td.paid-leave1,td.paid-leave2", function(e){
+                            // console.log(jQuery(this).parent().parent().find(">:first-child").attr('class'));
+                            // console.log(jQuery(this).parent().parent().find(">:first-child").attr('class'));
+                            parent_class_name=jQuery(this).parent().parent().find(">:first-child").attr('class');
+                            class_name=jQuery(this).attr('class');
+                            console.log(parent_class_name);
+                            console.log(class_name);
                     });
-                }) 
+// "td.paid-leave1,td.paid-leave2",
+                    $.contextMenu({
+                        selector:".paid-leave1,.paid-leave2",
+                        callback: function(key, options) {
+                            console.log('p',jQuery(this).attr('class'));
+                            if(key=='o'){
+                                that.showTimer(parent_class_name,class_name,'circle');
+                            }else{
+                                that.showTimer(parent_class_name,class_name,'dash');
+                            }
+
+                            // var m = "clicked: " + key;
+                            // window.console && console.log(m) || alert(m); 
+                        },
+                        items: {
+                            "o": {name: "paid", icon: "fa-circle"},
+                            "-": {name: "leave", icon: "fa-window-minimize"},
+                        //    copy: {name: "Copy", icon: "copy"},
+                        //     "paste": {name: "Paste", icon: "paste"},
+                        //     "delete": {name: "Delete", icon: "delete"},
+                        //     "sep1": "---------",
+                        //     "quit": {name: "Quit", icon: function(){
+                        //         return 'context-menu-icon context-menu-icon-quit';
+                        //     }}
+                        }
+                    });
+
+        // jQuery('.paid-leave').on('click', function(e){
+        //     console.log('clicked11', this);
+        // })    
+                });
+
+                //    $.noConflict();
+                //    $(".paid-leave").contextMenu(menu,{
+                //                 'triggerOn':'click',
+                //                 'displayAround': 'cursor',
+                //                 'mouseClick': 'right',
+                          
+                //     });
+
+                // jQuery(document).ready(function(){
+                //     jQuery(document).on("contextmenu", ".paid-leave", function(e){
+                //             console.log(jQuery(this).parent().parent().find(">:first-child").attr('class'));
+                //              parent_class_name=jQuery(this).parent().parent().find(">:first-child").attr('class');
+                //              class_name=jQuery(this).parent().attr('class');
+                //             jQuery(this).contextMenu(menu,{
+                //                 'triggerOn':'click',
+                //                 'displayAround': 'cursor',
+                //                 'mouseClick': 'right',
+                          
+                //             });
+                //     });
+                // }) 
             },
             checkBgColor:function(year,month,dayindex,index){
                           
@@ -464,35 +575,190 @@
                 } 
 
             },
-            showTimer(index,sec_index,e){  //mainIndex_0
-            //   console.log("sec",sec_index);
+            showTimer(index,sec_index,day_leave=''){  //mainIndex_0
+            //   console.log("sec",sec_index);         
+            
               let am1=jQuery("."+index).find('.am1_0').text().trim();
               let am2=jQuery("."+index).find('.am2_1').text().trim();
 
               let pm1=jQuery("."+index).find('.pm1_2').text().trim();
               let pm2=jQuery("."+index).find('.pm2_3').text().trim();
-           
+
+
+            if(day_leave=='circle' || day_leave=='dash'){           
+                // .attr('class')
+                    let leave_sign=day_leave=='circle'?"〇":"-";
+                    if(am1=='' && am2=='' && sec_index=='paid-leave1'){    
+                       
+                    //   console.log(); 
+                        if(jQuery("."+index).next().children('td').length==6){
+                            jQuery("."+index).next().find("td:first").attr('colspan','2').find("td:first").remove();
+                            jQuery("."+index).next().find("td:nth-child(2)").remove();
+                            jQuery("."+index).next().find('td:first').css({'text-align':'center','width':'220px'});                       
+                        }   
+                         jQuery("."+index).next().find(".paid-leave1").text(leave_sign);
+                         
+                    }else if(pm1== '' && pm2=='' && sec_index=='paid-leave2'){
+
+                        if(jQuery("."+index).next().children('td').length==6){
+                            jQuery("."+index).next().find("td:nth-child(3)").attr('colspan','2').find("td:nth-child(3)").remove();
+                            jQuery("."+index).next().find("td:nth-child(4)").remove();
+                            jQuery("."+index).next().find('td:nth-child(3)').css({'text-align':'center','width':'220px'});                       
+                        }  
+
+                         jQuery("."+index).next().find(".paid-leave2").text(leave_sign);
+                    }
+            }
+            // else if(day_leave=='dash'){
+            //     //   console.log('2',ok1);
+            //         if(am1=='' && am2=='' && sec_index=='paid-leave1' ){                   
+            //         // jQuery("."+sec_index).find("[name=am1]").parent().attr('colspan','2').find("[name=am1]").remove();//.text("-").attr('rowspan','2')  .find('[name=am2]').parents().remove();
+            //         // jQuery("."+sec_index).find("[name=am2]").parent().remove();
+            //              jQuery("."+index).next().find(".paid-leave1").text("-");
+            //         }else if(pm1== '' && pm2=='' && sec_index=='paid-leave2'){
+            //         // jQuery("."+sec_index).find("[name=pm1]").parent().attr('colspan','2').find("[name=pm1]").remove();//.text("-").attr('rowspan','2')  .find('[name=am2]').parents().remove();
+            //         // jQuery("."+sec_index).find("[name=pm2]").parent().remove();
+            //             jQuery("."+index).next().find(".paid-leave2").text("-");
+            //         }
+            // }
+            else{
               let ap_split1=am1!==''?am1.split(":"):'';
               let ap_split2=am2!==''?am2.split(":"):'';
+            
               let ap_split3=pm1!==''?pm1.split(":"):'';
               let ap_split4=pm2!==''?pm2.split(":"):'';
-         
-              if(am1=='' && am2==''){                   
-                jQuery("."+sec_index).find("[name=am1]").parent().attr('colspan','2').find("[name=am1]").remove();//.text("-").attr('rowspan','2')  .find('[name=am2]').parents().remove();
-                jQuery("."+sec_index).find("[name=am2]").parent().remove();
-                jQuery("."+sec_index).find('td:first').css({'text-align':'center','width':'220px'}).text("-");
-              }else if(pm1== '' && pm2==''){
-                jQuery("."+sec_index).find("[name=pm1]").parent().attr('colspan','2').find("[name=pm1]").remove();//.text("-").attr('rowspan','2')  .find('[name=am2]').parents().remove();
-                jQuery("."+sec_index).find("[name=pm2]").parent().remove();
-                jQuery("."+sec_index).find('td:nth-child(3)').css({'text-align':'center','width':'220px'}).text("-");
-              }
+              
+            //   console.log('a',jQuery("."+sec_index).find("[name='am1']").hasClass('checkColumn'));
+            //   if(jQuery("."+sec_index).find("[name='am1']").hasClass('checkColumn')){
 
-                this.ampm_time_check(ap_split1,"am1",sec_index);     
-                this.ampm_time_check(ap_split2,"am2",sec_index);   
-                this.ampm_time_check(ap_split3,"pm1",sec_index);   
-                this.ampm_time_check(ap_split4,"pm2",sec_index); 
+            //   }
+          
+            //   if(am1=='' && am2==''){                   
+            //     jQuery("."+sec_index).find("[name=am1]").parent().attr('colspan','2').find("[name=am1]").remove();//.text("-").attr('rowspan','2')  .find('[name=am2]').parents().remove();
+            //     jQuery("."+sec_index).find("[name=am2]").parent().remove();
+            //     jQuery("."+sec_index).find('td:first').css({'text-align':'center','width':'220px'}).text("-");
+            //   }else if(pm1== '' && pm2==''){
+            //     jQuery("."+sec_index).find("[name=pm1]").parent().attr('colspan','2').find("[name=pm1]").remove();//.text("-").attr('rowspan','2')  .find('[name=am2]').parents().remove();
+            //     jQuery("."+sec_index).find("[name=pm2]").parent().remove();
+            //     jQuery("."+sec_index).find('td:nth-child(3)').css({'text-align':'center','width':'220px'}).text("-");
+            //   }
+                // let total_hour=0;let total_minute=0;   
 
+                // if( jQuery("."+sec_index).find("[name='am1']").hasClass('checkColumn') ||
+                //         jQuery("."+sec_index).find("[name='am2']").hasClass('checkColumn') ||
+                //         jQuery("."+sec_index).find("[name='pm1']").hasClass('checkColumn') ||
+                //         jQuery("."+sec_index).find("[name='pm2']").hasClass('checkColumn')  ){
+                //         jQuery("."+sec_index).find("[name="+name+"]").val(ap_split[0]+":"+ap_split[1]); 
+                // }
+                let auto_am1,auto_am2,auto_pm1,auto_pm2='';
+
+                 if(!jQuery("."+sec_index).find("[name='am1']").hasClass('checkColumn') && !jQuery("."+sec_index).find("[name='am2']").hasClass('checkColumn')
+                && !jQuery("."+sec_index).find("[name='pm1']").hasClass('checkColumn') && !jQuery("."+sec_index).find("[name='pm2']").hasClass('checkColumn')){   
+                         auto_am1=this.ampm_time_check(ap_split1,"am1",sec_index);     
+                         auto_am2=this.ampm_time_check(ap_split2,"am2",sec_index);   
+                         auto_pm1=this.ampm_time_check(ap_split3,"pm1",sec_index);   
+                         auto_pm2=this.ampm_time_check(ap_split4,"pm2",sec_index); 
+                }
+
+                if(jQuery("."+sec_index).find("[name='am1']").hasClass('checkColumn')){
+                   auto_am1=this.ampm_time_check(ap_split1,"am1",sec_index);   
+                    //  console.log('a',auto_am1);  
+                }
+                 if(jQuery("."+sec_index).find("[name='am2']").hasClass('checkColumn')){
+                    auto_am2=this.ampm_time_check(ap_split2,"am2",sec_index);   
+                    //   console.log('b',auto_am2);
+                }
+                if(jQuery("."+sec_index).find("[name='pm1']").hasClass('checkColumn')){
+                     auto_pm1=this.ampm_time_check(ap_split3,"pm1",sec_index);   
+                    //    console.log('c',auto_pm1);
+                }
+                if(jQuery("."+sec_index).find("[name='pm2']").hasClass('checkColumn') ){
+                     auto_pm2=this.ampm_time_check(ap_split4,"pm2",sec_index); 
+                    //    console.log('d',auto_pm2);
+                }
+                // karanotokoro
+                if( auto_am1==undefined || auto_am2==undefined || auto_pm1==undefined || auto_pm2==undefined ){
+                          
+                             if(auto_am1==undefined ){
+                                name="am1";
+                           
+                             }else if(auto_am2==undefined ){
+                                name="am2";
+                           
+                             }else if(auto_pm1==undefined ){
+                                name="pm1";
+                            
+                             }else if(auto_pm2==undefined ){
+                                name="pm2";
+                             
+                             }
+                            //  console.log('av',jQuery("."+sec_index).find("[name="+name+"]").val()); 
+                            let split_ap=jQuery("."+sec_index).find("[name="+name+"]").val()!=undefined?jQuery("."+sec_index).find("[name="+name+"]").val().split(":"):'';
+                            if(split_ap!=''){
+                                let h1,m1='';
+                                // let [h1,m1] =split_ap.split(":");
+                                // let split_data=split_ap.split(":");
+                                h1=split_ap[0]<10?"0"+parseInt(split_ap[0]):split_ap[0];
+                                m1=split_ap[1]<10?"0"+parseInt(split_ap[1]):split_ap[1];
+                          
+                                // console.log('m',m1);
+                                if( ((h1+":"+m1).search(/^\d{2}:\d{2}$/) != -1) &&
+                                    ((h1+":"+m1).substr(0,2) >= 0 && (h1+":"+m1).substr(0,2) <= 24) &&
+                                    ((h1+":"+m1).substr(3,2) >= 0 && (h1+":"+m1).substr(3,2) <= 59) ){
+                                        // auto_am1=[];auto_am2=[];auto_pm1=[];auto_pm2=[];
+                                     if(name=="am1"){
+                                          auto_am1=[];
+                                         console.log('h',h1);
+                                           auto_am1[0]=h1;      //this.ampm_time_check(split_ap,"am1",sec_index);   
+                                           auto_am1[1]=m1;
+                                     }else if(name=="am2"){
+                                           auto_am2=[];
+                                           console.log('h1',h1);
+                                           auto_am2[0]=h1;           //this.ampm_time_check(split_ap,"am2",sec_index);   
+                                           auto_am2[1]=m1;  
+                                     }else if(name=="pm1"){
+                                            auto_pm1=[];
+                                           console.log('h2',h1);
+                                            auto_pm1[0]=h1;            //this.ampm_time_check(split_ap,"pm1",sec_index);  
+                                            auto_pm1[1]=m1;  
+                                     }else if(name=="pm2"){
+                                           auto_pm2=[];
+                                           console.log('h3',h1);
+                                            auto_pm2[0]=h1;            //this.ampm_time_check(split_ap,"pm2",sec_index);  
+                                            auto_pm2[1]=m1;  
+                                     }       
+                                }
+                            }                 
+                }
+                // console.log('b',auto_am1);
+                //    console.log('a',auto_am1);  
+                //       console.log('ab',auto_am2);  
+                //          console.log('ac',auto_pm1);  
+                //             console.log('ad',auto_pm2);  
+               
+                let total_am=0;let total_pm=0; 
+                const {t_hr, t_min}=this.totalHourCal(auto_am1,auto_am2,auto_pm1,auto_pm2,total_am,total_pm);               
+                let res=isNaN((parseFloat(t_hr)+parseFloat(t_min)).toFixed(2))?'':(parseFloat(t_hr)+parseFloat(t_min)).toFixed(2);                
+                jQuery("."+sec_index).find("[name='thour']").val(res);
+            } 
             },
+                
+            totalHourCal(auto_am1,auto_am2,auto_pm1,auto_pm2,total_am,total_pm){
+                if(auto_am1!='' && auto_am2!='' && auto_am1!=undefined && auto_am2!=undefined){
+                    total_am= (+auto_am2[0] + (+auto_am2[1] / 60))-(+auto_am1[0] + (+auto_am1[1] / 60));                  
+                }
+                if(auto_pm1!='' && auto_pm2!=''  && auto_pm1!=undefined && auto_pm2!=undefined){
+                    total_pm=(+auto_pm2[0] + (+auto_pm2[1] / 60))-(+auto_pm1[0] + (+auto_pm1[1] / 60));                 
+                }
+                //  console.log('y');
+                // console.log(total_am);
+                // console.log(total_pm); 
+                // console.log('x');
+                return {
+                    t_hr: total_am==''?0:total_am,
+                    t_min: total_pm==''?0:total_pm,
+                };            
+            }, 
             ampm_time_check(ap_split,name,sec_index){
                 
                 if(ap_split===''){ 
@@ -515,8 +781,34 @@
                     }else if(ap_split[0]==13 && (ap_split[1]>=16 && ap_split[1]<=30 ) ){
                         ap_split[0]=13;ap_split[1]="30"; 
                     }
-                }               
+                }       
+                
+
+                    // if( jQuery("."+sec_index).find("[name='am1']").hasClass('checkColumn') ||
+                    //     jQuery("."+sec_index).find("[name='am2']").hasClass('checkColumn') ||
+                    //     jQuery("."+sec_index).find("[name='pm1']").hasClass('checkColumn') ||
+                    //     jQuery("."+sec_index).find("[name='pm2']").hasClass('checkColumn')  ){
+                    //     jQuery("."+sec_index).find("[name="+name+"]").val(ap_split[0]+":"+ap_split[1]); 
+                    // }
+               
+                    
+                    // else{
+                    //     jQuery("."+sec_index).find("[name="+name+"]").val(ap_split[0]+":"+ap_split[1]);
+                    // }
+
+                    // let total_am=0;let total_pm=0; 
+                    // if(ap_split1!='' && ap_split2!=''){
+                    //     total_am=(+ap_split1[0] + (+ap_split1[1] / 60)) - (+ap_split2[0] + (+ap_split2[1] / 60));
+                    // }
+                    // if(ap_split3!='' && ap_split4!=''){
+                    //     total_pm=(+ap_split3[0] + (+ap_split3[1] / 60)) - (+ap_split4[0] + (+ap_split4[1] / 60))
+                    // }
+         
+                    // jQuery("."+sec_index).find("[name='thour']").val(parseInt(total_am)+parseInt(total_pm));
                     jQuery("."+sec_index).find("[name="+name+"]").val(ap_split[0]+":"+ap_split[1]);
+                    return ap_split!=''?ap_split:'';
+                    // total_hour+=ap_split[0];
+                    // total_minute+=ap_split[1];
             },           
         }, 
     }
