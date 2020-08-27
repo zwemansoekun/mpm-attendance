@@ -19,6 +19,7 @@ class CreateEmployeeDetailsTable extends Migration
             $table->decimal('salary_amount',10, 2);
             $table->integer('trans_money');
             $table->integer('jlpt');
+            $table->integer('ssb');
             $table->string('position');
             $table->text('address');
             $table->string('phone_no');

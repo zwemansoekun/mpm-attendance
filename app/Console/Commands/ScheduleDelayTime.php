@@ -46,7 +46,7 @@ class ScheduleDelayTime extends Command
         $setting = Setting::find(1);
         $dTime = DelayTime::select("*")->where("month",$monthString)->first();
        
-        if($dTime == null){
+        //if($dTime == null){
             $delayTime = new DelayTime([
                 'month' => $monthString,
                 'am' => $setting->am,
@@ -54,7 +54,7 @@ class ScheduleDelayTime extends Command
                 'money' => $setting->money
             ]);
             $delayTime->save();
-        }
+        //}
        
     }
 }
