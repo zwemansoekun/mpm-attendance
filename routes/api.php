@@ -30,8 +30,14 @@ Route::get('/delayTimes',  'DelayTimeController@index');
 Route::post('/delayTime/updateAm/{id}',  'DelayTimeController@saveAm');
 Route::post('/delayTime/updatePm/{id}',  'DelayTimeController@savePm');
 
-Route::get('/employee/{emp_id}', 'EmployeeController@findByEmployee');
 
+Route::get('/holidays', 'HolidayController@index');
+Route::post('/holidays', 'HolidayController@add');
+Route::get('/holidays/copy', 'HolidayController@copy');
+Route::get('/holidays/findYear/{year}', 'HolidayController@findYear');
+
+Route::get('/employee/{emp_id}', 'EmployeeController@findByEmployee');
 Route::get('/employeeDetail/lastData/{emp_id}', 'EmployeeDetailController@findLastDataByEmployee');
 Route::get('/employeeDetail/{emp_id}', 'EmployeeDetailController@findByEmployee');
 Route::post('/employeeDetail/updateAll', 'EmployeeDetailController@updateAll');
+
