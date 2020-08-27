@@ -3,6 +3,9 @@
             <div class="container">
                 <div class="row">
                      <div class="col-md-4"> 
+                         <!-- <a href="/export" class="btn btn-primary">Export to .xls</a>
+                        <router-link to="/export">export example</router-link> -->
+                         
                         <select class="form-control" id="selectEmployee" name="employ_selected" required focus v-model="select_employee">
                             <option value="" disabled selected>Please select employee</option>        
                         
@@ -101,18 +104,20 @@
                                                 <td  style="width: 200px;padding:0px" v-bind:key="index"  v-for="(date,index) in day" :class="date==null?([0,1].includes(index)==true?'paid-leave1':'paid-leave2'):''">   
                                                     <div v-if="date!== null">                                        
                                                         <template v-if="index<2" >
-                                                             <input :name="`am${index+1}`"  @change="updateInput" class="form-control input-sm"  style="text-align: center;" type="text">                                                   
+                                                             <input :name="`am${index+1}[]`"  @change="updateInput" :class="`form-control input-sm am${index+1}`"  style="text-align: center;" type="text">                                                   
                                                         </template>
                                                         <template v-else>
-                                                            <input :name="`pm${index-1}`"  @change="updateInput"  class="form-control input-sm"  style="text-align: center;" type="text">   
+                                                            <input :name="`pm${index-1}[]`"  @change="updateInput"  :class="`form-control input-sm pm${index-1}`"  style="text-align: center;" type="text">   
                                                         </template>
                                                     </div>
                                                      <div v-else>
                                                         <template v-if="index<2" >
-                                                             <input :name="`am${index+1}`"   class="form-control input-sm"  style="text-align: center;" type="text" readonly>                                                   
+                                                            <!-- :name="`am${index+1}[]`" -->
+                                                             <input    class="form-control input-sm"  style="text-align: center;" type="text" readonly>                                                   
                                                         </template>
                                                         <template v-else>
-                                                            <input :name="`pm${index-1}`"   class="form-control input-sm"  style="text-align: center;" type="text" readonly>   
+                                                            <!-- :name="`pm${index-1}[]`"  -->
+                                                            <input   class="form-control input-sm"  style="text-align: center;" type="text" readonly>   
                                                         </template>
                                                      </div>
                                                 </td>
@@ -124,8 +129,8 @@
                                                 <td  style="width: 200px;padding:0px" ><input name="pm2" class="form-control input-sm"  style="text-align: center;" type="text"></td>   -->
                                                 
                                                 <td  style="width: 200px;padding:0px" >
-                                                    <input name="thour" class="form-control input-sm" style="text-align: center;" type="text">
-                                                    <input name="date" class="form-control input-sm" style="text-align: center;" type="hidden" :value="`${year}-${month}-${dayindex+1}`">
+                                                    <input name="thour[]" class="form-control input-sm thour" style="text-align: center;" type="text">
+                                                    <!-- <input name="date" class="form-control input-sm" style="text-align: center;" type="hidden" :value="`${year}-${month}-${dayindex+1}`"> -->
                                                 </td>           
                                                 <td  style="width: 200px;padding:0px;" ><button type="button" onclick="this.blur();" :id="`autobut${dayindex}`" class="btn btn-secondary" @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">自動計算</button></td>                                                     
                                             </tr>
@@ -295,9 +300,52 @@
             //   this.check_input();
         },      
         methods: {  
+            testSave:function(){
+                // alert('clicked');
+                // console.log('clicked');
+                //     this.axios.get('/export')
+                //     .then(response => {
+                //         if(response.status === 200) {
+                //                 console.log('27success');
+                //         }
+                //     })
+                //     .catch(error => {
+                //         // code here when an upload is not valid                     
+                //         console.log('check error: ', this.error)
+                //     });
+
+            },
             attendSave:function(){
-                console.log('hello');
-                console.log($('#form').serializeArray());//serialize   //serializeArray
+                // jQuery.noConflict(); 
+                // jQuery(document).ready(function($){
+                        // console.log('hello');
+                var validator = jQuery('#form').validate({
+                  
+                    rules: {
+                            "am1[]": "required",
+                            "am2[]": "required",
+                            "pm1[]": "required",
+                            "pm2[]": "required",
+                            "thour[]":"required",
+                    },  
+                     errorPlacement: function(error,element) {
+                        return true;
+                    },
+                });
+               
+                if(jQuery('#form').valid()){
+                         alert($('#form').serialize());
+                      console.log($('#form').serialize());
+                }else{
+                    alert("Invalid");
+                    return false;
+                }
+// });
+                
+                    
+
+                //  console.log($('#form').serialize());
+                // console.log($('#form').serializeArray());//serialize   //serializeArray
             },
             updateInput:function(event){ 
 
@@ -311,7 +359,7 @@
                 
                   const {t_hr, t_min}=this.totalHourCal(am1,am2,pm1,pm2,total_am,total_pm);  
                   let res=isNaN((parseFloat(t_hr)+parseFloat(t_min)).toFixed(2))?'':(parseFloat(t_hr)+parseFloat(t_min)).toFixed(2);
-                  jQuery(event.target).parent().parent().parent().find("[name='thour']").val(res);
+                  jQuery(event.target).parent().parent().parent().find(".thour").val(res);
             }, 
             allButtonClick:function(){ 
                 $('[id^=autobut]').click();
@@ -652,48 +700,48 @@
                 // }
                 let auto_am1,auto_am2,auto_pm1,auto_pm2='';
 
-                 if(!jQuery("."+sec_index).find("[name='am1']").hasClass('checkColumn') && !jQuery("."+sec_index).find("[name='am2']").hasClass('checkColumn')
-                && !jQuery("."+sec_index).find("[name='pm1']").hasClass('checkColumn') && !jQuery("."+sec_index).find("[name='pm2']").hasClass('checkColumn')){   
-                         auto_am1=this.ampm_time_check(ap_split1,"am1",sec_index);     
-                         auto_am2=this.ampm_time_check(ap_split2,"am2",sec_index);   
-                         auto_pm1=this.ampm_time_check(ap_split3,"pm1",sec_index);   
-                         auto_pm2=this.ampm_time_check(ap_split4,"pm2",sec_index); 
+                 if(!jQuery("."+sec_index).find(".am1").hasClass('checkColumn') && !jQuery("."+sec_index).find(".am2").hasClass('checkColumn')
+                && !jQuery("."+sec_index).find(".pm1").hasClass('checkColumn') && !jQuery("."+sec_index).find(".pm2").hasClass('checkColumn')){   
+                         auto_am1=this.ampm_time_check(ap_split1,".am1",sec_index);     
+                         auto_am2=this.ampm_time_check(ap_split2,".am2",sec_index);   
+                         auto_pm1=this.ampm_time_check(ap_split3,".pm1",sec_index);   
+                         auto_pm2=this.ampm_time_check(ap_split4,".pm2",sec_index); 
                 }
 
-                if(jQuery("."+sec_index).find("[name='am1']").hasClass('checkColumn')){
-                   auto_am1=this.ampm_time_check(ap_split1,"am1",sec_index);   
+                if(jQuery("."+sec_index).find(".am1").hasClass('checkColumn')){
+                   auto_am1=this.ampm_time_check(ap_split1,".am1",sec_index);   
                     //  console.log('a',auto_am1);  
                 }
-                 if(jQuery("."+sec_index).find("[name='am2']").hasClass('checkColumn')){
-                    auto_am2=this.ampm_time_check(ap_split2,"am2",sec_index);   
+                 if(jQuery("."+sec_index).find(".am2").hasClass('checkColumn')){
+                    auto_am2=this.ampm_time_check(ap_split2,".am2",sec_index);   
                     //   console.log('b',auto_am2);
                 }
-                if(jQuery("."+sec_index).find("[name='pm1']").hasClass('checkColumn')){
-                     auto_pm1=this.ampm_time_check(ap_split3,"pm1",sec_index);   
+                if(jQuery("."+sec_index).find(".pm1").hasClass('checkColumn')){
+                     auto_pm1=this.ampm_time_check(ap_split3,".pm1",sec_index);   
                     //    console.log('c',auto_pm1);
                 }
-                if(jQuery("."+sec_index).find("[name='pm2']").hasClass('checkColumn') ){
-                     auto_pm2=this.ampm_time_check(ap_split4,"pm2",sec_index); 
+                if(jQuery("."+sec_index).find(".pm2").hasClass('checkColumn') ){
+                     auto_pm2=this.ampm_time_check(ap_split4,".pm2",sec_index); 
                     //    console.log('d',auto_pm2);
                 }
                 // karanotokoro
                 if( auto_am1==undefined || auto_am2==undefined || auto_pm1==undefined || auto_pm2==undefined ){
                           
                              if(auto_am1==undefined ){
-                                name="am1";
+                                name=".am1";
                            
                              }else if(auto_am2==undefined ){
-                                name="am2";
+                                name=".am2";
                            
                              }else if(auto_pm1==undefined ){
-                                name="pm1";
+                                name=".pm1";
                             
                              }else if(auto_pm2==undefined ){
-                                name="pm2";
+                                name=".pm2";
                              
                              }
                             //  console.log('av',jQuery("."+sec_index).find("[name="+name+"]").val()); 
-                            let split_ap=jQuery("."+sec_index).find("[name="+name+"]").val()!=undefined?jQuery("."+sec_index).find("[name="+name+"]").val().split(":"):'';
+                            let split_ap=jQuery("."+sec_index).find(name).val()!=undefined?jQuery("."+sec_index).find(name).val().split(":"):'';
                             if(split_ap!=''){
                                 let h1,m1='';
                                 // let [h1,m1] =split_ap.split(":");
@@ -706,22 +754,22 @@
                                     ((h1+":"+m1).substr(0,2) >= 0 && (h1+":"+m1).substr(0,2) <= 24) &&
                                     ((h1+":"+m1).substr(3,2) >= 0 && (h1+":"+m1).substr(3,2) <= 59) ){
                                         // auto_am1=[];auto_am2=[];auto_pm1=[];auto_pm2=[];
-                                     if(name=="am1"){
+                                     if(name==".am1"){
                                           auto_am1=[];
                                          console.log('h',h1);
                                            auto_am1[0]=h1;      //this.ampm_time_check(split_ap,"am1",sec_index);   
                                            auto_am1[1]=m1;
-                                     }else if(name=="am2"){
+                                     }else if(name==".am2"){
                                            auto_am2=[];
                                            console.log('h1',h1);
                                            auto_am2[0]=h1;           //this.ampm_time_check(split_ap,"am2",sec_index);   
                                            auto_am2[1]=m1;  
-                                     }else if(name=="pm1"){
+                                     }else if(name==".pm1"){
                                             auto_pm1=[];
                                            console.log('h2',h1);
                                             auto_pm1[0]=h1;            //this.ampm_time_check(split_ap,"pm1",sec_index);  
                                             auto_pm1[1]=m1;  
-                                     }else if(name=="pm2"){
+                                     }else if(name==".pm2"){
                                            auto_pm2=[];
                                            console.log('h3',h1);
                                             auto_pm2[0]=h1;            //this.ampm_time_check(split_ap,"pm2",sec_index);  
@@ -739,7 +787,7 @@
                 let total_am=0;let total_pm=0; 
                 const {t_hr, t_min}=this.totalHourCal(auto_am1,auto_am2,auto_pm1,auto_pm2,total_am,total_pm);               
                 let res=isNaN((parseFloat(t_hr)+parseFloat(t_min)).toFixed(2))?'':(parseFloat(t_hr)+parseFloat(t_min)).toFixed(2);                
-                jQuery("."+sec_index).find("[name='thour']").val(res);
+                jQuery("."+sec_index).find(".thour").val(res);
             } 
             },
                 
@@ -765,9 +813,9 @@
                       return false;   
                 }
 
-                if(name==="am2"){
+                if(name==".am2"){
                     ap_split[0]=12;ap_split[1]="00";     
-                }else if(name==="pm2"){
+                }else if(name==".pm2"){
                     ap_split[0]=17;ap_split[1]="00";  
                 }else{
                     if( (ap_split[0]<8 && ap_split[1]<60) || (ap_split[0]==8 && ap_split[1]<6) ){
@@ -803,9 +851,9 @@
                     // if(ap_split3!='' && ap_split4!=''){
                     //     total_pm=(+ap_split3[0] + (+ap_split3[1] / 60)) - (+ap_split4[0] + (+ap_split4[1] / 60))
                     // }
-         
+        //  console.log('z',name);
                     // jQuery("."+sec_index).find("[name='thour']").val(parseInt(total_am)+parseInt(total_pm));
-                    jQuery("."+sec_index).find("[name="+name+"]").val(ap_split[0]+":"+ap_split[1]);
+                    jQuery("."+sec_index).find(name).val(ap_split[0]+":"+ap_split[1]);
                     return ap_split!=''?ap_split:'';
                     // total_hour+=ap_split[0];
                     // total_minute+=ap_split[1];
