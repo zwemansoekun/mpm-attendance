@@ -29,3 +29,9 @@ Route::get('/setting/delayTime/{year}/{month}','SettingController@delayTime')->w
 Route::get('/delayTimes',  'DelayTimeController@index');
 Route::post('/delayTime/updateAm/{id}',  'DelayTimeController@saveAm');
 Route::post('/delayTime/updatePm/{id}',  'DelayTimeController@savePm');
+
+Route::get('/employee/{emp_id}', 'EmployeeController@findByEmployee');
+
+Route::get('/employeeDetail/lastData/{emp_id}', 'EmployeeDetailController@findLastDataByEmployee');
+Route::get('/employeeDetail/{emp_id}', 'EmployeeDetailController@findByEmployee');
+Route::post('/employeeDetail/updateAll', 'EmployeeDetailController@updateAll');
