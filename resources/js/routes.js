@@ -1,6 +1,7 @@
 import AttendList from './components/AttendList.vue';
 import Setting from './components/Setting.vue';
 import Holiday from './components/Holiday.vue';
+import SalaryHistory from './components/SalaryHistory.vue';
 
 export const routes = [
     {
@@ -17,5 +18,11 @@ export const routes = [
         name: 'home',
         path: '/holidays',
         component: Holiday
-    }    
+    },  
+    {
+        name: 'salaryHistory',
+        path: '/salaryHistory',
+        component: SalaryHistory
+    }  
+
 ];

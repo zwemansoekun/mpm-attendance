@@ -10,5 +10,6 @@ $factory->define(Setting::class, function (Faker $faker) {
         'money' => 13,
         'am' => 5,
         'pm' => 15,
+        'create_month' => '2019/07'
     ];
 });

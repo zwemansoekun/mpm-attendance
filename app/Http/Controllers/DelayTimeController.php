@@ -17,23 +17,38 @@ class DelayTimeController extends Controller
 
     public function saveAm($id ,Request $request){
       
-        $delayTime = DelayTime::find($id);
-
-        $delayTime->am = $request->am;
-        $delayTime->save();
-        
-        $delayTimes = DelayTime::orderBy('month')->get(); 
-        return response()->json($delayTimes);
+        if($id > 0){
+            $delayTime = DelayTime::find($id);
+            $delayTime->am = $request->am;
+            $delayTime->save();
+            return response()->json($delayTime);
+        }else {
+            $delayTime = new DelayTime([
+                'month' => $request->month,
+                'am' => $request->am,
+                'pm' => $request->pm,
+                'money' => $request->money
+            ]);
+            $delayTime->save();
+            return response()->json($delayTime);
+        }
     }
 
     public function savePm($id ,Request $request){
-      
-        $delayTime = DelayTime::find($id);
-        
-        $delayTime->pm = $request->pm;
-        $delayTime->save();
-        
-        $delayTimes = DelayTime::orderBy('month')->get(); 
-        return response()->json($delayTimes);
+        if($id > 0){
+            $delayTime = DelayTime::find($id);
+            $delayTime->pm = $request->pm;
+            $delayTime->save();
+            return response()->json($delayTime);
+        }else {
+            $delayTime = new DelayTime([
+                'month' => $request->month,
+                'am' => $request->am,
+                'pm' => $request->pm,
+                'money' => $request->money
+            ]);
+            $delayTime->save();
+            return response()->json($delayTime);
+        }
     }
 }
