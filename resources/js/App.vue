@@ -6,7 +6,7 @@
                     <div class="list-group list-group-flush">
                     <router-link to="/attendList" class="nav-item nav-link list-group-item list-group-item-action bg-light">出退勤一覧</router-link>
                     <router-link to="/salaryList" class="nav-item nav-link list-group-item list-group-item-action bg-light">給与手当一覧</router-link>
-                    <router-link to="/holidayList" class="nav-item nav-link list-group-item list-group-item-action bg-light">休日一覧</router-link>
+                    <router-link to="/holidays" class="nav-item nav-link list-group-item list-group-item-action bg-light">休日一覧</router-link>
                     <router-link to="/salaryHistory" class="nav-item nav-link list-group-item list-group-item-action bg-light">給与関連個人履歴</router-link>
                     <router-link to="/attendManage" class="nav-item nav-link list-group-item list-group-item-action bg-light">勤怠管理表</router-link>
                     <router-link to="/setting" class="nav-item nav-link list-group-item list-group-item-action bg-light">設定</router-link>

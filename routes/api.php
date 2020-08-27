@@ -28,3 +28,8 @@ Route::get('/setting/delayTime/{year}/{month}','SettingController@delayTime')->w
 Route::get('/delayTimes',  'DelayTimeController@index');
 Route::post('/delayTime/updateAm/{id}',  'DelayTimeController@saveAm');
 Route::post('/delayTime/updatePm/{id}',  'DelayTimeController@savePm');
+
+Route::get('/holidays', 'HolidayController@index');
+Route::post('/holidays', 'HolidayController@add');
+Route::get('/holidays/copy', 'HolidayController@copy');
+Route::get('/holidays/findYear/{year}', 'HolidayController@findYear');
