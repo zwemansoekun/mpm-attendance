@@ -2,6 +2,7 @@ import AttendList from './components/AttendList.vue';
 import Setting from './components/Setting.vue';
 import Holiday from './components/Holiday.vue';
 import SalaryHistory from './components/SalaryHistory.vue';
+import AttendManage from './components/AttendManage.vue';
 
 export const routes = [
     {
@@ -23,6 +24,11 @@ export const routes = [
         name: 'salaryHistory',
         path: '/salaryHistory',
         component: SalaryHistory
+    },
+    {
+        name: 'attenManage',
+        path: '/attendManage',
+        component: AttendManage
     }  
 
 ];
