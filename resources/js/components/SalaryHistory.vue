@@ -30,11 +30,11 @@
                         </tr>
                         <tr>
                             <td>入社日</td>
-                            <td><span>{{ customFormatter(empData.entry_date) }}</span></td>
+                            <td><span v-if="empData.entry_date">{{ customFormatter(empData.entry_date) }}</span></td>
                         </tr>
                         <tr>
                             <td>生年月日</td>
-                            <td><span>{{ customFormatter(empData.dob) }}</span></td>
+                            <td><span v-if="empData.dob">{{ customFormatter(empData.dob) }}</span></td>
                         </tr>
                     </table>
                 </div>
@@ -51,15 +51,15 @@
                         <tr >
                             <td rowspan="2"> 手当</td>
                             <td>通勤交通費(片道/回)</td>
-                            <td>{{ empDetail.trans_money }}</td>
+                            <td>{{ numberFormatter(empDetail.trans_money) }}</td>
                         </tr>
                         <tr >
                             <td>JLPT</td>
-                            <td>{{ empDetail.jlpt }}</td>
+                            <td>{{ numberFormatter(empDetail.jlpt) }}</td>
                         </tr>
                         <tr>
                             <td colspan="2">SSB負担割合（0又は2%)</td>
-                            <td>{{ empDetail.ssb }}</td>
+                            <td>{{ numberFormatter(empDetail.ssb) }}</td>
                         </tr>
                         <tr>
                             <td colspan="2">ポジション</td>
@@ -103,136 +103,146 @@
 
 
             <div v-if="form_detail_open" class="mt-5">
-            <button type="button" class="btn btn-primary" @click="newHistoryCreate" v-if="!edit">編集</button>
-            <button type="button" class="btn btn-primary" @click="updateEmpDetail" v-if="edit">編集終了</button>
+                <button type="button" class="btn btn-primary" @click="newHistoryCreate" v-if="!edit">編集</button>
+                <button type="button" class="btn btn-primary" @click="updateEmpDetail" v-if="edit">編集終了</button>
 
-            <div class="alert alert-warning" v-if="duplicateErrors.length > 0">
-                <ol>
-                    <li v-for="error in duplicateErrors" :key="error">{{ error }}</li>
-                </ol>
-            </div>
-                
-            <table class="table table-sm table-bordered mt-2 mb-0" style="width:260px;">
-                <tr>
-                    <td style="width:130px;">Name</td>
-                    <td style="width:130px;">{{emp_name}}</td>
-                </tr>
-                <tr>
-                    <td>Name(Katanaka)</td>
-                    <td>{{empData.kana_name}}</td>
-                </tr>
-                <tr>
-                    <td>入社日</td>
-                    <td>{{ customFormatter(empData.entry_date) }}</td>
-                </tr>
-                <tr>
-                    <td>生年月日</td>
-                    <td>{{ customFormatter(empData.dob) }}</td>
-                </tr>
-            </table>
+                <div class="alert alert-danger mt-3" role="alert" v-if="duplicateErrors.length > 0">
+                    <ul v-for="error in duplicateErrors" :key="error">
+                        <li >{{ error }}</li>
+                    </ul>
+                </div>
 
-            <div class="table-responsive">
-            <table class="table table-sm table-bordered">
-                <tr>
-                    <th rowspan="2" style="width:130px;">給与年月</th>
-                    <th rowspan="2" style="width:130px;">基本給</th>
-                    <th colspan="2">手当</th>
-                    <th rowspan="2">SSB負担割合(%)</th>
-                    <th rowspan="2">ポジション</th>
-                    <th rowspan="2">住所</th>
-                    <th rowspan="2">電話番号</th>
-                    <th rowspan="2">身分証番号</th>
-                    <th rowspan="2">給与振込先銀行口座</th>
-                    <th rowspan="2">家族構成</th>
-                    <th rowspan="2">配偶者や子供の有無</th>
-                    <th rowspan="2">緊急連絡先</th>
-                    <th rowspan="2">通勤手段/時間（分）</th>
-                </tr>
-                <tr>
-                    <th>通勤交通費(片道/回)</th>
-                    <th>JLPT</th>
-                </tr>
-                <tr v-for="detail in empDetails" :key="detail.id">
-                    <td>
-                        <label class="text-danger" v-if="detail.payMonthErr">{{ detail.payMonthErr }}</label>
-                        <span v-if="!edit">{{ detail.pay_month }}</span>
-                        <input type="text" class="form-control" v-model="detail.pay_month" v-if="edit">
-                    </td>
-                    <td class="text-right">
-                        <label class="text-danger" v-if="detail.salaryAmountErr">{{ detail.salaryAmountErr }}</label>
-                        <span v-if="!edit">{{ detail.salary_amount }}</span>
-                        <input type="text" class="form-control" v-model="detail.salary_amount" v-if="edit">
-                    </td>
-                    <td class="text-right">
-                        <label class="text-danger" v-if="detail.transMoneyErr">{{ detail.transMoneyErr }}</label>
-                        <span v-if="!edit">{{ detail.trans_money }}</span>
-                        <input type="text" class="form-control" v-model="detail.trans_money" v-if="edit">
-                    </td>
-                    <td class="text-right">
-                        <label class="text-danger" v-if="detail.jlptErr">{{ detail.jlptErr }}</label>
-                        <span v-if="!edit">{{ detail.jlpt }}</span>
-                        <input type="text" class="form-control" v-model="detail.jlpt" v-if="edit">
-                    </td>
-                    <td class="text-right">
-                        <label class="text-danger" v-if="detail.ssbErr">{{ detail.ssbErr }}</label>
-                        <span v-if="!edit">{{ detail.ssb }}</span>
-                        <input type="text" class="form-control" v-model="detail.ssb" v-if="edit">
-                    </td>
-                    <td>
-                        <label class="text-danger" v-if="detail.positionErr">{{ detail.positionErr }}</label>
-                        <span v-if="!edit">{{ detail.position }}</span>
-                        <input type="text" class="form-control" v-model="detail.position" v-if="edit">
-                    </td>
-                    <td>
-                        <label class="text-danger" v-if="detail.addressErr">{{ detail.addressErr }}</label>
-                        <span v-if="!edit">{{ detail.address }}</span>
-                        <input type="text" class="form-control" v-model="detail.address" v-if="edit">
-                    </td>
-                    <td>
-                        <label class="text-danger" v-if="detail.phoneNoErr">{{ detail.phoneNoErr }}</label>
-                        <span v-if="!edit">{{ detail.phone_no }}</span>
-                        <input type="text" class="form-control" v-model="detail.phone_no" v-if="edit">
+                <div class="alert alert-success mt-3" role="alert" v-if="success_msg">
+                    <strong >データは成功しました。</strong> 
+                </div>
+                    
+                <table class="table table-sm table-bordered mt-2 mb-0" style="width:260px;">
+                    <tr>
+                        <td style="width:130px;">Name</td>
+                        <td style="width:130px;">{{emp_name}}</td>
+                    </tr>
+                    <tr>
+                        <td>Name(Katanaka)</td>
+                        <td>{{empData.kana_name}}</td>
+                    </tr>
+                    <tr>
+                        <td>入社日</td>
+                        <td class="text-right"><span v-if="empData.entry_date">{{ customFormatter(empData.entry_date) }}</span></td>
+                    </tr>
+                    <tr>
+                        <td>生年月日</td>
+                        <td class="text-right"><span v-if="empData.dob">{{ customFormatter(empData.dob) }}</span></td>
+                    </tr>
+                </table>
 
-                    </td>
-                    <td>
-                        <label class="text-danger" v-if="detail.nrcNoErr">{{ detail.nrcNoErr }}</label>
-                        <span v-if="!edit">{{ detail.nrc_no }}</span>
-                        <input type="text" class="form-control" v-model="detail.nrc_no" v-if="edit">
+<!-- text-nowrap -->
+                <div class="table-responsive ">
+                    <table class=" table-sm table-bordered">
+                        <tr>
+                            <th rowspan="2" style="width:130px;">給与年月</th>
+                            <th rowspan="2" style="width:130px;">基本給</th>
+                            <th colspan="2">手当</th>
+                            <th rowspan="2">SSB負担割合(%)</th>
+                            <th rowspan="2">ポジション</th>
+                            <th rowspan="2">住所</th>
+                            <th rowspan="2">電話番号</th>
+                            <th rowspan="2">身分証番号</th>
+                            <th rowspan="2">給与振込先銀行口座</th>
+                            <th rowspan="2">家族構成</th>
+                            <th rowspan="2">配偶者や子供の有無</th>
+                            <th rowspan="2">緊急連絡先</th>
+                            <th rowspan="2">通勤手段/時間（分）</th>
+                        </tr>
+                        <tr>
+                            <th>通勤交通費(片道/回)</th>
+                            <th>JLPT</th>
+                        </tr>
+                        <tr v-for="detail in empDetails" :key="detail.id">
+                            <td class="align-bottom">
+                                <label class="text-danger" v-if="detail.payMonthErr">{{ detail.payMonthErr }}</label>
+                                <span v-if="!edit">{{ detail.pay_month }}</span>
+                                <input type="text" class="form-control" v-model="detail.pay_month" v-if="edit">
+                            </td>
+                            <td class="text-right align-bottom" v-if="!edit && !detail.color">
+                                <span v-if="!edit">{{ numberFormatter(detail.salary_amount) }}</span>
+                            </td>
+                            <td class="text-right bg-info align-bottom" v-if="!edit && detail.color">
+                                <span v-if="!edit">{{ numberFormatter(detail.salary_amount) }}</span>
+                            </td>
+                            <td class="text-right align-bottom" v-if="edit">
+                                <label class="text-danger" v-if="detail.salaryAmountErr">{{ detail.salaryAmountErr }}</label>
+                                <input type="text" class="form-control" v-model="detail.salary_amount" v-if="edit">
+                            </td>
+                            <td class="text-right align-bottom">
+                                <label class="text-danger" v-if="detail.transMoneyErr">{{ detail.transMoneyErr }}</label>
+                                <span v-if="!edit">{{numberFormatter(detail.trans_money) }}</span>
+                                <input type="text" class="form-control" v-model="detail.trans_money" v-if="edit">
+                            </td>
+                            <td class="text-right align-bottom">
+                                <label class="text-danger" v-if="detail.jlptErr">{{ detail.jlptErr }}</label>
+                                <span v-if="!edit">{{ numberFormatter(detail.jlpt) }}</span>
+                                <input type="text" class="form-control" v-model="detail.jlpt" v-if="edit">
+                            </td>
+                            <td class="text-right align-bottom">
+                                <label class="text-danger" v-if="detail.ssbErr">{{ detail.ssbErr }}</label>
+                                <span v-if="!edit">{{ numberFormatter(detail.ssb) }}</span>
+                                <input type="text" class="form-control" v-model="detail.ssb" v-if="edit">
+                            </td>
+                            <td class="align-bottom">
+                                <label class="text-danger" v-if="detail.positionErr">{{ detail.positionErr }}</label>
+                                <span v-if="!edit">{{ detail.position }}</span>
+                                <input type="text" class="form-control" v-model="detail.position" v-if="edit">
+                            </td>
+                            <td class="align-bottom">
+                                <label class="text-danger" v-if="detail.addressErr">{{ detail.addressErr }}</label>
+                                <span v-if="!edit">{{ detail.address }}</span>
+                                <input type="text" class="form-control" v-model="detail.address" v-if="edit">
+                            </td>
+                            <td class="align-bottom">
+                                <label class="text-danger" v-if="detail.phoneNoErr">{{ detail.phoneNoErr }}</label>
+                                <span v-if="!edit">{{ detail.phone_no }}</span>
+                                <input type="text" class="form-control" v-model="detail.phone_no" v-if="edit">
 
-                    </td>
-                    <td class="text-right">
-                        <label class="text-danger" v-if="detail.bankAccErr">{{ detail.bankAccErr }}</label>
-                        <span v-if="!edit">{{ detail.bank_account }}</span>
-                        <input type="text" class="form-control" v-model="detail.bank_account" v-if="edit">
+                            </td>
+                            <td class="align-bottom">
+                                <label class="text-danger" v-if="detail.nrcNoErr">{{ detail.nrcNoErr }}</label>
+                                <span v-if="!edit">{{ detail.nrc_no }}</span>
+                                <input type="text" class="form-control" v-model="detail.nrc_no" v-if="edit">
 
-                    </td>
-                    <td>
-                        <label class="text-danger" v-if="detail.memberErr">{{ detail.memberErr }}</label>
-                        <span v-if="!edit">{{ detail.member }}</span>
-                        <input type="text" class="form-control" v-model="detail.member" v-if="edit">
+                            </td>
+                            <td class="text-right align-bottom">
+                                <label class="text-danger" v-if="detail.bankAccErr">{{ detail.bankAccErr }}</label>
+                                <span v-if="!edit">{{ detail.bank_account }}</span>
+                                <input type="text" class="form-control" v-model="detail.bank_account" v-if="edit">
 
-                    </td>
-                    <td>
-                        <label class="text-danger" v-if="detail.childErr">{{ detail.childErr }}</label>
-                        <span v-if="!edit">{{ detail.child }}</span>
-                        <input type="text" class="form-control" v-model="detail.child" v-if="edit">
+                            </td>
+                            <td class="align-bottom">
+                                <label class="text-danger" v-if="detail.memberErr">{{ detail.memberErr }}</label>
+                                <span v-if="!edit">{{ detail.member }}</span>
+                                <input type="text" class="form-control" v-model="detail.member" v-if="edit">
 
-                    </td>
-                    <td>
-                        <label class="text-danger" v-if="detail.emgPhErr">{{ detail.emgPhErr }}</label>
-                        <span v-if="!edit">{{ detail.emg_ph_no }}</span>
-                        <input type="text" class="form-control" v-model="detail.emg_ph_no" v-if="edit">
+                            </td>
+                            <td class="align-bottom">
+                                <label class="text-danger" v-if="detail.childErr">{{ detail.childErr }}</label>
+                                <span v-if="!edit">{{ detail.child }}</span>
+                                <input type="text" class="form-control" v-model="detail.child" v-if="edit">
 
-                    </td>
-                    <td>
-                        <label class="text-danger" v-if="detail.wasteTimeErr">{{ detail.wasteTimeErr }}</label>
-                        <span v-if="!edit">{{ detail.waste_time }}</span>
-                        <input type="text" class="form-control" v-model="detail.waste_time" v-if="edit">
-                    </td>
-                </tr>
-               
-            </table>
-            </div>
+                            </td>
+                            <td class="align-bottom">
+                                <label class="text-danger" v-if="detail.emgPhErr">{{ detail.emgPhErr }}</label>
+                                <span v-if="!edit">{{ detail.emg_ph_no }}</span>
+                                <input type="text" class="form-control" v-model="detail.emg_ph_no" v-if="edit">
+
+                            </td>
+                            <td class="align-bottom">
+                                <label class="text-danger" v-if="detail.wasteTimeErr">{{ detail.wasteTimeErr }}</label>
+                                <span v-if="!edit">{{ detail.waste_time }}</span>
+                                <input type="text" class="form-control" v-model="detail.waste_time" v-if="edit">
+                            </td>
+                        </tr>
+                    
+                    </table>
+                </div>
 
             </div>
 
@@ -261,7 +271,9 @@ var numeral = require("numeral");
                 form_detail_open:false,
                 edit:false,
                 errorFlg: false,
+                success_msg: false,
                 duplicateErrors: [],
+
             }
         },
         created() {
@@ -287,6 +299,9 @@ var numeral = require("numeral");
                 if(val!=''){                            
                     this.form_summary_open = true;
                     this.form_detail_open = false;
+                     this.edit = false;
+                    this.errorFlg =false;
+                    this.duplicateErrors = [];
                     this.findEmployeeData();
                     this.findLastHistory();
                     
@@ -325,6 +340,16 @@ var numeral = require("numeral");
                 .get('http://127.0.0.1:8000/api/employeeDetail/'+this.empData.id)
                 .then((response) => {
                     this.empDetails = response.data;
+                    for(let i=0; i < this.empDetails.length; i++)
+                    {
+                        for(let j= i+1; j < this.empDetails.length; j++)
+                        {
+                            if(this.empDetails[i]['salary_amount'] != this.empDetails[j]['salary_amount'])
+                            {
+                                Vue.set(this.empDetails[j], 'color', true);
+                            }
+                        }
+                    }
                     
                 })
             },
@@ -335,19 +360,19 @@ var numeral = require("numeral");
                 console.log(this.empDetails.length);
                 if(this.empDetails.length > 0){
                     newObj.pay_month = "";
-                    newObj.salary_amount =this.empDetails[this.empDetails.length-1].salary_amount;
-                    newObj.trans_money =this.empDetails[this.empDetails.length-1].trans_money;
-                    newObj.jlpt =this.empDetails[this.empDetails.length-1].jlpt;
-                    newObj.ssb =this.empDetails[this.empDetails.length-1].ssb;
-                    newObj.position =this.empDetails[this.empDetails.length-1].position;
-                    newObj.address =this.empDetails[this.empDetails.length-1].address;
-                    newObj.phone_no =this.empDetails[this.empDetails.length-1].phone_no;
-                    newObj.nrc_no =this.empDetails[this.empDetails.length-1].nrc_no;
-                    newObj.bank_account =this.empDetails[this.empDetails.length-1].bank_account;
-                    newObj.member =this.empDetails[this.empDetails.length-1].member;
-                    newObj.child =this.empDetails[this.empDetails.length-1].child;
-                    newObj.emg_ph_no =this.empDetails[this.empDetails.length-1].emg_ph_no;
-                    newObj.waste_time =this.empDetails[this.empDetails.length-1].waste_time;
+                    newObj.salary_amount = this.empDetails[this.empDetails.length-1].salary_amount;
+                    newObj.trans_money = this.empDetails[this.empDetails.length-1].trans_money;
+                    newObj.jlpt = this.empDetails[this.empDetails.length-1].jlpt;
+                    newObj.ssb = this.empDetails[this.empDetails.length-1].ssb;
+                    newObj.position = this.empDetails[this.empDetails.length-1].position;
+                    newObj.address = this.empDetails[this.empDetails.length-1].address;
+                    newObj.phone_no = this.empDetails[this.empDetails.length-1].phone_no;
+                    newObj.nrc_no = this.empDetails[this.empDetails.length-1].nrc_no;
+                    newObj.bank_account = this.empDetails[this.empDetails.length-1].bank_account;
+                    newObj.member = this.empDetails[this.empDetails.length-1].member;
+                    newObj.child = this.empDetails[this.empDetails.length-1].child;
+                    newObj.emg_ph_no = this.empDetails[this.empDetails.length-1].emg_ph_no;
+                    newObj.waste_time = this.empDetails[this.empDetails.length-1].waste_time;
                     newObj.employee_id = this.empData.id;
                 }else{
                     newObj.pay_month = '';
@@ -373,6 +398,7 @@ var numeral = require("numeral");
                 console.log("update");
                 this.duplicateErrors = [];
                 this.errorFlg = false;
+                this.success_msg = false;
                 for(let i=0; i < this.empDetails.length; i++)
                 {
                     Vue.set(this.empDetails[i] , 'payMonthErr','');
@@ -392,12 +418,10 @@ var numeral = require("numeral");
                     
                     if(this.empDetails[i].pay_month == '')
                     {
-                        console.log('1sss')
                         this.errorFlg = true;
                         Vue.set(this.empDetails[i] , 'payMonthErr','Pay Month data is required.');
                     }else if(!this.validatePayMonthFormat(this.empDetails[i].pay_month)){
                         this.errorFlg = true;
-                        console.log('****')
                         Vue.set(this.empDetails[i] , 'payMonthErr','Pay Month format is YYYY/MM.');
                     }
 
@@ -411,20 +435,20 @@ var numeral = require("numeral");
                         Vue.set(this.empDetails[i], 'salaryAmountErr', 'Salary Amount format error.' )
                     }
 
-                    if(this.empDetails[i].trans_money == 0){
-                        this.errorFlg = true;
-                        Vue.set(this.empDetails[i], 'transMoneyErr', 'Transportaion is required.')
-                    }
+                    // if(this.empDetails[i].trans_money == 0){
+                    //     this.errorFlg = true;
+                    //     Vue.set(this.empDetails[i], 'transMoneyErr', 'Transportaion is required.')
+                    // }
 
-                    if(this.empDetails[i].jlpt == 0){
-                        this.errorFlg = true;
-                        Vue.set(this.empDetails[i], 'jlptErr', 'JLPT is required.')
-                    }
+                    // if(this.empDetails[i].jlpt == 0){
+                    //     this.errorFlg = true;
+                    //     Vue.set(this.empDetails[i], 'jlptErr', 'JLPT is required.')
+                    // }
 
-                    if(this.empDetails[i].ssb == 0){
-                        this.errorFlg = true;
-                        Vue.set(this.empDetails[i], 'ssbErr', 'SSB is required.')
-                    }
+                    // if(this.empDetails[i].ssb == 0){
+                    //     this.errorFlg = true;
+                    //     Vue.set(this.empDetails[i], 'ssbErr', 'SSB is required.')
+                    // }
 
                     if(this.empDetails[i].position == ''){
                         this.errorFlg = true;
@@ -451,25 +475,25 @@ var numeral = require("numeral");
                         Vue.set(this.empDetails[i], 'bankAccErr', 'bankAcc is required.')
                     }
 
-                    if(this.empDetails[i].member == ''){
-                        this.errorFlg = true;
-                        Vue.set(this.empDetails[i], 'memberErr', 'member is required.')
-                    }
+                    // if(this.empDetails[i].member == ''){
+                    //     this.errorFlg = true;
+                    //     Vue.set(this.empDetails[i], 'memberErr', 'member is required.')
+                    // }
 
-                    if(this.empDetails[i].child == ''){
-                        this.errorFlg = true;
-                        Vue.set(this.empDetails[i], 'childErr', 'child is required.')
-                    }
+                    // if(this.empDetails[i].child == ''){
+                    //     this.errorFlg = true;
+                    //     Vue.set(this.empDetails[i], 'childErr', 'child is required.')
+                    // }
 
-                    if(this.empDetails[i].emg_ph_no == ''){
-                        this.errorFlg = true;
-                        Vue.set(this.empDetails[i], 'emgPhErr', 'Emg phone is required.')
-                    }
+                    // if(this.empDetails[i].emg_ph_no == ''){
+                    //     this.errorFlg = true;
+                    //     Vue.set(this.empDetails[i], 'emgPhErr', 'Emg phone is required.')
+                    // }
 
-                    if(this.empDetails[i].waste_time == ''){
-                        this.errorFlg = true;
-                        Vue.set(this.empDetails[i], 'wasteTimeErr', 'waste_time is required.')
-                    }
+                    // if(this.empDetails[i].waste_time == ''){
+                    //     this.errorFlg = true;
+                    //     Vue.set(this.empDetails[i], 'wasteTimeErr', 'waste_time is required.')
+                    // }
     
                 }
 
@@ -484,7 +508,6 @@ var numeral = require("numeral");
                     {
                         if(this.empDetails[i]['pay_month'] == this.empDetails[j]['pay_month'])
                         {
-                            console.log(this.empDetails[i]['pay_month']+' is duplicate.**')
                             this.duplicateErrors.push(this.empDetails[i]['pay_month']+' is duplicate.');
                         }
                     }
@@ -498,9 +521,13 @@ var numeral = require("numeral");
                 this.axios
                 .post('http://127.0.0.1:8000/api/employeeDetail/updateAll',this.empDetails)
                 .then((response) => {
-                    console.log("return")
                     console.log(response.data);
+                    this.findEmployeeHistory();
                     this.edit = false;
+                    this.success_msg = true;
+                    setTimeout(() => {
+                        this.success_msg = false;
+                    },2000)
                 })
 
                 
