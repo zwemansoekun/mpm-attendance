@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSsbsTable extends Migration
+class CreateEmployeesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,13 @@ class CreateSsbsTable extends Migration
      */
     public function up()
     {
-        Schema::create('ssbs', function (Blueprint $table) {
+        Schema::create('employees', function (Blueprint $table) {
             $table->id();
-            //$table->string('ssb_month');
-            $table->decimal('total_amount',10, 2);
-            $table->decimal('c_paid',10, 2);
-            $table->string('remark');
+            $table->string('kana_name');
+            $table->string('furi_name');
+            $table->date('entry_date');
+            $table->date('dob');
+            $table->integer('emp_id'); //api_emp_id
             $table->timestamps();
         });
     }
@@ -30,6 +31,6 @@ class CreateSsbsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ssbs');
+        Schema::dropIfExists('employees');
     }
 }

@@ -19,9 +19,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::get('/setting',  'SettingController@index');
-Route::post('/setting/updateMoney',  'SettingController@update');
-Route::post('/setting/updateAm',  'SettingController@updateAm');
-Route::post('/setting/updatePm',  'SettingController@updatePm');
+Route::post('/setting/updateMoney/{id}',  'SettingController@updateMoney');
+Route::post('/setting/updateAm/{id}',  'SettingController@updateAm');
+Route::post('/setting/updatePm/{id}',  'SettingController@updatePm');
+Route::get('/setting/all', 'SettingController@all');
 Route::get('/setting/delayTime/{year}/{month}','SettingController@delayTime')->where(['year' => '[0-9]+', 'month' =>'[0-9]+']);
 
 

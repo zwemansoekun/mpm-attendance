@@ -18,6 +18,7 @@ class CreateSettingsTable extends Migration
             $table->decimal('money',10, 2);
             $table->integer('am');
             $table->integer('pm');
+            $table->string('create_month');
             $table->timestamps();
         });
     }

@@ -15,13 +15,17 @@ class CreateSalarysTable extends Migration
     {
         Schema::create('salarys', function (Blueprint $table) {
             $table->id();
-            $table->decimal('trans_money',10, 2);
+            $table->string('pay_month');
+            $table->decimal('income',10, 2);
+            $table->integer('trans_money');
             $table->integer('jlpt');
             $table->integer('bonus');
             $table->integer('income_tax');
             $table->decimal('ssb',10, 2);
             $table->decimal('leave_late',10, 2);
-            $table->decimal('salary_amount',10, 2);
+            $table->decimal('payment_amount',10, 2);
+            $table->integer('employee_id'); // f_key
+            $table->integer('ssb_id'); //f_key //check pay pr
             $table->timestamps();
         });
     }
