@@ -5,20 +5,21 @@
  */
 
 require('./bootstrap');
-// window.$ = require('jquery')
 window.$=window.JQuery= require('jquery')//window.JQuery
-window.jcm = require('jquery-contextmenu-common');
-
-
 window.Vue = require('vue');
+jQuery.noConflict(); 
+
 import App from './App.vue';
 import VueRouter from 'vue-router';
 import VueAxios from 'vue-axios';
 import axios from 'axios';
 import {routes} from './routes';
+import { Verify } from 'crypto';
+
 
 Vue.use(VueRouter);
 Vue.use(VueAxios, axios);
+
 
 const router = new VueRouter({
     mode: 'history',
