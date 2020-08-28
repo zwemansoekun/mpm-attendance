@@ -5,14 +5,14 @@
                      <div class="col-md-4"> 
                          <!-- <a href="/export" class="btn btn-primary">Export to .xls</a>
                         <router-link to="/export">export example</router-link> -->
-                         
+                    
                         <select class="form-control" id="selectEmployee" name="employ_selected" required focus v-model="select_employee">
                             <option value="" disabled selected>Please select employee</option>        
                         
-                            <option v-bind:key="emp.id" v-for="emp in emps"  >{{ emp.id }} {{emp.name }}</option>
+                            <option v-bind:key="emp.id" v-for="emp in emps"> {{emp.id }} {{emp.name }}</option>
                         
                         </select>                      
-                     </div>  
+                     </div>                         
                     <div class="col-md-4 offset-md-2"> 
                         <select class="form-control" id="selectDate" name="date_selected" required focus v-model="select_date">
                             <option value="" disabled selected>Please select Year/Month</option>        
@@ -64,7 +64,7 @@
                     <div class="row">
                         <div class="col-md-4"> Name: {{emp_name}}</div>                          
                     </div>  
-                    <table class="table table-bordered">
+                    <table id="attendTable" class="table table-bordered">
                         <thead>
                             <tr>
                                 <td style="text-align: center;width: 8.3%;"></td>                          
@@ -99,7 +99,7 @@
                                                 </td>                                                                      
                                             </tr>
                                         
-                                            <tr  :class="`index_${dayindex}`">   
+                                            <tr :class="`index_${dayindex}`">   
 
                                                 <td  style="width: 200px;padding:0px" v-bind:key="index"  v-for="(date,index) in day" :class="date==null?([0,1].includes(index)==true?'paid-leave1':'paid-leave2'):''">   
                                                     <div v-if="date!== null">                                        
@@ -130,7 +130,7 @@
                                                 
                                                 <td  style="width: 200px;padding:0px" >
                                                     <input name="thour[]" class="form-control input-sm thour" style="text-align: center;" type="text">
-                                                    <!-- <input name="date" class="form-control input-sm" style="text-align: center;" type="hidden" :value="`${year}-${month}-${dayindex+1}`"> -->
+                                                    <input name="date[]" class="form-control input-sm date" style="text-align: center;" type="hidden" :value="`${year}-${month}-${dayindex+1}`">
                                                 </td>           
                                                 <td  style="width: 200px;padding:0px;" ><button type="button" onclick="this.blur();" :id="`autobut${dayindex}`" class="btn btn-secondary" @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">自動計算</button></td>                                                     
                                             </tr>
@@ -151,28 +151,31 @@
                                                 <!-- <td style="width: 200px" >  -->
                                                 <!-- </td>    -->
                                                 <td style="width: 182px;height:50px;">  
+                                                    
                                                 </td>  
                                                 <td style="width: 200px;height:50px;" >  
                                                     
                                                 </td>                                                                      
                                             </tr>                                        
-                                             <tr :class="`index_${dayindex}`"> 
+                                             <tr :class="['Sat','Sun'].includes(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])==false?`index_${dayindex}`:'' "> 
                                                 <!-- {{name_of_day}} -->
                                                    <!-- // style="width: 371.05px;height:50px;background-color:#FFDAB9"                  -->
                                                     <!-- style="width: 371.05px;height:50px;" -->
                                               <!-- :style="`{background-color:${checkBgColor(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()],null)}`" -->
-                                                <td style="width: 371.05px;height:50px;" :class="['Sat','Sun'].includes(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])==false?'paid-leave1':''" > 
+                                                <td style="width: 371.05px;padding:0px" :class="['Sat','Sun'].includes(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])==false?'paid-leave1':''" > 
                                                     <!-- <span class="context-menu-one btn btn-neutral">right click me</span> -->
                                                 </td>   
                                                 <!-- <td style="width: 200px" > 
                                                 </td>  -->
-                                                <td style="width: 368.05px;height:50px;" :class="['Sat','Sun'].includes(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])==false?'paid-leave2':''" > 
+                                                <td style="width: 368.05px;padding:0px" :class="['Sat','Sun'].includes(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])==false?'paid-leave2':''" > 
                                                 </td> 
                                                 <!-- <td style="width: 200px" >  -->
                                                 <!-- </td>    -->
-                                                <td style="width: 182px;height:50px;">  
+                                                <td style="width: 182px;padding:0px">  
+                                                    <input v-if="['Sat','Sun'].includes(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])==false" name="thour[]" class="form-control input-sm thour" style="text-align: center;" type="text">
+                                                    <input name="date[]" class="form-control input-sm date" style="text-align: center;" type="hidden" :value="`${year}-${month}-${dayindex+1}`">
                                                 </td>  
-                                                <td style="width: 200px;height:50px;" >  
+                                                <td style="width: 200px;padding:0px" >  
                                                     <button v-if="['Sat','Sun'].includes(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])==false" onclick="this.blur();" type="button" class="btn btn-secondary" @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">自動計算</button>  
                                                 </td>                                                                      
                                             </tr>                  
@@ -197,7 +200,7 @@
             return {
                 select_employee:'',
                 select_date:'',          
-                emps:[],
+                emps:[],          
                 dates:[],
                 emp_no:'',
                 emp_name:'',
@@ -250,7 +253,12 @@
 
         },
         computed: {
-            
+
+                empv: function(val)
+            {                  
+              this.ems=val; 
+              console.log('hi');
+            }               
         },
         watch: {
             select_employee:function (val) {
@@ -332,12 +340,88 @@
                         return true;
                     },
                 });
-               
+                let temp_arr=[];let am1,am2,pm1,pm2,thour,date;let am_leave,pm_leave=0;
                 if(jQuery('#form').valid()){
-                         alert($('#form').serialize());
-                      console.log($('#form').serialize());
+
+                        //  alert($('#form').serialize());
+                    //   console.log($('#form').serializeArray());
+                    // var tb = $('#attendTable:eq(0) tbody tr');
+                    // var size = tb.find("tr").length;
+                    // console.log(tb.length);
+                     $('#attendTable tr[class^=index_]').each(function (key,value) {
+                        //  if(key==0){
+                        //      return;
+                        //  }
+                        //  console.log('key',key);
+
+                        //  console.log('value',value);
+                         let that=this;
+                         $(that).find('td').each(function (index,v2) {
+                             let isLastElement = index == $(that).find('td').length-2;
+                            //  console.log(isLastElement);
+                            //  console.log(index);
+                            //  console.log($(that).find('td').length-1);
+                            //  console.log('k2',index);
+                            //  console.log('v2',jQuery(this).find('.am1').val());
+                            if(jQuery(this).find('.am1').val()){
+                                //  console.log(index);
+                                   am1=jQuery(this).find('.am1').val();
+                                //    console.log(am1);
+                            }
+                            if(jQuery(this).find('.am2').val()){
+                                //  console.log(index);
+                                  am2=jQuery(this).find('.am2').val();
+                                    //    console.log(am2);
+                            }
+                            if(jQuery(this).find('.pm1').val()){
+                                //  console.log(index);
+                                  pm1=jQuery(this).find('.pm1').val();
+                                    //    console.log(pm1);
+                            }
+                            if(jQuery(this).find('.pm2').val()){
+                                //  console.log(index);
+                                   pm2=jQuery(this).find('.pm2').val();
+                                        // console.log(pm2);
+                            }
+                            if(jQuery(this).find('.thour').val()){
+                                //  console.log(index);
+                                    thour=jQuery(this).find('.thour').val();
+                                    
+                                        //  console.log(thour);
+                            }
+                            if(jQuery(this).find('.date').val()){
+                                
+                                  date=jQuery(this).find('.date').val();
+                                //    console.log(date);
+                            }
+                            // am1=jQuery(this).find('.am1').val();
+                            //  am2=jQuery(this).find('.am2').val();
+                            //  pm1=jQuery(this).find('.pm1').val();
+                            //  pm2=jQuery(this).find('.pm2').val();
+                            //  thour=jQuery(this).find('.thour').val();
+                            //  date=jQuery(this).find('.date').val();
+
+                            if (isLastElement) {
+                                // console.log('win');
+                                temp_arr.push({"date": date,"emp_no":that.emp_no,"total_hours":thour,"am1": am1 ,"am2":am2,"pm1":pm1,"pm2":pm2,"am_leave":am_leave,"pm_leave":pm_leave}); 
+                                date='';am1='';am2='';pm1='';pm2='';thour='',am_leave=0,pm_leave=0;
+                                return false;
+                            }
+
+                         });
+                        //  console.log('temp',temp_arr);
+                        // $(value+'tr[class^=index_]').each(function (key1,value1) {
+                        //         console.log('key1',key1);
+                        //         console.log('value1',value1);
+                        // });
+
+                        // var name = $('.attrName', b).text();
+                        // var value = $('.attrValue', b).text();
+                        // ary.push({ Name: name, Value: value });               
+                   });
+
                 }else{
-                    alert("Invalid");
+                    alert("データを記入してください。");
                     return false;
                 }
 // });
@@ -366,7 +450,7 @@
             },  
             filterInput:function(){
                 // let count=1;
-                $('table tbody').find('td input').filter(function () {
+                $('#attendTable tbody').find('td input').filter(function () {
                      return this.value === ""
                 }).addClass('checkColumn').parent().parent().find('[type=button]').click().parent().parent().find('td input').removeClass('checkColumn');
                 //  console.log(  );
@@ -385,18 +469,30 @@
                             // console.log(jQuery(this).parent().parent().find(">:first-child").attr('class'));
                             parent_class_name=jQuery(this).parent().parent().find(">:first-child").attr('class');
                             class_name=jQuery(this).attr('class');
-                            console.log(parent_class_name);
-                            console.log(class_name);
+                            // console.log(parent_class_name);
+                            // console.log(class_name);
                     });
 // "td.paid-leave1,td.paid-leave2",
                     $.contextMenu({
                         selector:".paid-leave1,.paid-leave2",
                         callback: function(key, options) {
-                            console.log('p',jQuery(this).attr('class'));
+                            // let class_name=jQuery(this).attr('class');
+                            // console.log('p',jQuery(this).attr('class'));
                             if(key=='o'){
                                 that.showTimer(parent_class_name,class_name,'circle');
+                                if(class_name=='paid-leave1'){
+                                       $('<input/>').attr({ type: 'hidden',name: 'am_leave[]',value:1,class:'amleave'}).appendTo(jQuery('.'+class_name));
+                                }else{
+                                       $('<input/>').attr({ type: 'hidden',name: 'pm_leave[]',value:1,class:'pmleave'}).appendTo(jQuery('.'+class_name));
+                                }
+                             
                             }else{
                                 that.showTimer(parent_class_name,class_name,'dash');
+                                if(class_name=='paid-leave1'){
+                                       $('<input/>').attr({ type: 'hidden',name: 'am_leave[]',value:2,class:'amleave'}).appendTo(jQuery('.'+class_name));
+                                }else{
+                                       $('<input/>').attr({ type: 'hidden',name: 'pm_leave[]',value:2,class:'pmleave'}).appendTo(jQuery('.'+class_name));
+                                }
                             }
 
                             // var m = "clicked: " + key;
@@ -625,12 +721,35 @@
             },
             showTimer(index,sec_index,day_leave=''){  //mainIndex_0
             //   console.log("sec",sec_index);         
-            
+              let am_leave='';let pm_leave=''; 
+              let t_am='';let p_am=''; 
+              if(jQuery("."+sec_index).find('.amleave').val()){
+                  am_leave=jQuery("."+sec_index).find('.amleave').val();      
+              }
+              if(jQuery("."+sec_index).find('.pmleave').val()){
+                  pm_leave=jQuery("."+sec_index).find('.pmleave').val()
+              }  
+                // console.log('a_leave',am_leave);
+                // console.log('p_leave',pm_leave);
+
               let am1=jQuery("."+index).find('.am1_0').text().trim();
               let am2=jQuery("."+index).find('.am2_1').text().trim();
 
               let pm1=jQuery("."+index).find('.pm1_2').text().trim();
               let pm2=jQuery("."+index).find('.pm2_3').text().trim();
+
+              if(am1=='' && am2=='' && pm1=='' && pm2=='' && am_leave==1 && pm_leave==1 ){
+                    jQuery("."+sec_index).find(".thour").val(parseFloat('8.00'));
+                    return false;
+              }else if(am1=='' && am2=='' && pm1=='' && pm2=='' && am_leave==2 && pm_leave==2){
+                    jQuery("."+sec_index).find(".thour").val(parseFloat('0.00'));
+                    return false;
+              }else if(am_leave==1 && pm_leave==''){
+                    t_am=4;
+              }else if(am_leave=='' && pm_leave==1){
+                    p_am=4;
+              }    
+
 
 
             if(day_leave=='circle' || day_leave=='dash'){           
@@ -785,17 +904,21 @@
                 //             console.log('ad',auto_pm2);  
                
                 let total_am=0;let total_pm=0; 
-                const {t_hr, t_min}=this.totalHourCal(auto_am1,auto_am2,auto_pm1,auto_pm2,total_am,total_pm);               
+                const {t_hr, t_min}=this.totalHourCal(auto_am1,auto_am2,auto_pm1,auto_pm2,total_am,total_pm,t_am,p_am);               
                 let res=isNaN((parseFloat(t_hr)+parseFloat(t_min)).toFixed(2))?'':(parseFloat(t_hr)+parseFloat(t_min)).toFixed(2);                
                 jQuery("."+sec_index).find(".thour").val(res);
             } 
             },
                 
-            totalHourCal(auto_am1,auto_am2,auto_pm1,auto_pm2,total_am,total_pm){
-                if(auto_am1!='' && auto_am2!='' && auto_am1!=undefined && auto_am2!=undefined){
+            totalHourCal(auto_am1,auto_am2,auto_pm1,auto_pm2,total_am,total_pm,t_am,p_am){
+                if(t_am!=''){
+                    total_am=4;
+                }else if(auto_am1!='' && auto_am2!='' && auto_am1!=undefined && auto_am2!=undefined){
                     total_am= (+auto_am2[0] + (+auto_am2[1] / 60))-(+auto_am1[0] + (+auto_am1[1] / 60));                  
                 }
-                if(auto_pm1!='' && auto_pm2!=''  && auto_pm1!=undefined && auto_pm2!=undefined){
+                if(p_am!=''){
+                    total_pm=4;
+                }else if(auto_pm1!='' && auto_pm2!=''  && auto_pm1!=undefined && auto_pm2!=undefined){
                     total_pm=(+auto_pm2[0] + (+auto_pm2[1] / 60))-(+auto_pm1[0] + (+auto_pm1[1] / 60));                 
                 }
                 //  console.log('y');
