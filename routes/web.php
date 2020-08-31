@@ -17,12 +17,13 @@ use Illuminate\Support\Facades\Route;
 //     return view('welcome');
 // });
 
-Auth::routes(['register' => false]);
+Auth::routes();//['register' => false]
 
 Route::get('/',  function () {
         return view('layouts.app');
 })->middleware('auth');
-
+Route::post('/attendList','AttendController@store');
+Route::post('/attendList/getmonth','AttendController@getmonth');
 Route::get('{any}', function () {
          return view('layouts.app');
 })->where('any', '.*');
