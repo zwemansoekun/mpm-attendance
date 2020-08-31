@@ -15,11 +15,12 @@ import VueAxios from 'vue-axios';
 import axios from 'axios';
 import {routes} from './routes';
 import { Verify } from 'crypto';
+import VueSimpleAlert from "vue-simple-alert";
 
 
 Vue.use(VueRouter);
 Vue.use(VueAxios, axios);
-
+Vue.use(VueSimpleAlert);
 
 const router = new VueRouter({
     mode: 'history',
