@@ -6,7 +6,7 @@
                          <!-- <a href="/export" class="btn btn-primary">Export to .xls</a>
                         <router-link to="/export">export example</router-link> -->
                     
-                        <select class="form-control" id="selectEmployee" name="employ_selected" required focus v-model="select_employee">
+                        <select class="form-control" id="selectEmployee" @change="empChange($event)"  name="employ_selected" required focus v-model="select_employee">
                             <option value="" disabled selected>Please select employee</option>        
                         
                             <option v-bind:key="emp.id" v-for="emp in emps"> {{emp.id }} {{emp.name }}</option>
@@ -14,7 +14,7 @@
                         </select>                      
                      </div>                         
                     <div class="col-md-4 offset-md-2"> 
-                        <select class="form-control" id="selectDate" name="date_selected" required focus v-model="select_date">
+                        <select class="form-control" id="selectDate"  @change="dateChange($event)" name="date_selected" required focus v-model="select_date">
                             <option value="" disabled selected>Please select Year/Month</option>        
                         
                             <option v-bind:key="date.id" v-for="date in dates"  >{{ date.recordedDateTime }}</option>
@@ -39,8 +39,6 @@
                   <button type="button" class="close" data-dismiss="alert">x</button>
                  <strong >データはありませんでした。</strong> 
             </div>
-       
-
             <div class="container mt-5" v-if="form_open">
                 <!-- //form -->                      
                     <div class="row">
@@ -65,7 +63,7 @@
 
                     </div>
                     <!-- v-on:submit.prevent="attendSave" -->
-                     
+                     {{get_attend_data}}
 
                     <div class="row mt-5">
                         <div class="col-md-4"> {{this.select_date}}</div>                          
@@ -88,31 +86,43 @@
                         </thead>
                         <tbody> 
                                 <tr v-bind:key="dayindex" v-for="(day,dayindex) in ampm_by_day_arr" v-bind:class="day_name(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])">                                 
+                                   
+                                   <!-- {{day}} -->
                                     <th style="width: 100px;" scope="row">{{dayindex+1}} {{ days[new Date(year+"/"+month+"/"+(dayindex+1)).getDay()]}}</th>
                                     <td colspan="4"    style="text-align: center;padding:0px">
                                      
                                         <div v-if="day!==null">
                                             <tr :class="`mainIndex_${dayindex}`" >              
-                                          
-                                                <td style="width: 16.4%;" v-bind:key="index"  v-for="(date,index) in day" v-bind:class="`bg-${checkColor(date,index)}`"  :style="`background-color:${checkBgColor(year,month,dayindex+1,date==null)};`">   
+                                                <!-- {{day.am1}} -->
+                                                <td style="width: 16.4%;" v-bind:key="key"  v-for="(date,index,key) in day" v-bind:class="`bg-${checkColor(date,key)}`"  :style="`background-color:${checkBgColor(year,month,dayindex+1,date==null)};`">   
+                                                    <div v-if="date!== null" :class="ampm_index(key)">                                        
+                                                    
+                                                        {{date}}                                                
+                                                        
+                                                    </div>
+                                                </td>
+
+                                                <!-- <td style="width: 16.4%;" v-bind:key="index"  v-for="(date,index) in day" v-bind:class="`bg-${checkColor(date,index)}`"  :style="`background-color:${checkBgColor(year,month,dayindex+1,date==null)};`">   
                                                      <!-- //"`main_${dayindex}`"     -->
                                                      <!-- _${index} -->
+                                                     <!-- {{date}}
                                                     <div v-if="date!== null" :class="ampm_index(index)">                                        
                                                     
                                                         {{date.am_pm}}                                                        
                                                         
                                                     </div>
 
-                                                </td>     
+                                                </td>     -->
                                                 <td style="width: 16.4%;" >  
                                                 </td>  
                                                 <td style="width: 20.4%;" >  
                                                     
-                                                </td>                                                                      
+                                                </td>                                                                  
                                             </tr>
                                         
                                             <tr :class="`index_${dayindex}`">   
-                                                <div v-if="check_attend_data">
+                                                <!-- <div> -->
+                                                <!-- <div v-if="check_attend_data"> -->
                                                     <td  style="width: 200px;padding:0px" v-bind:key="index"  v-for="(date,index) in day" :class="date==null?([0,1].includes(index)==true?'paid-leave1':'paid-leave2'):''">   
                                                         <div v-if="date!== null">                                        
                                                             <template v-if="index<2" >
@@ -145,15 +155,15 @@
                                                         <input name="date[]" class="form-control input-sm date" style="text-align: center;" type="hidden" :value="`${year}-${month}-${(dayindex+1).toString().length==1?'0'+(dayindex+1):(dayindex+1)}`">
                                                     </td>           
                                                     <td  style="width: 200px;padding:0px;" ><button type="button" onclick="this.blur();" :id="`autobut${dayindex}`" class="btn btn-secondary" @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">自動計算</button></td>     
-                                                </div> 
-                                                <div v-else>
+                                                <!-- </div>  -->
+                                                <!-- <div v-else> -->
                                                     <!-- <td  style="width: 200px;padding:0px" v-bind:key="index"  v-for="(date,index) in get_attend_data" :class="date==null?([0,1].includes(index)==true?'paid-leave1':'paid-leave2'):''">   
                                                        <pre> {{date}}</pre>
                                                        <!-- <pre>{{}}</pre> -->
 
                                                         
                                                     <!-- </td>    --> 
-                                                </div>   
+                                                <!-- </div>    -->
                                             </tr>
 
                                         </div>
@@ -243,19 +253,19 @@
                 default_ampm:{"am":'',"pm":''},
                 name_of_day:true,
                 model_check:[
-                        {
-                           0: [
+                        // {
+                            [
                                  {"am1":22},
                                  {"am2":33},
                                  {"pm1":44},
                                  {"pm2":55},
                            ]    
-                        }
+                        // }
                   
                 ],
                 errors:null,
-                get_attend_data:[], 
-                check_attend_data:true,       
+                get_attend_data:{},
+                check_attend_data:true,               
             }
         },
         created() {
@@ -283,7 +293,7 @@
               this.ems=val; 
               console.log('hi');
             }, 
-            errorsFun:function(){
+            errorsFun:function(){              
                 // console.log('sdfsdf',this.errors);
                 // let result = {};
                 // for ( let k in this.errors) {
@@ -294,42 +304,10 @@
                 // }
                 this.error_check_messg = true 
                 return this.errors;
-            },                       
+            },           
         },
         watch: {
-            select_employee:function (val) {
-
-                if(val!=''){
-
-                let split_name=val.split(" ");
-                this.emp_no=split_name[0];
-
-                val=val.replace(this.emp_no,'');
-                this.emp_name=val;
-
-                }  
-
-                if(val!='' && this.select_date!=''){                            
-                     //    this.attendForm();
-                    this.ampm_calling();
-                 
-                }
-              
-            },
-            select_date:function (val) {            
-                if(val!=''){
-                    let split_date=val.split("/");                  
-                     this.year=split_date[0];
-                  
-                     val=val.replace(this.year+"/",'');
-                    this.month=val;
-                   
-                }  
-                 if(val!='' && this.select_employee!=''){              
-                    //  this.attendForm();
-                     this.ampm_calling();
-                }
-            },      
+            deep: true,            
             error_check_messg:function(){
                 if(this.error_check_messg==true){
                     setTimeout(() => {
@@ -349,20 +327,41 @@
             //   this.check_input();
         },      
         methods: {  
-            testSave:function(){
-                // alert('clicked');
-                // console.log('clicked');
-                //     this.axios.get('/export')
-                //     .then(response => {
-                //         if(response.status === 200) {
-                //                 console.log('27success');
-                //         }
-                //     })
-                //     .catch(error => {
-                //         // code here when an upload is not valid                     
-                //         console.log('check error: ', this.error)
-                //     });
+            
+            empChange:function(event){
+                let val='';
+        
+                if(event.target.value!=''){
 
+                  let  val=event.target.value;
+                    let split_name=val.split(" ");
+                    this.emp_no=split_name[0];
+
+                    val=val.replace(this.emp_no,'');
+                    this.emp_name=val;
+
+                }  
+                
+                if(val!='' && this.select_date!=''){   
+                         this.update_call();                         
+                    this.ampm_calling();             
+                }
+            },
+            dateChange:function(event){
+                let val='';
+                if(event.target.value!=''){
+                    val=event.target.value;
+                    let split_date=val.split("/");                  
+                    this.year=split_date[0];
+                  
+                    val=val.replace(this.year+"/",'');
+                    this.month=val;
+                   
+                }  
+                 if(val!='' && this.select_employee!=''){
+                          this.update_call();
+                     this.ampm_calling();
+                }
             },
             attendSave:function(){
                  let those=this;
@@ -672,7 +671,8 @@
             checkColor:function(val,index){                
            
                 if( (index==0 || index==2) && val!=null){
-                     let val_split=val!==''?val.am_pm.split(":"):'';
+                    //  let val_split=val!==''?val.am_pm.split(":"):'';
+                        let val_split=val!==''?val.split(":"):'';
                       if(val_split!='' && ( (val_split[0]==8 && val_split[1]>0 && val_split[1]<6) || (val_split[0]==13 && val_split[1]>0 && val_split[1]<16) ) ){
                           return 'warning';
                       }else if(val_split!='' && ((val_split[0]==8 &&  val_split[1]>5) || (val_split[0]==13 &&  val_split[1]>15) )){
@@ -708,34 +708,110 @@
                             return '';
                     }
                 }  
-           },
-            ampm_calling(){                
-                    let that = this;
-                    this.ampm_by_day_arr=[];
-                    this.ampm_by_day=[];
-                    this.ampm_inner_arr=[];
-                    this.ampm_arr=[];
-                     
-                if(this.year!='' && this.month!='' && this.emp_no!=''){                    
-                   
-                    this.dayCount=new Date(this.year,this.month, 0).getDate();
-
-
-                        this.axios({
+           },   
+           update_call(){
+               
+                    let up_data={
+                        "emp_no":this.emp_no,
+                        "date":this.select_date,
+                        "year":this.year,
+                        "month":this.month,
+                    };
+                    let ok1='';let ok12=[];let ok3={};
+                    this.axios({
                       url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/attendList/getmonth",
                       method: 'post',
                       data:up_data,
                     })                  
-                    .then(resposne=>{
-                        console.log('get',resposne.data);
-                        this.check_attend_data=false;                        
-                        this.get_attend_data=resposne.data;                                                
+                    .then(response=>{ 
+
+                        that.check_attend_data=false;                        
+                        that.get_attend_data={
+    "karrrrr": {
+        "Nissan": [
+            {"model":"Sentra", "doors":4},
+            {"model":"Maxima", "doors":4},
+            {"model":"Skyline", "doors":2}
+        ],
+        "Ford": [
+            {"model":"Taurus", "doors":4},
+            {"model":"Escort", "doors":4}
+        ]
+    }
+};//response.data;
+                        console.log('res',that.get_attend_data);                     
                     })
                     .catch(function (error) {
-                        console.log('geterror',error.response.data.errors);
-                    });
-                    
-                    
+                        console.log('geterror',error.response);
+                    }); 
+
+           },   
+            ampm_calling(){                
+                    let that = this;
+                    let those=this;
+                    this.ampm_by_day_arr=[];
+                    this.ampm_by_day=[];
+                    this.ampm_inner_arr=[];
+                    this.ampm_arr=[];
+                    let ex2=[];let ex1={};
+               
+                if(this.year!='' && this.month!='' && this.emp_no!=''){                    
+                   
+                    this.dayCount=new Date(this.year,this.month, 0).getDate();
+                    // this.update_call();
+                    console.log('okkkkkkkkkk',that.get_attend_data);
+                    // let up_data={
+                    //     "emp_no":this.emp_no,
+                    //     "date":this.select_date,
+                    //     "year":this.year,
+                    //     "month":this.month,
+                    // };
+                    // let ok1='';let ok12=[];let ok3={};
+                    // this.axios({
+                    //   url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/attendList/getmonth",
+                    //   method: 'post',
+                    //   data:up_data,
+                    // })                  
+                    // .then(response=>{ 
+
+                    //     that.check_attend_data=false;                        
+                    //     that.get_attend_data=response.data;
+                    //     console.log('res',that.get_attend_data);                     
+                    // })
+                    // .catch(function (error) {
+                    //     console.log('geterror',error.response.data.errors);
+                    // }); 
+
+
+                   
+                    // that.get_attend_data
+                //        console.log('const1000',sailNames);
+                // console.log('const1000',that.get_attend_data);
+                   
+                //     console.log(sailNames.length);
+                //     console.log(Object.keys(sailNames));
+
+                //     console.log(sailNames[Object.keys(sailNames)[0]]);
+                 
+//                         let count = 0;
+//   for (var k in sailNames) {
+//     if (sailNames.hasOwnProperty(k)) {
+//       count++;
+//     }
+//   }
+//   console.log(count);
+
+
+
+                    //     $.each(sailNames, function(key, value) {
+                    //     // sailNames.forEach(function(res, index) {
+                    //         console.log('res',key);
+                    //          console.log('index',value);
+                    //     });    
+
+                    //    console.log('const100022',sailNames);
+
+                    // let ex2=[];let ex1={};
                     this.axios
                     .get("http://localhost:5000/attendances/ampm/"+this.emp_no+"/"+this.year+this.month)                 
                     .then(response => { 
@@ -755,26 +831,34 @@
                                
                       
                         // let that = this;                        
-
+                        let eg1={};let eg2=[];
                         response.data.forEach(function(res, index) {
                                 if (res.recordedDateTime === that.memory && that.memory !== "") {
                                     that.memory = res.recordedDateTime;
+                                     eg1[res.recordedDateTime]= res    
                                     that.ampm_inner_arr.push(res);
                                 } else if (res.recordedDateTime !== that.memory && that.memory !== "") {
+                                    eg2.push(eg1);
                                     that.ampm_arr.push(that.ampm_inner_arr);
+                                    eg1={};
                                     that.ampm_inner_arr = [];
                                     that.memory = res.recordedDateTime;
+                                    eg1[ res.recordedDateTime]= res 
+                                    // eg2.push(eg1);    
                                     that.ampm_inner_arr.push(res);
                                 } else {
-                                    that.memory = res.recordedDateTime;                                
+                                    that.memory = res.recordedDateTime;     
+                                    eg1[ res.recordedDateTime]= res                          
                                     that.ampm_inner_arr.push(res);
                                 }
                                 if(response.data.length - 1 === index) {
+                                    eg2.push(eg1);   
                                     that.ampm_arr.push(that.ampm_inner_arr);
                                 }
                         });
                         that.memory='';       
-                  
+                        // console.log('e1',that.ampm_arr);
+                        // console.log('e2',eg2);
                         for(let i=1;i<=this.dayCount;i++){
                             for(let j = 0; j < that.ampm_arr.length; j++) {
                                     let connect_to_dayampm = that.ampm_arr[j];                                         
@@ -783,7 +867,7 @@
                                     if(new Date(that.year+"/"+that.month+"/"+i).getDate()===new Date(connect_to_dayampm[k].recordedDateTime).getDate()){
                                         
                                         that.ampm_by_day.push(connect_to_dayampm[k]); 
-                                     
+                                        // console.log('t1',that.ampm_by_day);
                                         if (connect_to_dayampm.length - 1 === k) {        
                                       
                                             if(that.ampm_by_day.length<5 && that.ampm_by_day.length!==4){                                            
@@ -791,42 +875,62 @@
                                                 for(let a=0;a<add_arr;a++){                                             
                                                     that.ampm_by_day.push(null); //{"am_pm":"00:00","hour":"00","minute":"00"}
                                                 }
-                                            }                                       
-                                            let store_arr=[];
-                                       
+                                            } 
+                                            //    console.log('t2',that.ampm_by_day);                                      
+                                            let store_arr=[];//let ex1={};//let ex2=[];
+                                            // var parsedobj = JSON.parse(JSON.stringify(this.get_attend_data))
+                                            // console.log("hay checking!!",parsedobj);
+                                            //  console.log("hay checking!!",this.get_attend_data);
+                                            //   console.log("hay checking2",that.get_attend_data);
+                                            //    console.log("hay checking33",that.$root);
+                                            //    let parsedObj =JSON.stringify(that.get_attend_data)
+                                            //     console.log(parsedObj)
                                             for(let i=0;i<that.ampm_by_day.length;i++){
                                         
                                                 if(that.ampm_by_day[i]!=null){
+
+                                                    // console.log("hay checking!!",that.get_attend_data[i]);
+
                                                     if(that.ampm_by_day[i].hour<12){        
                                                                                             
-                                                       store_arr[0]=that.ampm_by_day[i]?that.ampm_by_day[i]:null;                                                  
-                                                    }else if(that.ampm_by_day[i].hour>=12 && that.ampm_by_day[i].minute>=0  && that.ampm_by_day[i].hour<13 && store_arr[1]==undefined && store_arr[0]!=undefined ){  //&& store_arr[0]!==undefined
+                                                    //    store_arr[0]=that.ampm_by_day[i]?that.ampm_by_day[i]:null;   
+                                                        ex1['am1']=that.ampm_by_day[i]?that.ampm_by_day[i].am_pm:null;                                                      
+                                                    }else if(that.ampm_by_day[i].hour>=12 && that.ampm_by_day[i].minute>=0  && that.ampm_by_day[i].hour<13 && ex1['am2']==undefined && ex1['am1']!=undefined ){  //&& store_arr[0]!==undefined
                                                     
-                                                        store_arr[1]=that.ampm_by_day[i]?that.ampm_by_day[i]:null;                                                       
-                                                    }else if( ( (that.ampm_by_day[i].hour>=12 && that.ampm_by_day[i].minute>=0 ) || (that.ampm_by_day[i].hour>=12 && that.ampm_by_day[i].minute>=0   ) )&& that.ampm_by_day[i].hour<17 && store_arr[2]==null){ //&& store_arr[1]!==undefined   //&& store_arr[1]===undefined                                                    
+                                                        // store_arr[1]=that.ampm_by_day[i]?that.ampm_by_day[i]:null;  
+                                                         ex1['am2']=that.ampm_by_day[i]?that.ampm_by_day[i].am_pm:null;                                                      
+                                                    }else if( ( (that.ampm_by_day[i].hour>=12 && that.ampm_by_day[i].minute>=0 ) || (that.ampm_by_day[i].hour>=12 && that.ampm_by_day[i].minute>=0   ) )&& that.ampm_by_day[i].hour<17 && ex1['pm1']==null){ //&& store_arr[1]!==undefined   //&& store_arr[1]===undefined                                                    
                                                       
-                                                       store_arr[2]=that.ampm_by_day[i]?that.ampm_by_day[i]:null;                                                     
+                                                    //    store_arr[2]=that.ampm_by_day[i]?that.ampm_by_day[i]:null;   
+                                                      ex1['pm1']=that.ampm_by_day[i]?that.ampm_by_day[i].am_pm:null;                                                     
                                                     }else if(that.ampm_by_day[i].hour>=17 && that.ampm_by_day[i].minute>=0){
                                                 
-                                                        store_arr[3]=that.ampm_by_day[i]?that.ampm_by_day[i]:null;                                                      
+                                                        // store_arr[3]=that.ampm_by_day[i]?that.ampm_by_day[i]:null;  
+                                                        ex1['pm2']=that.ampm_by_day[i]?that.ampm_by_day[i].am_pm:null;                                                      
                                                     }
-                                                    if(store_arr[0]==undefined){
-                                                        store_arr[0]=null;
+                                                    if(ex1['am1']==undefined){
+                                                       ex1['am1']=null;
                                                     }
-                                                    if(store_arr[1]==undefined){
-                                                        store_arr[1]=null;
+                                                    if(ex1['am2']==undefined){
+                                                        ex1['am2']=null;
                                                     }
-                                                    if(store_arr[2]==undefined){
-                                                        store_arr[2]=null;
+                                                    if(ex1['pm1']==undefined){
+                                                        ex1['pm1']=null;
                                                     }
-                                                    if(store_arr[3]==undefined){
-                                                        store_arr[3]=null;
+                                                    if(ex1['pm2']==undefined){
+                                                        ex1['pm2']=null;
                                                     }
                                         
                                                 }
                                             } 
-
-                                            that.ampm_by_day_arr.push(store_arr);
+                                            let tar=[];
+                                            // console.log('ex1',ex1);
+                                            ex2.push(ex1);
+                                            tar.push(ex1);
+                                            //   console.log('ex2',ex2);
+                                                //  console.log('tar',tar);
+                                            ex1={};tar=[];
+                                            // that.ampm_by_day_arr.push(store_arr);
                                             that.status=1; 
                                             that.ampm_by_day=[]; 
                                         }
@@ -837,11 +941,13 @@
                             if(that.status===1){                        
                                that.status=0;                                
                             }else{
-                               that.ampm_by_day_arr.push(null);
+                                  ex2.push(null);
+                            //    that.ampm_by_day_arr.push(null);
                             }
                         }                              
                     });
-                   console.log('checking',that.ampm_by_day_arr);
+                    that.ampm_by_day_arr=ex2;
+                //    console.log('checking',that.ampm_by_day_arr);
                     this.axios
                     .get('http://127.0.0.1:8000/api/setting/delayTime/'+this.year+"/"+this.month)//+this.year+"/"+this.month
                     .then(response => { 
@@ -849,12 +955,7 @@
                           that.default_ampm.pm=response.data.pm;
                     }); 
 
-                    let up_data={
-                        "emp_no":this.emp_no,
-                        "date":this.select_date,
-                        "year":this.year,
-                        "month":this.month,
-                    };
+             
 
                 
 
