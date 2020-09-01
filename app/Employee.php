@@ -6,12 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Employee extends Model
 {
-    protected $fillable = ['kana_name', 'furi_name' , 'entry_date', 'dob', 'emp_id'];
+    protected $fillable = ['kana_name', 'entry_date', 'dob', 'emp_id'];
 
-    public function employeeDetails()
-    {
-        return $this->hasMany('App\EmployeeDetail');
-    }
+    // public function employeeDetails()
+    // {
+    //     return $this->hasMany('App\EmployeeDetail');
+    // }
 
     public function salarys()
     {

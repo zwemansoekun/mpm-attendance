@@ -6,7 +6,7 @@
                 <div class="col-md-4"> 
                     <select class="form-control" id="selectEmployee" name="employ_selected" required focus v-model="select_employee">
                         <option value="" disabled selected>Please select employee</option>        
-                        <option v-bind:key="emp.id" v-for="emp in emps" >{{ emp.id }} {{emp.name }}</option>
+                        <option v-bind:key="emp.id" v-for="emp in emps" v-bind:label="employeeCodeAndName(emp)"> {{ emp.id }} {{ emp.employeeId }} {{emp.name }}</option>
                     </select>               
                 </div>
             </div>  
@@ -116,28 +116,42 @@
                     <strong >データは成功しました。</strong> 
                 </div>
                     
+                <!-- <input type="hidden" name="emp_id"
+                    value="{{ emp_id }}"> -->
                 <table class="table table-sm table-bordered mt-2 mb-0" style="width:260px;">
                     <tr>
-                        <td style="width:130px;">Name</td>
+                        <td style="width:130px;">名前</td>
                         <td style="width:130px;">{{emp_name}}</td>
                     </tr>
                     <tr>
-                        <td>Name(Katanaka)</td>
-                        <td>{{empData.kana_name}}</td>
+                        <td>名前(フリガナ)</td>
+                        <td v-if="!edit">{{empData.kana_name}}</td>
+                        <td v-if="edit">
+                            <label class="text-danger" v-if="empData.kanaErr">{{ empData.kanaErr }}</label>
+                            <input type="text" class="form-control form-control-sm" v-model="empData.kana_name">
+                        </td>
                     </tr>
                     <tr>
                         <td>入社日</td>
-                        <td class="text-right"><span v-if="empData.entry_date">{{ customFormatter(empData.entry_date) }}</span></td>
+                        <td v-if="!edit" class="text-right"><span v-if="empData.entry_date">{{ customFormatter(empData.entry_date) }}</span></td>
+                        <td v-if="edit">
+                            <label class="text-danger" v-if="empData.entryErr">{{ empData.entryErr }}</label>
+                            <input type="date" class="form-control form-control-sm" v-model="empData.entry_date">
+                        </td>
                     </tr>
                     <tr>
                         <td>生年月日</td>
-                        <td class="text-right"><span v-if="empData.dob">{{ customFormatter(empData.dob) }}</span></td>
+                        <td v-if="!edit" class="text-right"><span v-if="empData.dob">{{ customFormatter(empData.dob) }}</span></td>
+                        <td v-if="edit">
+                            <label class="text-danger" v-if="empData.dobErr">{{ empData.dobErr }}</label>
+                            <input type="date" class="form-control form-control-sm" v-model="empData.dob">
+                        </td>
                     </tr>
                 </table>
 
 <!-- text-nowrap -->
-                <div class="table-responsive ">
-                    <table class=" table-sm table-bordered">
+                <div class="table-responsive">
+                    <table class="table table-sm table-bordered">
                         <tr>
                             <th rowspan="2" style="width:130px;">給与年月</th>
                             <th rowspan="2" style="width:130px;">基本給</th>
@@ -158,86 +172,119 @@
                             <th>JLPT</th>
                         </tr>
                         <tr v-for="detail in empDetails" :key="detail.id">
-                            <td class="align-bottom">
-                                <label class="text-danger" v-if="detail.payMonthErr">{{ detail.payMonthErr }}</label>
+                            <td v-if="!edit">
                                 <span v-if="!edit">{{ detail.pay_month }}</span>
-                                <input type="text" class="form-control" v-model="detail.pay_month" v-if="edit">
                             </td>
-                            <td class="text-right align-bottom" v-if="!edit && !detail.color">
+                            <td class="align-bottom" v-if="edit">
+                                <label class="text-danger" v-if="detail.payMonthErr">{{ detail.payMonthErr }}</label>
+                                <input type="text" class="form-control form-control-sm" v-model="detail.pay_month" v-if="edit">
+                            </td>  
+
+                            <td class="text-right" v-if="!edit && !detail.color">
                                 <span v-if="!edit">{{ numberFormatter(detail.salary_amount) }}</span>
                             </td>
-                            <td class="text-right bg-info align-bottom" v-if="!edit && detail.color">
+                            <td class="text-right bg-info" v-if="!edit && detail.color">
                                 <span v-if="!edit">{{ numberFormatter(detail.salary_amount) }}</span>
                             </td>
                             <td class="text-right align-bottom" v-if="edit">
                                 <label class="text-danger" v-if="detail.salaryAmountErr">{{ detail.salaryAmountErr }}</label>
-                                <input type="text" class="form-control" v-model="detail.salary_amount" v-if="edit">
+                                <input type="text" class="form-control form-control-sm" v-model="detail.salary_amount" v-if="edit">
                             </td>
-                            <td class="text-right align-bottom">
-                                <label class="text-danger" v-if="detail.transMoneyErr">{{ detail.transMoneyErr }}</label>
+
+                            <td class="text-right" v-if="!edit">
                                 <span v-if="!edit">{{numberFormatter(detail.trans_money) }}</span>
-                                <input type="text" class="form-control" v-model="detail.trans_money" v-if="edit">
                             </td>
-                            <td class="text-right align-bottom">
-                                <label class="text-danger" v-if="detail.jlptErr">{{ detail.jlptErr }}</label>
+                            <td class="align-bottom" v-if="edit">
+                                <label class="text-danger" v-if="detail.transMoneyErr">{{ detail.transMoneyErr }}</label>
+                                <input type="text" class="form-control form-control-sm" v-model="detail.trans_money" v-if="edit">
+                            </td>
+
+                            <td class="text-right" v-if="!edit">
                                 <span v-if="!edit">{{ numberFormatter(detail.jlpt) }}</span>
-                                <input type="text" class="form-control" v-model="detail.jlpt" v-if="edit">
                             </td>
-                            <td class="text-right align-bottom">
-                                <label class="text-danger" v-if="detail.ssbErr">{{ detail.ssbErr }}</label>
+                            <td class="align-bottom" v-if="edit">
+                                <label class="text-danger" v-if="detail.jlptErr">{{ detail.jlptErr }}</label>
+                                <input type="text" class="form-control form-control-sm" v-model="detail.jlpt" v-if="edit">
+                            </td>
+
+                            <td class="text-right" v-if="!edit">
                                 <span v-if="!edit">{{ numberFormatter(detail.ssb) }}</span>
-                                <input type="text" class="form-control" v-model="detail.ssb" v-if="edit">
                             </td>
-                            <td class="align-bottom">
-                                <label class="text-danger" v-if="detail.positionErr">{{ detail.positionErr }}</label>
+                            <td class="align-bottom" v-if="edit">
+                                <label class="text-danger" v-if="detail.ssbErr">{{ detail.ssbErr }}</label>
+                                <input type="text" class="form-control form-control-sm" v-model="detail.ssb" v-if="edit">
+                            </td>
+
+                            <td v-if="!edit">
                                 <span v-if="!edit">{{ detail.position }}</span>
-                                <input type="text" class="form-control" v-model="detail.position" v-if="edit">
                             </td>
-                            <td class="align-bottom">
-                                <label class="text-danger" v-if="detail.addressErr">{{ detail.addressErr }}</label>
+                            <td class="align-bottom" v-if="edit">
+                                <label class="text-danger" v-if="detail.positionErr">{{ detail.positionErr }}</label>
+                                <input type="text" class="form-control form-control-sm" v-model="detail.position" v-if="edit">
+                            </td>
+
+                            <td v-if="!edit">
                                 <span v-if="!edit">{{ detail.address }}</span>
-                                <input type="text" class="form-control" v-model="detail.address" v-if="edit">
                             </td>
-                            <td class="align-bottom">
-                                <label class="text-danger" v-if="detail.phoneNoErr">{{ detail.phoneNoErr }}</label>
+                            <td class="align-bottom" v-if="edit">
+                                <label class="text-danger" v-if="detail.addressErr">{{ detail.addressErr }}</label>
+                                <input type="text" class="form-control form-control-sm" v-model="detail.address" v-if="edit">
+                            </td>
+
+                            <td v-if="!edit">
                                 <span v-if="!edit">{{ detail.phone_no }}</span>
-                                <input type="text" class="form-control" v-model="detail.phone_no" v-if="edit">
-
                             </td>
-                            <td class="align-bottom">
-                                <label class="text-danger" v-if="detail.nrcNoErr">{{ detail.nrcNoErr }}</label>
+                            <td class="align-bottom" v-if="edit">
+                                <label class="text-danger" v-if="detail.phoneNoErr">{{ detail.phoneNoErr }}</label>
+                                <input type="text" class="form-control form-control-sm" v-model="detail.phone_no" v-if="edit">
+                            </td>
+
+                            <td v-if="!edit">
                                 <span v-if="!edit">{{ detail.nrc_no }}</span>
-                                <input type="text" class="form-control" v-model="detail.nrc_no" v-if="edit">
-
                             </td>
-                            <td class="text-right align-bottom">
-                                <label class="text-danger" v-if="detail.bankAccErr">{{ detail.bankAccErr }}</label>
+                             <td class="align-bottom" v-if="edit">
+                                <label class="text-danger" v-if="detail.nrcNoErr">{{ detail.nrcNoErr }}</label>
+                                <input type="text" class="form-control form-control-sm" v-model="detail.nrc_no" v-if="edit">
+                            </td>
+
+                            <td class="text-right" v-if="!edit">
                                 <span v-if="!edit">{{ detail.bank_account }}</span>
-                                <input type="text" class="form-control" v-model="detail.bank_account" v-if="edit">
-
                             </td>
-                            <td class="align-bottom">
-                                <label class="text-danger" v-if="detail.memberErr">{{ detail.memberErr }}</label>
+                            <td class="align-bottom" v-if="edit">
+                                <label class="text-danger" v-if="detail.bankAccErr">{{ detail.bankAccErr }}</label>
+                                <input type="text" class="form-control form-control-sm" v-model="detail.bank_account" v-if="edit">
+                            </td>
+
+                            <td v-if="!edit">
                                 <span v-if="!edit">{{ detail.member }}</span>
-                                <input type="text" class="form-control" v-model="detail.member" v-if="edit">
-
                             </td>
-                            <td class="align-bottom">
-                                <label class="text-danger" v-if="detail.childErr">{{ detail.childErr }}</label>
+                            <td class="align-bottom" v-if="edit">
+                                <label class="text-danger" v-if="detail.memberErr">{{ detail.memberErr }}</label>
+                                <input type="text" class="form-control form-control-sm" v-model="detail.member" v-if="edit">
+                            </td>
+
+                            <td v-if="!edit">
                                 <span v-if="!edit">{{ detail.child }}</span>
-                                <input type="text" class="form-control" v-model="detail.child" v-if="edit">
-
                             </td>
-                            <td class="align-bottom">
-                                <label class="text-danger" v-if="detail.emgPhErr">{{ detail.emgPhErr }}</label>
+                            <td class="align-bottom" v-if="edit">
+                                <label class="text-danger" v-if="detail.childErr">{{ detail.childErr }}</label>
+                                <input type="text" class="form-control form-control-sm" v-model="detail.child" v-if="edit">
+                            </td>
+
+                            <td v-if="!edit">
                                 <span v-if="!edit">{{ detail.emg_ph_no }}</span>
-                                <input type="text" class="form-control" v-model="detail.emg_ph_no" v-if="edit">
-
                             </td>
-                            <td class="align-bottom">
-                                <label class="text-danger" v-if="detail.wasteTimeErr">{{ detail.wasteTimeErr }}</label>
+                            <td class="align-bottom" v-if="edit">
+                                <label class="text-danger" v-if="detail.emgPhErr">{{ detail.emgPhErr }}</label>
+                                <input type="text" class="form-control form-control-sm" v-model="detail.emg_ph_no" v-if="edit">
+                            </td>
+
+                            <td v-if="!edit">
                                 <span v-if="!edit">{{ detail.waste_time }}</span>
-                                <input type="text" class="form-control" v-model="detail.waste_time" v-if="edit">
+                            </td>
+                            <td class="align-bottom" v-if="edit">
+                                <label class="text-danger" v-if="detail.wasteTimeErr">{{ detail.wasteTimeErr }}</label>
+                                <input type="text" class="form-control form-control-sm" v-model="detail.waste_time" v-if="edit">
                             </td>
                         </tr>
                     
@@ -249,6 +296,7 @@
         </div>
     </div>
 </template>
+
 
 <script>
 
@@ -262,6 +310,7 @@ var numeral = require("numeral");
             return {
                 select_employee:'',
                 emps:[],
+                emp_id:'',
                 emp_no:'',
                 emp_name:'',
                 empData: {},
@@ -273,7 +322,6 @@ var numeral = require("numeral");
                 errorFlg: false,
                 success_msg: false,
                 duplicateErrors: [],
-
             }
         },
         created() {
@@ -287,24 +335,21 @@ var numeral = require("numeral");
             select_employee:function (val) {
 
                 if(val!=''){
-
                     let split_name=val.split(" ");
-                    this.emp_no=split_name[0];
+                    this.emp_id=split_name[0];
+                    this.emp_no=split_name[1];
 
+                    val=val.replace(this.emp_id,'');
                     val=val.replace(this.emp_no,'');
                     this.emp_name=val;
 
-                }  
-
-                if(val!=''){                            
                     this.form_summary_open = true;
                     this.form_detail_open = false;
-                     this.edit = false;
+                    this.edit = false;
                     this.errorFlg =false;
                     this.duplicateErrors = [];
                     this.findEmployeeData();
                     this.findLastHistory();
-                    
                 }
               
             }
@@ -318,14 +363,14 @@ var numeral = require("numeral");
             },
             findEmployeeData(){
                 this.axios
-                .get('http://127.0.0.1:8000/api/employee/'+this.emp_no)
+                .get('http://127.0.0.1:8000/api/employee/'+this.emp_id)
                 .then((response) => {
                     this.empData = response.data;
                 })
             },
             findLastHistory(){
                 this.axios
-                .get('http://127.0.0.1:8000/api/employeeDetail/lastData/'+this.emp_no)
+                .get('http://127.0.0.1:8000/api/employeeDetail/lastData/'+this.emp_id)
                 .then((response) => {
                     this.empDetail = response.data;
                 })
@@ -337,17 +382,15 @@ var numeral = require("numeral");
             },
             findEmployeeHistory(){
                 this.axios
-                .get('http://127.0.0.1:8000/api/employeeDetail/'+this.empData.id)
+                .get('http://127.0.0.1:8000/api/employeeDetail/'+this.emp_id)
                 .then((response) => {
                     this.empDetails = response.data;
                     for(let i=0; i < this.empDetails.length; i++)
                     {
-                        for(let j= i+1; j < this.empDetails.length; j++)
+                        
+                        if(i+1 < this.empDetails.length && this.empDetails[i]['salary_amount'] != this.empDetails[i+1]['salary_amount'])
                         {
-                            if(this.empDetails[i]['salary_amount'] != this.empDetails[j]['salary_amount'])
-                            {
-                                Vue.set(this.empDetails[j], 'color', true);
-                            }
+                            Vue.set(this.empDetails[i+1], 'color', true);
                         }
                     }
                     
@@ -355,9 +398,7 @@ var numeral = require("numeral");
             },
             newHistoryCreate(){
                 this.edit = true;
-                console.log("newObject");
                 let newObj = {};
-                console.log(this.empDetails.length);
                 if(this.empDetails.length > 0){
                     newObj.pay_month = "";
                     newObj.salary_amount = this.empDetails[this.empDetails.length-1].salary_amount;
@@ -373,7 +414,7 @@ var numeral = require("numeral");
                     newObj.child = this.empDetails[this.empDetails.length-1].child;
                     newObj.emg_ph_no = this.empDetails[this.empDetails.length-1].emg_ph_no;
                     newObj.waste_time = this.empDetails[this.empDetails.length-1].waste_time;
-                    newObj.employee_id = this.empData.id;
+                    newObj.emp_id = this.emp_id;
                 }else{
                     newObj.pay_month = '';
                     newObj.salary_amount = 0;
@@ -389,16 +430,35 @@ var numeral = require("numeral");
                     newObj.child ='';
                     newObj.emg_ph_no ='';
                     newObj.waste_time ='';
-                    newObj.employee_id = this.empData.id;
+                    newObj.emp_id = this.emp_id;
                 }
 
                 this.empDetails.push(newObj);
             },
             updateEmpDetail(){
-                console.log("update");
                 this.duplicateErrors = [];
                 this.errorFlg = false;
                 this.success_msg = false;
+                Vue.set(this.empData, 'kanaErr','');
+                Vue.set(this.empData, 'entryErr', '');
+                Vue.set(this.empData, 'dobErr' , '');
+
+                console.log(this.empData.kana_name)
+                if(this.empData.kana_name == undefined || this.empData.kana_name == ''){
+                    this.errorFlg = true;
+                    Vue.set(this.empData, 'kanaErr','名前(フリガナ)を入力してください。');
+                }
+
+                if(this.empData.entry_date == undefined || this.empData.entry_date == ''){
+                    this.errorFlg = true;
+                    Vue.set(this.empData, 'entryErr', '入社日を入力してください。');
+                }
+
+                if(this.empData.dob == undefined || this.empData.dob == ''){
+                    this.errorFlg = true;
+                    Vue.set(this.empData, 'dobErr' , '生年月日を入力してください。');
+                }
+
                 for(let i=0; i < this.empDetails.length; i++)
                 {
                     Vue.set(this.empDetails[i] , 'payMonthErr','');
@@ -410,7 +470,7 @@ var numeral = require("numeral");
                     Vue.set(this.empDetails[i] , 'addressErr','');
                     Vue.set(this.empDetails[i] , 'phoneNoErr','');
                     Vue.set(this.empDetails[i] , 'nrcNoErr','');
-                    Vue.set(this.empDetails[i] , 'BankAccErr','');
+                    Vue.set(this.empDetails[i] , 'bankAccErr','');
                     Vue.set(this.empDetails[i] , 'memberErr','');
                     Vue.set(this.empDetails[i] , 'childErr','');
                     Vue.set(this.empDetails[i] , 'emgPhErr','');
@@ -419,20 +479,20 @@ var numeral = require("numeral");
                     if(this.empDetails[i].pay_month == '')
                     {
                         this.errorFlg = true;
-                        Vue.set(this.empDetails[i] , 'payMonthErr','Pay Month data is required.');
+                        Vue.set(this.empDetails[i] , 'payMonthErr','給与年月を入力してください。');
                     }else if(!this.validatePayMonthFormat(this.empDetails[i].pay_month)){
                         this.errorFlg = true;
-                        Vue.set(this.empDetails[i] , 'payMonthErr','Pay Month format is YYYY/MM.');
+                        Vue.set(this.empDetails[i] , 'payMonthErr','給与年月をフォーマット(YYYY/MM)で入力してください。');
                     }
 
                     if(this.empDetails[i].salary_amount == 0)
                     {
                         this.errorFlg = true;
-                        Vue.set(this.empDetails[i], 'salaryAmountErr', 'Salary Amount is required.' )
+                        Vue.set(this.empDetails[i], 'salaryAmountErr', '基本給を入力してください。' );
                     }else if(!this.validateDecimal(this.empDetails[i].salary_amount))
                     {
                         this.errorFlg = true;
-                        Vue.set(this.empDetails[i], 'salaryAmountErr', 'Salary Amount format error.' )
+                        Vue.set(this.empDetails[i], 'salaryAmountErr', '基本給は数を入れて下さい。' );
                     }
 
                     // if(this.empDetails[i].trans_money == 0){
@@ -450,29 +510,55 @@ var numeral = require("numeral");
                     //     Vue.set(this.empDetails[i], 'ssbErr', 'SSB is required.')
                     // }
 
+                    if(this.empDetails[i].trans_money == '')
+                    {
+                        this.empDetails[i].trans_money = 0;
+                    }else if(!this.validateNumber(this.empDetails[i].trans_money))
+                    {
+                        this.errorFlg = true;
+                        Vue.set(this.empDetails[i], 'transMoneyErr', '通勤交通費は数を入れて下さい。');
+                    }
+
+                    if(this.empDetails[i].jlpt == '')
+                    {
+                        this.empDetails[i].jlpt = 0;
+                    }else if(!this.validateNumber(this.empDetails[i].jlpt))
+                    {
+                        this.errorFlg = true;
+                        Vue.set(this.empDetails[i], 'jlptErr', 'JLPTは数を入れて下さい。');
+                    }
+
+                    if(this.empDetails[i].ssb == ''){
+                        this.empDetails[i].ssb = 0;
+                    }else if(!this.validateNumber(this.empDetails[i].ssb))
+                    {
+                        this.errorFlg = true;
+                        Vue.set(this.empDetails[i], 'ssbErr', 'SSB負担割合は数を入れて下さい。');
+                    }
+
                     if(this.empDetails[i].position == ''){
                         this.errorFlg = true;
-                        Vue.set(this.empDetails[i], 'positionErr', 'Position is required.')
+                        Vue.set(this.empDetails[i], 'positionErr', 'ポジションを入力してください。');
                     }
 
                     if(this.empDetails[i].address == ''){
                         this.errorFlg = true;
-                        Vue.set(this.empDetails[i], 'addressErr', 'Address is required.')
+                        Vue.set(this.empDetails[i], 'addressErr', '住所を入力してください。');
                     }
 
                     if(this.empDetails[i].phone_no == ''){
                         this.errorFlg = true;
-                        Vue.set(this.empDetails[i], 'phoneNoErr', 'Phone No is required.')
+                        Vue.set(this.empDetails[i], 'phoneNoErr', '電話番号を入力してください。');
                     }
 
                     if(this.empDetails[i].nrc_no == ''){
                         this.errorFlg = true;
-                        Vue.set(this.empDetails[i], 'nrcNoErr', 'NRC No is required.')
+                        Vue.set(this.empDetails[i], 'nrcNoErr', '身分証番号を入力してください。');
                     }
 
                     if(this.empDetails[i].bank_account == ''){
                         this.errorFlg = true;
-                        Vue.set(this.empDetails[i], 'bankAccErr', 'bankAcc is required.')
+                        Vue.set(this.empDetails[i], 'bankAccErr', '給与振込先銀行口座を入力してください。');
                     }
 
                     // if(this.empDetails[i].member == ''){
@@ -497,8 +583,8 @@ var numeral = require("numeral");
     
                 }
 
-                console.log(this.errorFlg);
                 if(this.errorFlg){
+                    
                     return this.empDetails;
                 }
 
@@ -508,7 +594,7 @@ var numeral = require("numeral");
                     {
                         if(this.empDetails[i]['pay_month'] == this.empDetails[j]['pay_month'])
                         {
-                            this.duplicateErrors.push(this.empDetails[i]['pay_month']+' is duplicate.');
+                            this.duplicateErrors.push(this.empDetails[i]['pay_month']+'は重複しています。');
                         }
                     }
                 }
@@ -517,11 +603,16 @@ var numeral = require("numeral");
                     return this.duplicateErrors;
                 }
 
+                this.axios
+                .post('http://127.0.0.1:8000/api/employee/save/'+this.emp_id,this.empData)
+                .then((response) => {
 
+                })
+                
                 this.axios
                 .post('http://127.0.0.1:8000/api/employeeDetail/updateAll',this.empDetails)
                 .then((response) => {
-                    console.log(response.data);
+
                     this.findEmployeeHistory();
                     this.edit = false;
                     this.success_msg = true;
@@ -532,16 +623,21 @@ var numeral = require("numeral");
 
                 
             },
-            validateDecimal: function(number){
-                var re = /^-?\d+(?:\.?\d+)?$/;
-                return re.test(number);
+            validateNumber: function(value){
+                var regex = /^\d*$/;
+                return regex.test(value);
+            },
+            validateDecimal: function(value){
+                var regex = /^-?\d+(?:\.?\d+)?$/;
+                return regex.test(value);
             },
             validatePayMonthFormat: function(value){
-
-                console.log(value);
                 //var re = /^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/(19|20)\d{2}$/ ;
-                var re = /^\d{4}\/(0[1-9]|1\d|2\d|3[01])$/ ;
-                return re.test(value);
+                var regex = /^\d{4}\/(0?[1-9]|1[012])$/ ;
+                return regex.test(value);
+            },
+            employeeCodeAndName: function(value){
+                return value.employeeId+' '+value.name;
             }
 
         }
