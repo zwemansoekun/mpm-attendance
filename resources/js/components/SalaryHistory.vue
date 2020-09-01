@@ -443,7 +443,6 @@ var numeral = require("numeral");
                 Vue.set(this.empData, 'entryErr', '');
                 Vue.set(this.empData, 'dobErr' , '');
 
-                console.log(this.empData.kana_name)
                 if(this.empData.kana_name == undefined || this.empData.kana_name == ''){
                     this.errorFlg = true;
                     Vue.set(this.empData, 'kanaErr','名前(フリガナ)を入力してください。');
