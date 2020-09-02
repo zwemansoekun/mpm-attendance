@@ -5,16 +5,18 @@
                      <div class="col-md-4"> 
                          <!-- <a href="/export" class="btn btn-primary">Export to .xls</a>
                         <router-link to="/export">export example</router-link> -->
-                    
+
+                         
                         <select class="form-control" id="selectEmployee" name="employ_selected" required focus v-model="select_employee">
+
                             <option value="" disabled selected>Please select employee</option>        
                         
-                            <option v-bind:key="emp.id" v-for="emp in emps"> {{emp.id }} {{emp.name }}</option>
+                            <option v-bind:key="emp.id" v-for="emp in emps"  >{{ emp.id }} {{emp.name }}</option>
                         
                         </select>                      
-                     </div>                         
+                     </div>  
                     <div class="col-md-4 offset-md-2"> 
-                        <select class="form-control" id="selectDate" name="date_selected" required focus v-model="select_date">
+                        <select class="form-control" id="selectDate"  @change="dateChange($event)" name="date_selected" required focus v-model="select_date">
                             <option value="" disabled selected>Please select Year/Month</option>        
                         
                             <option v-bind:key="date.id" v-for="date in dates"  >{{ date.recordedDateTime }}</option>
@@ -39,8 +41,6 @@
                   <button type="button" class="close" data-dismiss="alert">x</button>
                  <strong >データはありませんでした。</strong> 
             </div>
-       
-
             <div class="container mt-5" v-if="form_open">
                 <!-- //form -->                      
                     <div class="row">
@@ -65,7 +65,7 @@
 
                     </div>
                     <!-- v-on:submit.prevent="attendSave" -->
-                     
+                     <!-- {{get_attend_data}} -->
 
                     <div class="row mt-5">
                         <div class="col-md-4"> {{this.select_date}}</div>                          
@@ -76,7 +76,7 @@
                     <div class="row">
                         <div class="col-md-4"> Name: {{emp_name}}</div>                          
                     </div>  
-                    <table id="attendTable" class="table table-bordered">
+                    <table class="table table-bordered">
                         <thead>
                             <tr>
                                 <td style="text-align: center;width: 8.3%;"></td>                          
@@ -88,38 +88,50 @@
                         </thead>
                         <tbody> 
                                 <tr v-bind:key="dayindex" v-for="(day,dayindex) in ampm_by_day_arr" v-bind:class="day_name(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])">                                 
+                                   
+                                   <!-- {{day}} -->
                                     <th style="width: 100px;" scope="row">{{dayindex+1}} {{ days[new Date(year+"/"+month+"/"+(dayindex+1)).getDay()]}}</th>
                                     <td colspan="4"    style="text-align: center;padding:0px">
                                      
                                         <div v-if="day!==null">
                                             <tr :class="`mainIndex_${dayindex}`" >              
-                                          
-                                                <td style="width: 16.4%;" v-bind:key="index"  v-for="(date,index) in day" v-bind:class="`bg-${checkColor(date,index)}`"  :style="`background-color:${checkBgColor(year,month,dayindex+1,date==null)};`">   
+                                                <!-- {{day.am1}} -->
+                                                <td style="width: 16.4%;" v-bind:key="key"  v-for="(date,index,key) in day" v-bind:class="`bg-${checkColor(date,key)}`"  :style="`background-color:${checkBgColor(year,month,dayindex+1,date==null)};`">   
+                                                    <div v-if="date!== null" :class="ampm_index(key)">                                        
+                                                    
+                                                        {{date}}                                                
+                                                        
+                                                    </div>
+                                                </td>
+
+                                                <!-- <td style="width: 16.4%;" v-bind:key="index"  v-for="(date,index) in day" v-bind:class="`bg-${checkColor(date,index)}`"  :style="`background-color:${checkBgColor(year,month,dayindex+1,date==null)};`">   
                                                      <!-- //"`main_${dayindex}`"     -->
                                                      <!-- _${index} -->
+                                                     <!-- {{date}}
                                                     <div v-if="date!== null" :class="ampm_index(index)">                                        
                                                     
                                                         {{date.am_pm}}                                                        
                                                         
                                                     </div>
 
-                                                </td>     
+                                                </td>     -->
                                                 <td style="width: 16.4%;" >  
                                                 </td>  
                                                 <td style="width: 20.4%;" >  
                                                     
-                                                </td>                                                                      
-                                            </tr>
-                                        
+                                                </td>                                                                  
+                                            </tr>                                        
+
                                             <tr :class="`index_${dayindex}`">   
-                                                <div v-if="check_attend_data">
-                                                    <td  style="width: 200px;padding:0px" v-bind:key="index"  v-for="(date,index) in day" :class="date==null?([0,1].includes(index)==true?'paid-leave1':'paid-leave2'):''">   
+                                                <!-- <div> -->
+                                                <!-- <div v-if="check_attend_data"> -->
+                                                    <td  style="width: 200px;padding:0px" v-bind:key="key"  v-for="(date,index,key) in day" :class="date==null?([0,1].includes(key)==true?'paid-leave1':'paid-leave2'):''">   
                                                         <div v-if="date!== null">                                        
-                                                            <template v-if="index<2" >
-                                                                <input :name="`am${index+1}[]`"  @change="updateInput" :class="`form-control input-sm am${index+1}`"  style="text-align: center;" type="text">                                                   
+                                                            <template v-if="key<2" >
+                                                                <input :name="`am${key+1}[]`"  @change="updateInput" :class="`form-control input-sm am${key+1}`"  style="text-align: center;" type="text">                                                   
                                                             </template>
                                                             <template v-else>
-                                                                <input :name="`pm${index-1}[]`"  @change="updateInput"  :class="`form-control input-sm pm${index-1}`"  style="text-align: center;" type="text">   
+                                                                <input :name="`pm${key-1}[]`"  @change="updateInput"  :class="`form-control input-sm pm${key-1}`"  style="text-align: center;" type="text">   
                                                             </template>
                                                         </div>
                                                         <div v-else>
@@ -134,7 +146,7 @@
                                                         </div>
                                                     </td>
 
-
+                                            <tr  :class="`index_${dayindex}`">
                                                     <!-- <td  style="width: 200px;padding:0px" ><input name="am1" class="form-control input-sm"  style="text-align: center;" type="text"></td>
                                                     <td  style="width: 200px;padding:0px" ><input name="am2" class="form-control input-sm"  style="text-align: center;" type="text"></td>      
                                                     <td  style="width: 200px;padding:0px" ><input name="pm1" class="form-control input-sm"  style="text-align: center;" type="text"></td>      
@@ -145,15 +157,23 @@
                                                         <input name="date[]" class="form-control input-sm date" style="text-align: center;" type="hidden" :value="`${year}-${month}-${(dayindex+1).toString().length==1?'0'+(dayindex+1):(dayindex+1)}`">
                                                     </td>           
                                                     <td  style="width: 200px;padding:0px;" ><button type="button" onclick="this.blur();" :id="`autobut${dayindex}`" class="btn btn-secondary" @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">自動計算</button></td>     
-                                                </div> 
-                                                <div v-else>
+                                                <!-- </div>  -->
+                                                <!-- <div v-else> -->
                                                     <!-- <td  style="width: 200px;padding:0px" v-bind:key="index"  v-for="(date,index) in get_attend_data" :class="date==null?([0,1].includes(index)==true?'paid-leave1':'paid-leave2'):''">   
                                                        <pre> {{date}}</pre>
                                                        <!-- <pre>{{}}</pre> -->
 
-                                                        
-                                                    <!-- </td>    --> 
-                                                </div>   
+                                                <!-- <td  style="width: 200px;padding:0px" ><input name="am1" class="form-control input-sm"  style="text-align: center;" type="text"></td>
+                                                <td  style="width: 200px;padding:0px" ><input name="am2" class="form-control input-sm"  style="text-align: center;" type="text"></td>      
+                                                <td  style="width: 200px;padding:0px" ><input name="pm1" class="form-control input-sm"  style="text-align: center;" type="text"></td>      
+                                                <td  style="width: 200px;padding:0px" ><input name="pm2" class="form-control input-sm"  style="text-align: center;" type="text"></td>   -->
+                                                
+                                                <td  style="width: 200px;padding:0px" >
+                                                    <input name="thour[]" class="form-control input-sm thour" style="text-align: center;" type="text">
+                                                    <!-- <input name="date" class="form-control input-sm" style="text-align: center;" type="hidden" :value="`${year}-${month}-${dayindex+1}`"> -->
+                                                </td>           
+                                                <td  style="width: 200px;padding:0px;" ><button type="button" onclick="this.blur();" :id="`autobut${dayindex}`" class="btn btn-secondary" @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">自動計算</button></td>                                                     
+
                                             </tr>
 
                                         </div>
@@ -172,32 +192,30 @@
                                                 <!-- <td style="width: 200px" >  -->
                                                 <!-- </td>    -->
                                                 <td style="width: 182px;height:50px;">  
-                                                    
                                                 </td>  
                                                 <td style="width: 200px;height:50px;" >  
                                                     
                                                 </td>                                                                      
                                             </tr>                                        
-                                             <tr :class="['Sat','Sun'].includes(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])==false?`index_${dayindex}`:'' "> 
+                                             <tr :class="`index_${dayindex}`"> 
                                                 <!-- {{name_of_day}} -->
                                                    <!-- // style="width: 371.05px;height:50px;background-color:#FFDAB9"                  -->
                                                     <!-- style="width: 371.05px;height:50px;" -->
                                               <!-- :style="`{background-color:${checkBgColor(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()],null)}`" -->
-                                                <td style="width: 371.05px;padding:0px" :class="['Sat','Sun'].includes(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])==false?'paid-leave1':''" > 
+                                                <td style="width: 371.05px;height:50px;" :class="['Sat','Sun'].includes(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])==false?'paid-leave1':''" > 
                                                     <!-- <span class="context-menu-one btn btn-neutral">right click me</span> -->
                                                 </td>   
                                                 <!-- <td style="width: 200px" > 
                                                 </td>  -->
-                                                <td style="width: 368.05px;padding:0px" :class="['Sat','Sun'].includes(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])==false?'paid-leave2':''" > 
+                                                <td style="width: 368.05px;height:50px;" :class="['Sat','Sun'].includes(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])==false?'paid-leave2':''" > 
                                                 </td> 
                                                 <!-- <td style="width: 200px" >  -->
                                                 <!-- </td>    -->
-                                                <td style="width: 182px;padding:0px">  
-                                                    <input v-if="['Sat','Sun'].includes(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])==false" name="total_hours[]" class="form-control input-sm thour" style="text-align: center;" type="text">
-                                                    <input name="date[]" class="form-control input-sm date" style="text-align: center;" type="hidden" :value="`${year}-${month}-${(dayindex+1).toString().length==1?'0'+(dayindex+1):(dayindex+1)}`">
-                                                </td> 
-                                                <td style="width: 200px;padding:0px" >  
-                                                    <button :id="`autobut${dayindex}`" v-if="['Sat','Sun'].includes(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])==false" onclick="this.blur();" type="button" class="btn btn-secondary" @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">自動計算</button>  
+                                                <td style="width: 182px;height:50px;">  
+                                                </td>  
+                                                <td style="width: 200px;height:50px;" >  
+                                                    <button v-if="['Sat','Sun'].includes(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])==false" onclick="this.blur();" type="button" class="btn btn-secondary" @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">自動計算</button>  
+
                                                 </td>                                                                      
                                             </tr>                  
 
@@ -221,7 +239,7 @@
             return {
                 select_employee:'',
                 select_date:'',          
-                emps:[],          
+                emps:[],
                 dates:[],
                 emp_no:'',
                 emp_name:'',
@@ -243,19 +261,19 @@
                 default_ampm:{"am":'',"pm":''},
                 name_of_day:true,
                 model_check:[
-                        {
-                           0: [
+                        // {
+                            [
                                  {"am1":22},
                                  {"am2":33},
                                  {"pm1":44},
                                  {"pm2":55},
                            ]    
-                        }
+                        // }
                   
                 ],
                 errors:null,
-                get_attend_data:[], 
-                check_attend_data:true,       
+                get_attend_data:{},
+                check_attend_data:true,               
             }
         },
         created() {
@@ -276,60 +294,12 @@
             });    
 
         },
-        computed: {
 
-                empv: function(val)
-            {                  
-              this.ems=val; 
-              console.log('hi');
-            }, 
-            errorsFun:function(){
-                // console.log('sdfsdf',this.errors);
-                // let result = {};
-                // for ( let k in this.errors) {
-                    
-                //     // if (!['0.total_hours','0.pm2'].includes(k))
-                //     //     continue;
-                //     result[k] = this.errors[k];
-                // }
-                this.error_check_messg = true 
-                return this.errors;
-            },                       
+        computed: {            
+
         },
         watch: {
-            select_employee:function (val) {
-
-                if(val!=''){
-
-                let split_name=val.split(" ");
-                this.emp_no=split_name[0];
-
-                val=val.replace(this.emp_no,'');
-                this.emp_name=val;
-
-                }  
-
-                if(val!='' && this.select_date!=''){                            
-                     //    this.attendForm();
-                    this.ampm_calling();
-                 
-                }
-              
-            },
-            select_date:function (val) {            
-                if(val!=''){
-                    let split_date=val.split("/");                  
-                     this.year=split_date[0];
-                  
-                     val=val.replace(this.year+"/",'');
-                    this.month=val;
-                   
-                }  
-                 if(val!='' && this.select_employee!=''){              
-                    //  this.attendForm();
-                     this.ampm_calling();
-                }
-            },      
+            deep: true,            
             error_check_messg:function(){
                 if(this.error_check_messg==true){
                     setTimeout(() => {
@@ -349,20 +319,41 @@
             //   this.check_input();
         },      
         methods: {  
-            testSave:function(){
-                // alert('clicked');
-                // console.log('clicked');
-                //     this.axios.get('/export')
-                //     .then(response => {
-                //         if(response.status === 200) {
-                //                 console.log('27success');
-                //         }
-                //     })
-                //     .catch(error => {
-                //         // code here when an upload is not valid                     
-                //         console.log('check error: ', this.error)
-                //     });
+            
+            empChange:function(event){
+                let val='';
+        
+                if(event.target.value!=''){
 
+                  let  val=event.target.value;
+                    let split_name=val.split(" ");
+                    this.emp_no=split_name[0];
+
+                    val=val.replace(this.emp_no,'');
+                    this.emp_name=val;
+
+                }  
+                
+                if(val!='' && this.select_date!=''){   
+                         this.update_call();                         
+                    this.ampm_calling();             
+                }
+            },
+            dateChange:function(event){
+                let val='';
+                if(event.target.value!=''){
+                    val=event.target.value;
+                    let split_date=val.split("/");                  
+                    this.year=split_date[0];
+                  
+                    val=val.replace(this.year+"/",'');
+                    this.month=val;
+                   
+                }  
+                 if(val!='' && this.select_employee!=''){
+                          this.update_call();
+                     this.ampm_calling();
+                }
             },
             attendSave:function(){
                  let those=this;
@@ -384,163 +375,12 @@
                         return true;
                     },
                 });
-                let temp_arr=[];let am1,am2,pm1,pm2,thour,date;let am_leave=0,pm_leave=0;   let data_arr={};let eg_arr=[];
+               
                 if(jQuery('#form').valid()){
-
-                        //  alert($('#form').serialize());
-                    //   console.log($('#form').serializeArray());
-                    // var tb = $('#attendTable:eq(0) tbody tr');
-                    // var size = tb.find("tr").length;
-                    // console.log(tb.length);
-                     $('#attendTable tr[class^=index_]').each(function (key,value) {
-                        //  if(key==0){
-                        //      return;
-                        //  }
-                        //  console.log('key',key);
-
-                        //  console.log('value',value);
-                         let that=this;
-                         $(that).find('td').each(function (index,v2) {
-                             let isLastElement = index == $(that).find('td').length-2;
-                          
-                            //  console.log(isLastElement);
-                            //  console.log(index);
-                            //  console.log($(that).find('td').length-1);
-                            //  console.log('k2',index);
-                            //  console.log('v2',jQuery(this).find('.am1').val());
-                            if(jQuery(this).find('.am1').val()){
-                                //  console.log(index);
-                                   am1=jQuery(this).find('.am1').val();
-                                    // data_arr['am1']=am1;
-                                       data_arr['am1']=am1;
-                                //    console.log(am1);
-                            }
-                            if(jQuery(this).find('.am2').val()){
-                                //  console.log(index);
-                                  am2=jQuery(this).find('.am2').val();
-                                    //  data_arr['am2']=am2;
-                                       data_arr['am2']=am2;
-                                    //    console.log(am2);
-                            }
-                            if(jQuery(this).find('.pm1').val()){
-                                //  console.log(index);
-                                  pm1=jQuery(this).find('.pm1').val();
-                                //   data_arr['pm1']=pm1;
-                                        data_arr['pm1']=pm1;
-                                    //    console.log(pm1);
-                            }
-                            if(jQuery(this).find('.pm2').val()){
-                                //  console.log(index);
-                                   pm2=jQuery(this).find('.pm2').val();
-                                    //   data_arr['pm2']=pm2;
-                                          data_arr['pm2']=pm2;
-                                        // console.log(pm2);
-                            }
-                            if(jQuery(this).find('.thour').val()){
-                                //  console.log(index);
-                                    thour=jQuery(this).find('.thour').val();
-                                    //    data_arr['thour']=thour;
-                                         data_arr['total_hours']=thour;
-                                        //  console.log(thour);
-                            }
-                            if(jQuery(this).find('.date').val()){
-                                
-                                  date=jQuery(this).find('.date').val();
-                                    //  data_arr['date']=date;
-                                       data_arr['date']=date;
-                                //    console.log(date);
-                            }
-                           
-
-                            if (isLastElement) {
-                      
-                                //noted!!    
-                                // data_arr['emp_no']=those.emp_no;
-                                // data_arr['am_leave']=am_leave;
-                                // data_arr['pm_leave']=pm_leave;
-                                // those.emp_no=those.$refs.myButton.value;
-                                // temp_arr.push(data_arr);
-                                // data_arr={};am_leave=0;pm_leave=0;
-
-                                temp_arr.push({"date": date,"emp_no":those.emp_no,"total_hours":thour,"am1": am1 ,"am2":am2,"pm1":pm1,"pm2":pm2,"am_leave":am_leave,"pm_leave":pm_leave}); 
-                                // console.log('temp',temp_arr);
-                                date='';am1='';am2='';pm1='';pm2='';thour='',am_leave=0,pm_leave=0;
-                                return false;
-                            }
-
-                         });
-                        //  console.log('temp',temp_arr);
-                        // $(value+'tr[class^=index_]').each(function (key1,value1) {
-                        //         console.log('key1',key1);
-                        //         console.log('value1',value1);
-                        // });
-
-                        // var name = $('.attrName', b).text();
-                        // var value = $('.attrValue', b).text();
-                        // ary.push({ Name: name, Value: value });               
-                   });
-
-                    console.log(temp_arr);
-                    this.axios({
-                      url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/attendList",
-                      method: 'post',
-                      data: temp_arr
-                    })
-                    .then(function (response) {
-                        // your action after success
-                        console.log('res',response.data.errors);
-                         console.log('res2',response.data);
-                        if(response.data){
-                            if(response.data.message==true){
-                                those.$fire({
-                                    title: "成功しました",
-                                    text: "データの登録は成功しました。",
-                                    type: "success",
-                                    timer: 3000,
-                                    showCancelButton: false,
-                                    showConfirmButton: false,
-                                    // position:'center',
-                                }).then(r => {
-                                    //    console.log(r.value);
-                                });
-                            }else{
-                                those.$fire({
-                                        title: "失敗！！",
-                                        text: "データの登録は出来ません。",
-                                        type: "error",
-                                        timer: 3000,
-                                        showCancelButton: false,
-                                        showConfirmButton: false,
-                                        // position:'center',
-                                }).then(r => {
-                                        //    console.log(r.value);
-                                }); 
-                                those.errors=response.data.errors;
-                                console.log(response.data.errors);
-                            }                           
-                        }
-                      
-                    })
-                    .catch(function (error) {
-                        those.$fire({
-                        title: "失敗！！",
-                        text: "データの登録は出来ません。",
-                        type: "error",
-                        timer: 3000,
-                        showCancelButton: false,
-                        showConfirmButton: false,
-                        // position:'center',
-                        }).then(r => {
-                        //    console.log(r.value);
-                        }); 
-                        those.errors=error.response.data.errors;
-                        console.log(response.data.errors);
-                    });
-
-
-
+                         alert($('#form').serialize());
+                      console.log($('#form').serialize());
                 }else{
-                    alert("データを記入してください。");
+                    alert("Invalid");
                     return false;
                 }
 // });
@@ -567,7 +407,7 @@
             },  
             filterInput:function(){
                 // let count=1;
-                $('#attendTable tbody').find('td input').filter(function () {
+                $('table tbody').find('td input').filter(function () {
                      return this.value === ""
                 }).addClass('checkColumn').parent().parent().find('[type=button]').click().parent().parent().find('td input').removeClass('checkColumn');
                 //  console.log(  );
@@ -586,30 +426,19 @@
                             // console.log(jQuery(this).parent().parent().find(">:first-child").attr('class'));
                             parent_class_name=jQuery(this).parent().parent().find(">:first-child").attr('class');
                             class_name=jQuery(this).attr('class');
-                            // console.log(parent_class_name);
-                            // console.log(class_name);
+                            console.log(parent_class_name);
+                            console.log(class_name);
                     });
 // "td.paid-leave1,td.paid-leave2",
                     $.contextMenu({
                         selector:".paid-leave1,.paid-leave2",
                         callback: function(key, options) {
-                            // let class_name=jQuery(this).attr('class');
-                            // console.log('p',jQuery(this).attr('class'));
+                            console.log('p',jQuery(this).attr('class'));
                             if(key=='o'){
                                 that.showTimer(parent_class_name,class_name,'circle');
-                                if(class_name=='paid-leave1'){
-                                       $('<input/>').attr({ type: 'hidden',name: 'am_leave[]',value:1,class:'amleave'}).appendTo(jQuery(this));
-                                }else{
-                                       $('<input/>').attr({ type: 'hidden',name: 'pm_leave[]',value:1,class:'pmleave'}).appendTo(jQuery(this));
-                                }
-                             
+
                             }else{
                                 that.showTimer(parent_class_name,class_name,'dash');
-                                if(class_name=='paid-leave1'){
-                                      $('<input/>').attr({ type: 'hidden',name: 'am_leave[]',value:2,class:'amleave'}).appendTo(jQuery(this));
-                                }else{
-                                      $('<input/>').attr({ type: 'hidden',name: 'pm_leave[]',value:2,class:'pmleave'}).appendTo(jQuery(this));
-                                }
                             }
 
                             // var m = "clicked: " + key;
@@ -672,7 +501,8 @@
             checkColor:function(val,index){                
            
                 if( (index==0 || index==2) && val!=null){
-                     let val_split=val!==''?val.am_pm.split(":"):'';
+                    //  let val_split=val!==''?val.am_pm.split(":"):'';
+                        let val_split=val!==''?val.split(":"):'';
                       if(val_split!='' && ( (val_split[0]==8 && val_split[1]>0 && val_split[1]<6) || (val_split[0]==13 && val_split[1]>0 && val_split[1]<16) ) ){
                           return 'warning';
                       }else if(val_split!='' && ((val_split[0]==8 &&  val_split[1]>5) || (val_split[0]==13 &&  val_split[1]>15) )){
@@ -708,34 +538,110 @@
                             return '';
                     }
                 }  
-           },
-            ampm_calling(){                
-                    let that = this;
-                    this.ampm_by_day_arr=[];
-                    this.ampm_by_day=[];
-                    this.ampm_inner_arr=[];
-                    this.ampm_arr=[];
-                     
-                if(this.year!='' && this.month!='' && this.emp_no!=''){                    
-                   
-                    this.dayCount=new Date(this.year,this.month, 0).getDate();
-
-
-                        this.axios({
+           },   
+           update_call(){
+               
+                    let up_data={
+                        "emp_no":this.emp_no,
+                        "date":this.select_date,
+                        "year":this.year,
+                        "month":this.month,
+                    };
+                    let ok1='';let ok12=[];let ok3={};
+                    this.axios({
                       url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/attendList/getmonth",
                       method: 'post',
                       data:up_data,
                     })                  
-                    .then(resposne=>{
-                        console.log('get',resposne.data);
-                        this.check_attend_data=false;                        
-                        this.get_attend_data=resposne.data;                                                
+                    .then(response=>{ 
+
+                        that.check_attend_data=false;                        
+                        that.get_attend_data={
+    "karrrrr": {
+        "Nissan": [
+            {"model":"Sentra", "doors":4},
+            {"model":"Maxima", "doors":4},
+            {"model":"Skyline", "doors":2}
+        ],
+        "Ford": [
+            {"model":"Taurus", "doors":4},
+            {"model":"Escort", "doors":4}
+        ]
+    }
+};//response.data;
+                        console.log('res',that.get_attend_data);                     
                     })
                     .catch(function (error) {
-                        console.log('geterror',error.response.data.errors);
-                    });
-                    
-                    
+                        console.log('geterror',error.response);
+                    }); 
+
+           },   
+            ampm_calling(){                
+                    let that = this;
+                    let those=this;
+                    this.ampm_by_day_arr=[];
+                    this.ampm_by_day=[];
+                    this.ampm_inner_arr=[];
+                    this.ampm_arr=[];
+                    let ex2=[];let ex1={};
+               
+                if(this.year!='' && this.month!='' && this.emp_no!=''){                    
+                   
+                    this.dayCount=new Date(this.year,this.month, 0).getDate();
+                    // this.update_call();
+                    console.log('okkkkkkkkkk',that.get_attend_data);
+                    // let up_data={
+                    //     "emp_no":this.emp_no,
+                    //     "date":this.select_date,
+                    //     "year":this.year,
+                    //     "month":this.month,
+                    // };
+                    // let ok1='';let ok12=[];let ok3={};
+                    // this.axios({
+                    //   url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/attendList/getmonth",
+                    //   method: 'post',
+                    //   data:up_data,
+                    // })                  
+                    // .then(response=>{ 
+
+                    //     that.check_attend_data=false;                        
+                    //     that.get_attend_data=response.data;
+                    //     console.log('res',that.get_attend_data);                     
+                    // })
+                    // .catch(function (error) {
+                    //     console.log('geterror',error.response.data.errors);
+                    // }); 
+
+
+                   
+                    // that.get_attend_data
+                //        console.log('const1000',sailNames);
+                // console.log('const1000',that.get_attend_data);
+                   
+                //     console.log(sailNames.length);
+                //     console.log(Object.keys(sailNames));
+
+                //     console.log(sailNames[Object.keys(sailNames)[0]]);
+                 
+//                         let count = 0;
+//   for (var k in sailNames) {
+//     if (sailNames.hasOwnProperty(k)) {
+//       count++;
+//     }
+//   }
+//   console.log(count);
+
+
+
+                    //     $.each(sailNames, function(key, value) {
+                    //     // sailNames.forEach(function(res, index) {
+                    //         console.log('res',key);
+                    //          console.log('index',value);
+                    //     });    
+
+                    //    console.log('const100022',sailNames);
+
+                    // let ex2=[];let ex1={};
                     this.axios
                     .get("http://localhost:5000/attendances/ampm/"+this.emp_no+"/"+this.year+this.month)                 
                     .then(response => { 
@@ -755,26 +661,34 @@
                                
                       
                         // let that = this;                        
-
+                        let eg1={};let eg2=[];
                         response.data.forEach(function(res, index) {
                                 if (res.recordedDateTime === that.memory && that.memory !== "") {
                                     that.memory = res.recordedDateTime;
+                                     eg1[res.recordedDateTime]= res    
                                     that.ampm_inner_arr.push(res);
                                 } else if (res.recordedDateTime !== that.memory && that.memory !== "") {
+                                    eg2.push(eg1);
                                     that.ampm_arr.push(that.ampm_inner_arr);
+                                    eg1={};
                                     that.ampm_inner_arr = [];
                                     that.memory = res.recordedDateTime;
+                                    eg1[ res.recordedDateTime]= res 
+                                    // eg2.push(eg1);    
                                     that.ampm_inner_arr.push(res);
                                 } else {
-                                    that.memory = res.recordedDateTime;                                
+                                    that.memory = res.recordedDateTime;     
+                                    eg1[ res.recordedDateTime]= res                          
                                     that.ampm_inner_arr.push(res);
                                 }
                                 if(response.data.length - 1 === index) {
+                                    eg2.push(eg1);   
                                     that.ampm_arr.push(that.ampm_inner_arr);
                                 }
                         });
                         that.memory='';       
-                  
+                        // console.log('e1',that.ampm_arr);
+                        // console.log('e2',eg2);
                         for(let i=1;i<=this.dayCount;i++){
                             for(let j = 0; j < that.ampm_arr.length; j++) {
                                     let connect_to_dayampm = that.ampm_arr[j];                                         
@@ -783,7 +697,7 @@
                                     if(new Date(that.year+"/"+that.month+"/"+i).getDate()===new Date(connect_to_dayampm[k].recordedDateTime).getDate()){
                                         
                                         that.ampm_by_day.push(connect_to_dayampm[k]); 
-                                     
+                                        // console.log('t1',that.ampm_by_day);
                                         if (connect_to_dayampm.length - 1 === k) {        
                                       
                                             if(that.ampm_by_day.length<5 && that.ampm_by_day.length!==4){                                            
@@ -791,42 +705,62 @@
                                                 for(let a=0;a<add_arr;a++){                                             
                                                     that.ampm_by_day.push(null); //{"am_pm":"00:00","hour":"00","minute":"00"}
                                                 }
-                                            }                                       
-                                            let store_arr=[];
-                                       
+                                            } 
+                                            //    console.log('t2',that.ampm_by_day);                                      
+                                            let store_arr=[];//let ex1={};//let ex2=[];
+                                            // var parsedobj = JSON.parse(JSON.stringify(this.get_attend_data))
+                                            // console.log("hay checking!!",parsedobj);
+                                            //  console.log("hay checking!!",this.get_attend_data);
+                                            //   console.log("hay checking2",that.get_attend_data);
+                                            //    console.log("hay checking33",that.$root);
+                                            //    let parsedObj =JSON.stringify(that.get_attend_data)
+                                            //     console.log(parsedObj)
                                             for(let i=0;i<that.ampm_by_day.length;i++){
                                         
                                                 if(that.ampm_by_day[i]!=null){
+
+                                                    // console.log("hay checking!!",that.get_attend_data[i]);
+
                                                     if(that.ampm_by_day[i].hour<12){        
                                                                                             
-                                                       store_arr[0]=that.ampm_by_day[i]?that.ampm_by_day[i]:null;                                                  
-                                                    }else if(that.ampm_by_day[i].hour>=12 && that.ampm_by_day[i].minute>=0  && that.ampm_by_day[i].hour<13 && store_arr[1]==undefined && store_arr[0]!=undefined ){  //&& store_arr[0]!==undefined
+                                                    //    store_arr[0]=that.ampm_by_day[i]?that.ampm_by_day[i]:null;   
+                                                        ex1['am1']=that.ampm_by_day[i]?that.ampm_by_day[i].am_pm:null;                                                      
+                                                    }else if(that.ampm_by_day[i].hour>=12 && that.ampm_by_day[i].minute>=0  && that.ampm_by_day[i].hour<13 && ex1['am2']==undefined && ex1['am1']!=undefined ){  //&& store_arr[0]!==undefined
                                                     
-                                                        store_arr[1]=that.ampm_by_day[i]?that.ampm_by_day[i]:null;                                                       
-                                                    }else if( ( (that.ampm_by_day[i].hour>=12 && that.ampm_by_day[i].minute>=0 ) || (that.ampm_by_day[i].hour>=12 && that.ampm_by_day[i].minute>=0   ) )&& that.ampm_by_day[i].hour<17 && store_arr[2]==null){ //&& store_arr[1]!==undefined   //&& store_arr[1]===undefined                                                    
+                                                        // store_arr[1]=that.ampm_by_day[i]?that.ampm_by_day[i]:null;  
+                                                         ex1['am2']=that.ampm_by_day[i]?that.ampm_by_day[i].am_pm:null;                                                      
+                                                    }else if( ( (that.ampm_by_day[i].hour>=12 && that.ampm_by_day[i].minute>=0 ) || (that.ampm_by_day[i].hour>=12 && that.ampm_by_day[i].minute>=0   ) )&& that.ampm_by_day[i].hour<17 && ex1['pm1']==null){ //&& store_arr[1]!==undefined   //&& store_arr[1]===undefined                                                    
                                                       
-                                                       store_arr[2]=that.ampm_by_day[i]?that.ampm_by_day[i]:null;                                                     
+                                                    //    store_arr[2]=that.ampm_by_day[i]?that.ampm_by_day[i]:null;   
+                                                      ex1['pm1']=that.ampm_by_day[i]?that.ampm_by_day[i].am_pm:null;                                                     
                                                     }else if(that.ampm_by_day[i].hour>=17 && that.ampm_by_day[i].minute>=0){
                                                 
-                                                        store_arr[3]=that.ampm_by_day[i]?that.ampm_by_day[i]:null;                                                      
+                                                        // store_arr[3]=that.ampm_by_day[i]?that.ampm_by_day[i]:null;  
+                                                        ex1['pm2']=that.ampm_by_day[i]?that.ampm_by_day[i].am_pm:null;                                                      
                                                     }
-                                                    if(store_arr[0]==undefined){
-                                                        store_arr[0]=null;
+                                                    if(ex1['am1']==undefined){
+                                                       ex1['am1']=null;
                                                     }
-                                                    if(store_arr[1]==undefined){
-                                                        store_arr[1]=null;
+                                                    if(ex1['am2']==undefined){
+                                                        ex1['am2']=null;
                                                     }
-                                                    if(store_arr[2]==undefined){
-                                                        store_arr[2]=null;
+                                                    if(ex1['pm1']==undefined){
+                                                        ex1['pm1']=null;
                                                     }
-                                                    if(store_arr[3]==undefined){
-                                                        store_arr[3]=null;
+                                                    if(ex1['pm2']==undefined){
+                                                        ex1['pm2']=null;
                                                     }
                                         
                                                 }
                                             } 
-
-                                            that.ampm_by_day_arr.push(store_arr);
+                                            let tar=[];
+                                            // console.log('ex1',ex1);
+                                            ex2.push(ex1);
+                                            tar.push(ex1);
+                                            //   console.log('ex2',ex2);
+                                                //  console.log('tar',tar);
+                                            ex1={};tar=[];
+                                            // that.ampm_by_day_arr.push(store_arr);
                                             that.status=1; 
                                             that.ampm_by_day=[]; 
                                         }
@@ -837,11 +771,13 @@
                             if(that.status===1){                        
                                that.status=0;                                
                             }else{
-                               that.ampm_by_day_arr.push(null);
+                                  ex2.push(null);
+                            //    that.ampm_by_day_arr.push(null);
                             }
                         }                              
                     });
-                   console.log('checking',that.ampm_by_day_arr);
+                    that.ampm_by_day_arr=ex2;
+                //    console.log('checking',that.ampm_by_day_arr);
                     this.axios
                     .get('http://127.0.0.1:8000/api/setting/delayTime/'+this.year+"/"+this.month)//+this.year+"/"+this.month
                     .then(response => { 
@@ -849,12 +785,7 @@
                           that.default_ampm.pm=response.data.pm;
                     }); 
 
-                    let up_data={
-                        "emp_no":this.emp_no,
-                        "date":this.select_date,
-                        "year":this.year,
-                        "month":this.month,
-                    };
+             
 
                 
 
@@ -877,35 +808,12 @@
             },
             showTimer(index,sec_index,day_leave=''){  //mainIndex_0
             //   console.log("sec",sec_index);         
-              let am_leave='';let pm_leave=''; 
-              let t_am='';let p_am=''; 
-              if(jQuery("."+sec_index).find('.amleave').val()){
-                  am_leave=jQuery("."+sec_index).find('.amleave').val();      
-              }
-              if(jQuery("."+sec_index).find('.pmleave').val()){
-                  pm_leave=jQuery("."+sec_index).find('.pmleave').val()
-              }  
-                // console.log('a_leave',am_leave);
-                // console.log('p_leave',pm_leave);
-
+            
               let am1=jQuery("."+index).find('.am1_0').text().trim();
               let am2=jQuery("."+index).find('.am2_1').text().trim();
 
               let pm1=jQuery("."+index).find('.pm1_2').text().trim();
               let pm2=jQuery("."+index).find('.pm2_3').text().trim();
-
-              if(am1=='' && am2=='' && pm1=='' && pm2=='' && am_leave==1 && pm_leave==1 ){
-                    jQuery("."+sec_index).find(".thour").val('8.00');
-                    return false;
-              }else if(am1=='' && am2=='' && pm1=='' && pm2=='' && am_leave==2 && pm_leave==2){
-                    jQuery("."+sec_index).find(".thour").val('0.00');
-                    return false;
-              }else if( (am_leave==1 && pm_leave=='') || (am_leave==1 && pm_leave==2) ){
-                    t_am=4;
-              }else if( (am_leave=='' && pm_leave==1) || (am_leave==2 && pm_leave==1) ){
-                    p_am=4;
-              }    
-
 
 
             if(day_leave=='circle' || day_leave=='dash'){           
@@ -1060,21 +968,17 @@
                 //             console.log('ad',auto_pm2);  
                
                 let total_am=0;let total_pm=0; 
-                const {t_hr, t_min}=this.totalHourCal(auto_am1,auto_am2,auto_pm1,auto_pm2,total_am,total_pm,t_am,p_am);               
+                const {t_hr, t_min}=this.totalHourCal(auto_am1,auto_am2,auto_pm1,auto_pm2,total_am,total_pm);               
                 let res=isNaN((parseFloat(t_hr)+parseFloat(t_min)).toFixed(2))?'':(parseFloat(t_hr)+parseFloat(t_min)).toFixed(2);                
                 jQuery("."+sec_index).find(".thour").val(res==0?"0.00":res);
             } 
             },
                 
-            totalHourCal(auto_am1,auto_am2,auto_pm1,auto_pm2,total_am,total_pm,t_am,p_am){
-                if(t_am!=''){
-                    total_am=4;
-                }else if(auto_am1!='' && auto_am2!='' && auto_am1!=undefined && auto_am2!=undefined){
+            totalHourCal(auto_am1,auto_am2,auto_pm1,auto_pm2,total_am,total_pm){
+                if(auto_am1!='' && auto_am2!='' && auto_am1!=undefined && auto_am2!=undefined){
                     total_am= (+auto_am2[0] + (+auto_am2[1] / 60))-(+auto_am1[0] + (+auto_am1[1] / 60));                  
                 }
-                if(p_am!=''){
-                    total_pm=4;
-                }else if(auto_pm1!='' && auto_pm2!=''  && auto_pm1!=undefined && auto_pm2!=undefined){
+                if(auto_pm1!='' && auto_pm2!=''  && auto_pm1!=undefined && auto_pm2!=undefined){
                     total_pm=(+auto_pm2[0] + (+auto_pm2[1] / 60))-(+auto_pm1[0] + (+auto_pm1[1] / 60));                 
                 }
                 //  console.log('y');

@@ -142,7 +142,7 @@ class AttendController extends Controller
         $attend='';
         if($request->year && $request->month){
             $date='%'.$request->year."-".$request->month.'%'; 
-            $attend=AttendDetail::where('emp_no', $request->emp_no)->where('date','like',$date)->get();
+            $attend=AttendDetail::where('emp_no', $request->emp_no)->where('date','like',$date)->get()->toArray();
             // var_dump($attend);
         }
       
