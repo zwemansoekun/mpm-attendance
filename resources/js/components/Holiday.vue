@@ -3,75 +3,67 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-4" id="app"> 
-                    <datepicker  :minimumView="'year'" :maximumView="'year'" 
-                        v-model="customDate" :format="customFormatter" id="dtPicker" v-on:selected="selectedDate()">
-                    </datepicker>
+                    <datepicker  :minimumView="'year'" :maximumView="'year'" v-model="customDate" :format="customFormatter" id="dtPicker" v-on:selected="selectedDate()"></datepicker>
                 </div>  
             </div> 
         </div>   
                 
-        <div class="container mt-5">
-            <div class="row">
-                <div class="col-md-4"> {{customFormatter(customDate)}}</div>
-                    <input type="hidden" name="dtInput" :value="customDate">
-                </div>
-            <div class="row">
-                <div class="col-md-4"></div>
-                <div class="col-md-4">
-                    <button type="button" class="btn btn-primary" ref="btnToggle" 
-                    @click="addRow(holidays)" :disabled="!btnEnabled" >{{btnText.text}}</button>
-                </div>
-                <div class="col-md-4">
-                    <button type="button" class="btn btn-primary" v-if="isBtnHidden" 
-                    @click="copyRow()">前年の物をコピー</button>
-                </div>
-            </div> 
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th scope="col">date</th>
-                        <th scope="col">description</th>
-                    </tr>
-                </thead>
+                <div class="container mt-5">
+                    <!-- //form -->
+                        <div class="row">
+                            <div class="col-md-4"> {{customFormatter(customDate)}}</div>
+                            <input type="hidden" name="dtInput" :value="customDate">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4"></div>
+                            <div class="col-md-4">
+                                <button type="button" class="btn btn-primary" ref="btnToggle" @click="addRow(holidays)" :disabled="!btnEnabled" >{{btnText.text}}</button>
+                            </div>
+                            <div class="col-md-4">
+                                <button type="button" class="btn btn-primary" v-if="isBtnHidden" @click="copyRow()">前年の物をコピー</button>
+                            </div>
+                        </div> 
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                <th scope="col">date</th>
+                                <th scope="col">description</th>
+                                </tr>
+                            </thead>
                             
-                <tbody v-sortable.tr="holidays" id ="tblId" v-if="isRowOne">
-                    <tr v-for="holiday in holidays">
-                        <td>
-                            <span v-if="holiday.dtError" class="text-danger">
-                                日付をフォーマット(YYYY-MM-DD)で入力してください
-                            </span>
-                            <span v-if="holiday.dtDuplicateError" class="text-danger">
-                                日付は重複しています
-                            </span>
-                            <span v-if="holiday.yearError" class="text-danger">
-                                {{customFormatter(customDate)}}の休日を入力してください
-                            </span>
-                            <input class="form-control" v-model="holiday.date"  type="text"/>
-                        </td>
-                        <td>
-                            <span v-if="holiday.desError" class="text-danger">
-                                名称を入力してください
-                            </span>
-                            <span v-if="holiday.desDuplicateError" class="text-danger">
-                                名称は重複しています
-                            </span>
-                            <input class="form-control" v-model="holiday.description" type="text"/>
-                        </td>
-                    </tr>
-                </tbody>
-                <tbody  v-if="isRowTwo">
-                    <tr>
-                        <td>
-                            <input class="form-control"  type="text" value=""/>
-                        </td>
-                        <td>
-                            <input class="form-control"  type="text" value=""/>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+                            <tbody v-sortable.tr="holidays" id ="tblId" v-if="isRowOne">
+                                <tr v-for="holiday in holidays">
+                                    <td>
+                                        <span v-if="holiday.dtError" class="text-danger">日付をフォーマット(YYYY-MM-DD)で入力してください</span>
+                                        <span v-if="holiday.dtDuplicateError" class="text-danger">日付は重複しています</span>
+                                        <span v-if="holiday.yearError" class="text-danger">
+                                            {{customFormatter(customDate)}}の休日を入力してください
+                                        </span>
+                                        <input class="form-control" v-model="holiday.date"  type="text"/>
+                                    </td>
+                                    <td>
+                                        <span v-if="holiday.desError" class="text-danger">名称を入力してください</span>
+                                        <span v-if="holiday.desDuplicateError" class="text-danger">名称は重複しています</span>
+                                        <input class="form-control" v-model="holiday.description" type="text"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+
+                            <tbody  id ="tblId" v-if="isRowTwo">
+                                <tr>
+                                    <td>
+                                        <input class="form-control"  type="text" value=""/>
+                                    </td>
+                                    <td>
+                                        <input class="form-control"  type="text" value=""/>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                </div>
         </div>
-    </div>
+  
 </template>
 
 <script>
@@ -131,8 +123,12 @@ var moment = require('moment');
                           }
                         }
 
-                        for (var i = 0; i < this.holidays.length; i++) {
-                            for(var j= i+ 1; j < this.holidays.length; j++){
+                        
+                       
+                        for (var i = 0; i < holidays.length; i++) {
+                            for(var j= i+ 1; j < holidays.length; j++){
+                                console.log(holidays[i]["date"]);
+                                console.log("j " +holidays[j]["date"]);
                                 if (holidays[i]["date"] === holidays[j]["date"]) {
                                     holidays[j]["dtDuplicateError"] = true;
                                 }
@@ -145,12 +141,12 @@ var moment = require('moment');
                         }
 
                         for(let i=0; i <this.holidays.length; i++){
-                          if(holidays[i].dtDuplicateError == true || holidays[i].desDuplicateError == true){
+                          if(holidays[i].dtDuplicateError == true && holiday[i].desDuplicateError == true){
                               return this.holidays;
                           }
                         }
 
-                        for(let i=0; i <this.holidays.length; i++){
+                           for(let i=0; i <this.holidays.length; i++){
                           if(moment(holidays[i].date).format('YYYY') !== moment(this.customDate).format('YYYY')){
                              holidays[i].yearError = true;
                           }
@@ -170,7 +166,7 @@ var moment = require('moment');
                             this.$refs.btnToggle.innerText = '編集',
                             //this.$router.push({name: 'home'}),
                              this.axios
-                                .get('http://127.0.0.1:8000/api/holidays/findYear/'+ moment(this.customDate).format("yyyy"))
+                               .get('http://127.0.0.1:8000/api/holidays/findYear/'+ moment(this.customDate).format("yyyy"))
                                 .then(response => {
                                     this.holidays = response.data;
                                     
@@ -194,7 +190,8 @@ var moment = require('moment');
                 });
             },
             returnValue: function(){
-                this.axios
+                
+                    this.axios
                     .get('http://127.0.0.1:8000/api/holidays/findYear/'+ moment(this.customDate).format("yyyy"))
                     .then(response => {
                         this.holidays = response.data;
@@ -231,7 +228,6 @@ var moment = require('moment');
                     this.axios
                     .get('http://127.0.0.1:8000/api/holidays/copy')
                     .then(response => {
-                        //console.log(response.data);
                         this.holidays = response.data,
                         this.btnEnabled = true;
                     });
