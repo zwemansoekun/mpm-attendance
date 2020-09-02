@@ -63,7 +63,7 @@
 
                     </div>
                     <!-- v-on:submit.prevent="attendSave" -->
-                     {{get_attend_data}}
+                     <!-- {{get_attend_data}} -->
 
                     <div class="row mt-5">
                         <div class="col-md-4"> {{this.select_date}}</div>                          
@@ -123,13 +123,13 @@
                                             <tr :class="`index_${dayindex}`">   
                                                 <!-- <div> -->
                                                 <!-- <div v-if="check_attend_data"> -->
-                                                    <td  style="width: 200px;padding:0px" v-bind:key="index"  v-for="(date,index) in day" :class="date==null?([0,1].includes(index)==true?'paid-leave1':'paid-leave2'):''">   
+                                                    <td  style="width: 200px;padding:0px" v-bind:key="key"  v-for="(date,index,key) in day" :class="date==null?([0,1].includes(key)==true?'paid-leave1':'paid-leave2'):''">   
                                                         <div v-if="date!== null">                                        
-                                                            <template v-if="index<2" >
-                                                                <input :name="`am${index+1}[]`"  @change="updateInput" :class="`form-control input-sm am${index+1}`"  style="text-align: center;" type="text">                                                   
+                                                            <template v-if="key<2" >
+                                                                <input :name="`am${key+1}[]`"  @change="updateInput" :class="`form-control input-sm am${key+1}`"  style="text-align: center;" type="text">                                                   
                                                             </template>
                                                             <template v-else>
-                                                                <input :name="`pm${index-1}[]`"  @change="updateInput"  :class="`form-control input-sm pm${index-1}`"  style="text-align: center;" type="text">   
+                                                                <input :name="`pm${key-1}[]`"  @change="updateInput"  :class="`form-control input-sm pm${key-1}`"  style="text-align: center;" type="text">   
                                                             </template>
                                                         </div>
                                                         <div v-else>
