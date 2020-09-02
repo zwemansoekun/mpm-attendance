@@ -20,16 +20,16 @@ class CreateEmployeeDetailsTable extends Migration
             $table->integer('trans_money');
             $table->integer('jlpt');
             $table->integer('ssb');
-            $table->string('position');
-            $table->text('address');
-            $table->string('phone_no');
-            $table->string('nrc_no');
-            $table->string('bank_account');
-            $table->string('member');
-            $table->string('child');
-            $table->string('emg_ph_no');
-            $table->string('waste_time');
-            $table->integer('employee_id'); //f_key
+            $table->string('position')->nullable();
+            $table->text('address')->nullable();
+            $table->string('phone_no')->nullable();
+            $table->string('nrc_no')->nullable();
+            $table->string('bank_account')->nullable();
+            $table->string('member')->nullable();
+            $table->string('child')->nullable();
+            $table->string('emg_ph_no')->nullable();
+            $table->string('waste_time')->nullable();
+            $table->integer('emp_id'); //api_emp_id
             $table->timestamps();
         });
     }

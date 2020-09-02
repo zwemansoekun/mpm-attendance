@@ -16,7 +16,6 @@ class CreateEmployeesTable extends Migration
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
             $table->string('kana_name');
-            $table->string('furi_name');
             $table->date('entry_date');
             $table->date('dob');
             $table->integer('emp_id'); //api_emp_id

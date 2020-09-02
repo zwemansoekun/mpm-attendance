@@ -13,32 +13,22 @@ class EmployeeDetailController extends Controller
 
     public function findLastDataByEmployee($emp_id)
     {
-        $employee = Employee::select("*")->where('emp_id',$emp_id)->first();
 
-        $employeeDetail = new EmployeeDetail();
-        if($employee != null)
-        {
-            $employeeDetail = EmployeeDetail::select("*")->where("employee_id",$employee->id)->orderBy('pay_month','desc')->with('employee')->first();
-        }
+        $employeeDetail = EmployeeDetail::select("*")->where("emp_id",$emp_id)->orderBy('pay_month','desc')->first();
 
         return response()->json($employeeDetail);
     }
 
     public function findByEmployee($emp_id)
     {
-        $employeeDetails = EmployeeDetail::select("*")->where("employee_id",$emp_id)->orderBy('pay_month')->get();
+        $employeeDetails = EmployeeDetail::select("*")->where("emp_id",$emp_id)->orderBy('pay_month')->get();
 
         return response()->json($employeeDetails);
     }
 
     public function updateAll(Request $request)
     {
-        //$ids = $request->id[0];
-        //Debugbar::info($ids);
-        
         foreach($request->all() as $detail){
-            Debugbar::info('update**');
-            Debugbar::info($detail);
             if(!array_key_exists("id" , $detail))
             {
                 $new = new EmployeeDetail([
@@ -56,7 +46,7 @@ class EmployeeDetailController extends Controller
                     'child' => $detail['child'],
                     'emg_ph_no' => $detail['emg_ph_no'],
                     'waste_time' => $detail['waste_time'],
-                    'employee_id' => $detail['employee_id']
+                    'emp_id' => $detail['emp_id']
                 ]);
                 $new->save();
             } else 
@@ -120,7 +110,6 @@ class EmployeeDetailController extends Controller
                 }
 
                 $oldDetail->save();
-
             }
             
         }

@@ -37,6 +37,8 @@ Route::get('/holidays/copy', 'HolidayController@copy');
 Route::get('/holidays/findYear/{year}', 'HolidayController@findYear');
 
 Route::get('/employee/{emp_id}', 'EmployeeController@findByEmployee');
+Route::post('/employee/save/{id}', 'EmployeeController@save');
+
 Route::get('/employeeDetail/lastData/{emp_id}', 'EmployeeDetailController@findLastDataByEmployee');
 Route::get('/employeeDetail/{emp_id}', 'EmployeeDetailController@findByEmployee');
 Route::post('/employeeDetail/updateAll', 'EmployeeDetailController@updateAll');
