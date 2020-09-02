@@ -1,12 +1,14 @@
+
 <template>
-    <div class="col-md-10"> 
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4" id="app"> 
-                    <datepicker  :minimumView="'year'" :maximumView="'year'" v-model="customDate" :format="customFormatter" id="dtPicker" v-on:selected="selectedDate()"></datepicker>
-                </div>  
-            </div> 
-        </div>   
+
+        <div class="col-md-10"> 
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-4" id="app"> 
+                             <datepicker  :minimumView="'year'" :maximumView="'year'" v-model="customDate" :format="customFormatter" id="dtPicker" v-on:selected="selectedDate()"></datepicker>
+                        </div>  
+                    </div> 
+                </div>   
                 
                 <div class="container mt-5">
                     <!-- //form -->
@@ -38,7 +40,7 @@
                                         <span v-if="holiday.dtDuplicateError" class="text-danger">日付は重複しています</span>
                                         <span v-if="holiday.yearError" class="text-danger">
                                             {{customFormatter(customDate)}}の休日を入力してください
-                                        </span>
+                                    </span>
                                         <input class="form-control" v-model="holiday.date"  type="text"/>
                                     </td>
                                     <td>
@@ -60,6 +62,8 @@
                                 </tr>
 
                             </tbody>
+
+                        
                         </table>
                 </div>
         </div>
@@ -81,7 +85,9 @@ var moment = require('moment');
             
             return {
                 customDate: new Date(),holidays: [],seen: true, btnText: {text:'編集'},
-                isBtnHidden:false, isRowOne:true, isRowTwo: false, btnEnabled:true
+                isBtnHidden:false, isRowOne:true, isRowTwo: false, btnEnabled:true,
+                subholidays: []
+               
             }
         },
         
@@ -136,7 +142,7 @@ var moment = require('moment');
                                     holidays[j]["desDuplicateError"] = true;
                                 }
                             }
-                            holidays[i]["dtError"] = false;
+                             holidays[i]["dtError"] = false;
                             holidays[i]["desError"] = false;
                         }
 
@@ -146,7 +152,7 @@ var moment = require('moment');
                           }
                         }
 
-                           for(let i=0; i <this.holidays.length; i++){
+                        for(let i=0; i <this.holidays.length; i++){
                           if(moment(holidays[i].date).format('YYYY') !== moment(this.customDate).format('YYYY')){
                              holidays[i].yearError = true;
                           }
@@ -160,18 +166,21 @@ var moment = require('moment');
                           }
                         }
 
+                    console.log("Inholilday" +this.holidays);
                         this.axios
                         .post('http://127.0.0.1:8000/api/holidays', Object.values(this.holidays))
                         .then(response => (
                             this.$refs.btnToggle.innerText = '編集',
-                            //this.$router.push({name: 'home'}),
-                             this.axios
-                               .get('http://127.0.0.1:8000/api/holidays/findYear/'+ moment(this.customDate).format("yyyy"))
-                                .then(response => {
-                                    this.holidays = response.data;
+                             this.holidays =[],
+                             //console.log("holildathis.holidays),
+                              this.axios
+                                .get('http://127.0.0.1:8000/api/holidays/findYear/'+ moment(this.customDate).format("yyyy"))
+                                .then(response => (
                                     
-                                })
-                            ))
+                                    this.holidays = response.data
+                                 
+                                ))
+                        ))
                         .catch(error=> {
                             //console.log(error.response.data)
                         });
@@ -190,7 +199,7 @@ var moment = require('moment');
                 });
             },
             returnValue: function(){
-                
+                console.log("find");
                     this.axios
                     .get('http://127.0.0.1:8000/api/holidays/findYear/'+ moment(this.customDate).format("yyyy"))
                     .then(response => {
@@ -201,11 +210,13 @@ var moment = require('moment');
                              if(this.holidays.length != 0){
                                 this.isRowOne = true;
                                 this.isRowTwo = false;
+                                
                                 this.btnEnabled = true;
                             }else{
                                 this.btnEnabled = false;
                                 this.isRowOne = false;
                                 this.isRowTwo = true;
+                                 
                             }
 
                         }else{
@@ -215,9 +226,11 @@ var moment = require('moment');
                              if(this.holidays.length != 0){
                                 this.isRowOne = true;
                                 this.isRowTwo = false;
+                                 
                             }else{
                                 this.isRowOne = false;
                                 this.isRowTwo = true;
+                                 
                             }
                         }
                     });
@@ -225,9 +238,11 @@ var moment = require('moment');
             copyRow: function () {
                     this.isRowOne = true;
                     this.isRowTwo = false;
+                    
                     this.axios
                     .get('http://127.0.0.1:8000/api/holidays/copy')
                     .then(response => {
+                        //console.log(response.data);
                         this.holidays = response.data,
                         this.btnEnabled = true;
                     });

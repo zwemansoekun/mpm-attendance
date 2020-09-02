@@ -27,6 +27,7 @@ class HolidayController extends Controller
      */
     public function add(Request $request)
     {
+        Debugbar::info($request->all());
         foreach($request->all() as $key)
         {
           if(!array_key_exists("id", $key))
@@ -69,7 +70,7 @@ class HolidayController extends Controller
      */
     public function findYear($year)
     {
-       $holidays = Holiday::select('date','description')->whereYear('date',$year)->get();
+       $holidays = Holiday::select('id','date','description')->whereYear('date',$year)->get();
         return response()->json($holidays);
     }
 
