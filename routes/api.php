@@ -44,5 +44,7 @@ Route::get('/employeeDetail/{emp_id}', 'EmployeeDetailController@findByEmployee'
 Route::post('/employeeDetail/updateAll', 'EmployeeDetailController@updateAll');
 
 Route::get('/attendManage', 'AttendManageController@index');
+Route::post('/attendManage/csvOutput/{year}', 'AttendManageController@csvOutput');
+
 
 
