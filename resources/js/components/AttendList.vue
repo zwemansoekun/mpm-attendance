@@ -855,16 +855,19 @@
                                 }
                         });
                         that.memory='';       
-                        
-                            console.log(attend_data);
-                        let pp1=[];let pp2=[];let k='';
+                        // attend_data=[];
+                        // attend_data=[ { "id": 7, "date": "2020-07-01", "emp_no": 6, "total_hours": "1.48", "am1": "21:25:00", "am2": "08:16:00", "pm1": "16:20:00", "pm2": "03:45:00", "am_leave": 2, "pm_leave": 1 }, { "id": 36, "date": "2020-07-03", "emp_no": 6, "total_hours": "13.35", "am1": "08:24:00", "am2": "12:27:00", "pm1": "21:55:00", "pm2": "03:21:00", "am_leave": 1, "pm_leave": 2 }, { "id": 69, "date": "2020-07-04", "emp_no": 6, "total_hours": "16.77", "am1": "02:03:00", "am2": "19:48:00", "pm1": "04:39:00", "pm2": "05:53:00", "am_leave": 1, "pm_leave": 2 }, { "id": 81, "date": "2020-07-06", "emp_no": 6, "total_hours": "10.78", "am1": "15:39:00", "am2": "06:32:00", "pm1": "16:29:00", "pm2": "07:38:00", "am_leave": 2, "pm_leave": 1 } ];
+                        let pp1=[];let pp2=[];let k=0;
                         for(let i=1;i<=this.dayCount;i++){
+                                 console.log('mmm',moment(that.year+"/"+that.month+"/"+i).format('YYYY-MM-DD'));
+                            if(k<attend_data.length){
 
-
-                            for(let j=(k!=''?k:0+(i-1));j<attend_data.length;j++){
-                                    
+                          
+                            for(let j=(k!=0?k:0+(i-1));j<attend_data.length;j++){
+                                        console.log('ccccc',attend_data[j].date);
                                 if(moment(that.year+"/"+that.month+"/"+i).format('YYYY-MM-DD')==attend_data[j].date){
                                             pp1.push({"1":attend_data[j]});
+                                            ++k;                                          
                                             break;
                                 }else if(moment(that.year+"/"+that.month+"/"+i).format('YYYY-MM-DD')<attend_data[j].date){
                                        k=j;
@@ -874,10 +877,9 @@
                                          pp1.push(null);
                                     continue;
                                 }
-
-
                             }
-
+                              }else  //dd
+                                  pp1.push(null);
                         }
                         pp2.push(pp1)
                         console.log('pp2',pp2);
