@@ -123,6 +123,30 @@
                                             </tr>
                                         
 
+                                            <tr  :class="`index_${dayindex}`">   
+
+                                                <td  style="width: 200px;padding:0px" v-bind:key="index"  v-for="(date,index) in day" :class="date==null?([0,1].includes(index)==true?'paid-leave1':'paid-leave2'):''">   
+                                                    <div v-if="date!== null">                                        
+                                                        <template v-if="index<2" >
+                                                             <input :name="`am${index+1}[]`"  @change="updateInput" :class="`form-control input-sm am${index+1}`"  style="text-align: center;" type="text">                                                   
+                                                        </template>
+                                                        <template v-else>
+                                                            <input :name="`pm${index-1}[]`"  @change="updateInput"  :class="`form-control input-sm pm${index-1}`"  style="text-align: center;" type="text">   
+                                                        </template>
+                                                    </div>
+                                                     <div v-else>
+                                                        <template v-if="index<2" >
+                                                            <!-- :name="`am${index+1}[]`" -->
+                                                             <input    class="form-control input-sm"  style="text-align: center;" type="text" readonly>                                                   
+                                                        </template>
+                                                        <template v-else>
+                                                            <!-- :name="`pm${index-1}[]`"  -->
+                                                            <input   class="form-control input-sm"  style="text-align: center;" type="text" readonly>   
+                                                        </template>
+                                                     </div>
+                                                </td>
+
+
                                             <tr  :class="`index_${dayindex}`">
                                                     <!-- <td  style="width: 200px;padding:0px" ><input name="am1" class="form-control input-sm"  style="text-align: center;" type="text"></td>
                                                     <td  style="width: 200px;padding:0px" ><input name="am2" class="form-control input-sm"  style="text-align: center;" type="text"></td>      
@@ -271,6 +295,7 @@
             });    
 
         },
+
         computed: {            
 
         },
@@ -351,7 +376,6 @@
                         return true;
                     },
                 });
-
                
                 if(jQuery('#form').valid()){
                          alert($('#form').serialize());
@@ -416,7 +440,6 @@
 
                             }else{
                                 that.showTimer(parent_class_name,class_name,'dash');
-
                             }
 
                             // var m = "clicked: " + key;
