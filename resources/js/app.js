@@ -7,6 +7,7 @@
 require('./bootstrap');
 window.$=window.JQuery= require('jquery')//window.JQuery
 window.Vue = require('vue');
+window.moment = require('moment');
 jQuery.noConflict(); 
 
 import App from './App.vue';

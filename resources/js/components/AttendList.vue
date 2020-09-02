@@ -63,7 +63,7 @@
 
                     </div>
                     <!-- v-on:submit.prevent="attendSave" -->
-                     <!-- {{get_attend_data}} -->
+                     {{get_attend_data}}
 
                     <div class="row mt-5">
                         <div class="col-md-4"> {{this.select_date}}</div>                          
@@ -251,20 +251,9 @@
                 data_check_messg:false,
                 error_check_messg:false,
                 default_ampm:{"am":'',"pm":''},
-                name_of_day:true,
-                model_check:[
-                        // {
-                            [
-                                 {"am1":22},
-                                 {"am2":33},
-                                 {"pm1":44},
-                                 {"pm2":55},
-                           ]    
-                        // }
-                  
-                ],
+                name_of_day:true,             
                 errors:null,
-                get_attend_data:{},
+                get_attend_data:[],
                 check_attend_data:true,               
             }
         },
@@ -668,11 +657,30 @@
                 }
 
             },
-            checkColor:function(val,index){                
-           
+            checkColor:function(val,index){  
+                // console.log('date',val);
+                //  console.log('key',index);
+                let val_split='';              
+                    // console.log('te4',val);
+                    // return '';
                 if( (index==0 || index==2) && val!=null){
                     //  let val_split=val!==''?val.am_pm.split(":"):'';
-                        let val_split=val!==''?val.split(":"):'';
+                       val_split=val!==''?val.split(":"):'';
+                    // if(val.am1!=null){
+                    //     val_split=val!==''?val.am1.split(":"):'';
+                    // }
+                    // if(val.am2!=null){
+                    //     val_split=val!==''?val.am2.split(":"):'';
+                    // }
+                    // if(val.pm1!=null){
+                    //     val_split=val!==''?val.pm1.split(":"):'';
+                    // }
+                    // if(val.pm2!=null){
+                    //     val_split=val!==''?val.pm2.split(":"):'';
+                    // } 
+
+                        // console.log('vvd',val_split);
+
                       if(val_split!='' && ( (val_split[0]==8 && val_split[1]>0 && val_split[1]<6) || (val_split[0]==13 && val_split[1]>0 && val_split[1]<16) ) ){
                           return 'warning';
                       }else if(val_split!='' && ((val_split[0]==8 &&  val_split[1]>5) || (val_split[0]==13 &&  val_split[1]>15) )){
@@ -710,7 +718,7 @@
                 }  
            },   
            update_call(){
-               
+                    let that=this;
                     let up_data={
                         "emp_no":this.emp_no,
                         "date":this.select_date,
@@ -726,27 +734,17 @@
                     .then(response=>{ 
 
                         that.check_attend_data=false;                        
-                        that.get_attend_data={
-    "karrrrr": {
-        "Nissan": [
-            {"model":"Sentra", "doors":4},
-            {"model":"Maxima", "doors":4},
-            {"model":"Skyline", "doors":2}
-        ],
-        "Ford": [
-            {"model":"Taurus", "doors":4},
-            {"model":"Escort", "doors":4}
-        ]
-    }
-};//response.data;
-                        console.log('res',that.get_attend_data);                     
+                        that.get_attend_data=response.data;
+                        console.log('res',that.get_attend_data);   
+                        that.ampm_calling(that.get_attend_data);                  
                     })
                     .catch(function (error) {
                         console.log('geterror',error.response);
                     }); 
 
            },   
-            ampm_calling(){                
+            ampm_calling(attend_data=''){        
+                    console.log('ampmin',attend_data);           
                     let that = this;
                     let those=this;
                     this.ampm_by_day_arr=[];
@@ -759,7 +757,7 @@
                    
                     this.dayCount=new Date(this.year,this.month, 0).getDate();
                     // this.update_call();
-                    console.log('okkkkkkkkkk',that.get_attend_data);
+                    // console.log('okkkkkkkkkk',that.get_attend_data);
                     // let up_data={
                     //     "emp_no":this.emp_no,
                     //     "date":this.select_date,
@@ -857,13 +855,46 @@
                                 }
                         });
                         that.memory='';       
-                        // console.log('e1',that.ampm_arr);
-                        // console.log('e2',eg2);
+                        
+                            console.log(attend_data);
+                        let pp1=[];let pp2=[];let k='';
                         for(let i=1;i<=this.dayCount;i++){
+
+
+                            for(let j=(k!=''?k:0+(i-1));j<attend_data.length;j++){
+                                    
+                                if(moment(that.year+"/"+that.month+"/"+i).format('YYYY-MM-DD')==attend_data[j].date){
+                                            pp1.push({"1":attend_data[j]});
+                                            break;
+                                }else if(moment(that.year+"/"+that.month+"/"+i).format('YYYY-MM-DD')<attend_data[j].date){
+                                       k=j;
+                                       pp1.push(null);
+                                            break;
+                                }else{
+                                         pp1.push(null);
+                                    continue;
+                                }
+
+
+                            }
+
+                        }
+                        pp2.push(pp1)
+                        console.log('pp2',pp2);
+                        return;
+
+
+
+                        for(let i=1;i<=this.dayCount;i++){
+                                //    console.log('testiung123',attend_data[i-1]);
                             for(let j = 0; j < that.ampm_arr.length; j++) {
                                     let connect_to_dayampm = that.ampm_arr[j];                                         
                                 for(let k = 0; k < connect_to_dayampm.length; k++) {
-                                           
+                                    //   console.log('suzin',new Date(that.year+"/"+that.month+"/"+i).getDate());   
+                                    //   console.log('zweman',attend_data[i-1].date);    
+                                    //   console.log('sdate',attend_data[i-1].date);   
+                                   
+                                    //   console.log('date',moment(that.year+"/"+that.month+"/"+i).format('YYYY-MM-DD'));
                                     if(new Date(that.year+"/"+that.month+"/"+i).getDate()===new Date(connect_to_dayampm[k].recordedDateTime).getDate()){
                                         
                                         that.ampm_by_day.push(connect_to_dayampm[k]); 
@@ -923,55 +954,58 @@
                                         
                                                 }
                                             } 
-                                            let tar=[];
+                                            
+                                            // let tar=[];
                                             // console.log('ex1',ex1);
-                                            ex2.push(ex1);
-                                            tar.push(ex1);
+                                        
+                                             if(attend_data[i-1].date==moment(that.year+"/"+that.month+"/"+i).format('YYYY-MM-DD')){                                                   
+                                                  ex2.push({"0":ex1,"1":attend_data[i-1]});
+                                             }else{
+                                                   ex2.push({"0":ex1});
+                                             }  
+
+                                            // ex2.push({"1":attend_data});
+                                            // tar.push(ex1);
                                             //   console.log('ex2',ex2);
                                                 //  console.log('tar',tar);
-                                            ex1={};tar=[];
+                                            ex1={};//tar=[];
                                             // that.ampm_by_day_arr.push(store_arr);
                                             that.status=1; 
                                             that.ampm_by_day=[]; 
                                         }
                                     }
+                                    
+                                    // console.log('sdate',attend_data[i-1].date);
+                                    // console.log('date',moment(that.year+"/"+that.month+"/"+i).format('YYYY-MM-DD'));
+                                    // if(attend_data[i-1].date==moment(that.year+"/"+that.month+"/"+i).format('YYYY-MM-DD')){
+                                    //         ex2.push({"1":attend_data[i-1].date});
+                                    // }    
 
                                 }
                             }
-                            if(that.status===1){                        
-                               that.status=0;                                
-                            }else{
-                                  ex2.push(null);
-                            //    that.ampm_by_day_arr.push(null);
-                            }
+                                        if(that.status===1){                        
+                                           that.status=0;                                
+                                        }else{
+                                             console.log('else',attend_data[i-1].date);
+                                              console.log('elseif',moment(that.year+"/"+that.month+"/"+i).format('YYYY-MM-DD'));
+                                            // if(attend_data[i-1].date==moment(that.year+"/"+that.month+"/"+i).format('YYYY-MM-DD')){                                                   
+                                            //       ex2.push({"1":attend_data[i-1]});
+                                            //  }else{
+                                                  ex2.push(null);
+                                            //  }
+
+                                        //    that.ampm_by_day_arr.push(null);
+                                        }
                         }                              
                     });
                     that.ampm_by_day_arr=ex2;
-                //    console.log('checking',that.ampm_by_day_arr);
+                   console.log('checking',that.ampm_by_day_arr);
                     this.axios
                     .get('http://127.0.0.1:8000/api/setting/delayTime/'+this.year+"/"+this.month)//+this.year+"/"+this.month
                     .then(response => { 
                           that.default_ampm.am=response.data.am;
                           that.default_ampm.pm=response.data.pm;
-                    }); 
-
-             
-
-                
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                    });
 
                 } 
 
