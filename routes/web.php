@@ -23,6 +23,7 @@ Route::get('/',  function () {
         return view('layouts.app');
 })->middleware('auth');
 
+Route::get('/attendManage/download/{year}', 'AttendManageController@download');
 Route::get('{any}', function () {
          return view('layouts.app');
 })->where('any', '.*');

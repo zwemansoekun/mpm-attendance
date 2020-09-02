@@ -4,7 +4,10 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-4" id="app"> 
-                    <datepicker  placeholder="Select Year/Month" :minimumView="'month'" :maximumView="'month'" v-model="customDate" v-on:selected="selectedDate()" :format="customFormatter"></datepicker>
+                    <datepicker  placeholder="Select Year/Month" :minimumView="'month'" 
+                        :maximumView="'month'" v-model="customDate" 
+                        v-on:selected="selectedDate()" :format="customFormatter"></datepicker>
+                      
                 </div>  
             </div> 
         </div>   
@@ -27,6 +30,8 @@ var moment = require('moment');
                 customDate: null
             }
         },
+         template: `<div class="checkbox-wrapper" > </div>`,
+
         methods :{
             customFormatter(date) {
                 return moment(date).format('YYYY/MM');
@@ -37,17 +42,17 @@ var moment = require('moment');
                 });
             },
             returnValue: function(){
-               var date = moment(this.customDate).format("yyyyMM");
-                this.axios
-                .get('http://127.0.0.1:8000/api/attendManage/csvOutput')
-                .then(response => {
-                    //this.holidays = response.data;
-                    console.log("Success")
-                   //console.log(response.data);
+                axios.post('http://127.0.0.1:8000/api/attendManage/csvOutput/'+ moment(this.customDate).format("yyyyMM"))
+                    .then((response) => {
+
+                        if(response.data != null){
+                            const link = document.createElement('a')
+                            link.href = 'http://127.0.0.1:8000/attendManage/download/'+ moment(this.customDate).format("yyyyMM")
+                            document.body.appendChild(link)
+                            link.click()
+                        }
                 });
             },
-
-
         }
     }
 
