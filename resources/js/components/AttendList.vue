@@ -63,7 +63,7 @@
 
                     </div>
                     <!-- v-on:submit.prevent="attendSave" -->
-                     {{get_attend_data}}
+                     <!-- {{pp1}} -->
 
                     <div class="row mt-5">
                         <div class="col-md-4"> {{this.select_date}}</div>                          
@@ -85,138 +85,115 @@
                             </tr>
                         </thead>
                         <tbody> 
-                                <tr v-bind:key="dayindex" v-for="(day,dayindex) in ampm_by_day_arr" v-bind:class="day_name(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])">                                 
-                                   
-                                   <!-- {{day}} -->
+                                <tr v-bind:key="dayindex" v-for="(day,dayindex) in pp1" v-bind:class="day_name(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])">                                
                                     <th style="width: 100px;" scope="row">{{dayindex+1}} {{ days[new Date(year+"/"+month+"/"+(dayindex+1)).getDay()]}}</th>
-                                    <td colspan="4"    style="text-align: center;padding:0px">
-                                     
-                                        <div v-if="day!==null">
-                                            <tr :class="`mainIndex_${dayindex}`" >              
-                                                <!-- {{day.am1}} -->
-                                                <td style="width: 16.4%;" v-bind:key="key"  v-for="(date,index,key) in day" v-bind:class="`bg-${checkColor(date,key)}`"  :style="`background-color:${checkBgColor(year,month,dayindex+1,date==null)};`">   
-                                                    <div v-if="date!== null" :class="ampm_index(key)">                                        
-                                                    
-                                                        {{date}}                                                
-                                                        
-                                                    </div>
-                                                </td>
-
-                                                <!-- <td style="width: 16.4%;" v-bind:key="index"  v-for="(date,index) in day" v-bind:class="`bg-${checkColor(date,index)}`"  :style="`background-color:${checkBgColor(year,month,dayindex+1,date==null)};`">   
-                                                     <!-- //"`main_${dayindex}`"     -->
-                                                     <!-- _${index} -->
-                                                     <!-- {{date}}
-                                                    <div v-if="date!== null" :class="ampm_index(index)">                                        
-                                                    
-                                                        {{date.am_pm}}                                                        
-                                                        
-                                                    </div>
-
-                                                </td>     -->
-                                                <td style="width: 16.4%;" >  
-                                                </td>  
-                                                <td style="width: 20.4%;" >  
-                                                    
-                                                </td>                                                                  
-                                            </tr>
-                                        
-                                            <tr :class="`index_${dayindex}`">   
-                                                <!-- <div> -->
-                                                <!-- <div v-if="check_attend_data"> -->
-                                                    <td  style="width: 200px;padding:0px" v-bind:key="key"  v-for="(date,index,key) in day" :class="date==null?([0,1].includes(key)==true?'paid-leave1':'paid-leave2'):''">   
-                                                        <div v-if="date!== null">                                        
-                                                            <template v-if="key<2" >
-                                                                <input :name="`am${key+1}[]`"  @change="updateInput" :class="`form-control input-sm am${key+1}`"  style="text-align: center;" type="text">                                                   
-                                                            </template>
-                                                            <template v-else>
-                                                                <input :name="`pm${key-1}[]`"  @change="updateInput"  :class="`form-control input-sm pm${key-1}`"  style="text-align: center;" type="text">   
-                                                            </template>
-                                                        </div>
-                                                        <div v-else>
-                                                            <template v-if="index<2" >
-                                                                <!-- :name="`am${index+1}[]`" -->
-                                                                <input    class="form-control input-sm"  style="text-align: center;" type="text" readonly>                                                   
-                                                            </template>
-                                                            <template v-else>
-                                                                <!-- :name="`pm${index-1}[]`"  -->
-                                                                <input   class="form-control input-sm"  style="text-align: center;" type="text" readonly>   
-                                                            </template>
+                                     <td colspan="4"    style="text-align: center;padding:0px">
+                                         <!-- {{day}} -->
+                                           <div v-if="day!==null">
+                                                <tr :class="key==0?`mainIndex_${dayindex}`:`index_${dayindex}`" v-bind:key="key"  v-for="(date,key) in day" >                                                    
+                                                     <template v-if="key==0">                                                         
+                                                        <td style="width: 16.4%;" v-bind:class="`bg-${checkColor(date.am1,key)}`"  :style="`background-color:${checkBgColor(year,month,dayindex+1,date.length==0)};`">
+                                                        <div v-if="date!== null"  :class="ampm_index(0)"> 
+                                                            {{date.am1}}  
                                                         </div>
                                                     </td>
+                                                    <td style="width: 16.4%;"   v-bind:class="`bg-${checkColor(date.am2,key)}`"  :style="`background-color:${checkBgColor(year,month,dayindex+1,date.length==0)};`">
+                                                        <div v-if="date!== null"  :class="ampm_index(1)"> 
+                                                            {{date.am2}}  
+                                                        </div>
+                                                    </td>
+                                                    <td style="width: 16.4%;"  v-bind:class="`bg-${checkColor(date.pm1,key)}`"  :style="`background-color:${checkBgColor(year,month,dayindex+1,date.length==0)};`">
+                                                        <div v-if="date!== null"  :class="ampm_index(2)"> 
+                                                            {{date.pm1}}  
+                                                        </div>
+                                                    </td>
+                                                    <td style="width: 16.4%;"  v-bind:class="`bg-${checkColor(date.pm2,key)}`"  :style="`background-color:${checkBgColor(year,month,dayindex+1,date.length==0)};`">
+                                                        <div v-if="date!== null"  :class="ampm_index(3)"> 
+                                                            {{date.pm2}}   
+                                                        </div>
+                                                    </td>
+                                                    <td style="width: 16.4%;" >  
+                                                    </td>  
+                                                    <td style="width: 20.4%;" >
+                                                    </td>
+                                                    </template>    
+                                                    <template v-else>
 
-
-                                                    <!-- <td  style="width: 200px;padding:0px" ><input name="am1" class="form-control input-sm"  style="text-align: center;" type="text"></td>
-                                                    <td  style="width: 200px;padding:0px" ><input name="am2" class="form-control input-sm"  style="text-align: center;" type="text"></td>      
-                                                    <td  style="width: 200px;padding:0px" ><input name="pm1" class="form-control input-sm"  style="text-align: center;" type="text"></td>      
-                                                    <td  style="width: 200px;padding:0px" ><input name="pm2" class="form-control input-sm"  style="text-align: center;" type="text"></td>   -->
-                                                    
-                                                    <td  style="width: 200px;padding:0px" >
-                                                        <input name="total_hours[]" class="form-control input-sm thour" style="text-align: center;" type="text">
-                                                        <input name="date[]" class="form-control input-sm date" style="text-align: center;" type="hidden" :value="`${year}-${month}-${(dayindex+1).toString().length==1?'0'+(dayindex+1):(dayindex+1)}`">
-                                                    </td>           
-                                                    <td  style="width: 200px;padding:0px;" ><button type="button" onclick="this.blur();" :id="`autobut${dayindex}`" class="btn btn-secondary" @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">自動計算</button></td>     
-                                                <!-- </div>  -->
-                                                <!-- <div v-else> -->
-                                                    <!-- <td  style="width: 200px;padding:0px" v-bind:key="index"  v-for="(date,index) in get_attend_data" :class="date==null?([0,1].includes(index)==true?'paid-leave1':'paid-leave2'):''">   
-                                                       <pre> {{date}}</pre>
-                                                       <!-- <pre>{{}}</pre> -->
-
+                                                        <td style="width: 16.4%;padding:0px" v-bind:class="date==null?([0,1].includes(0)==true?'paid-leave1':'paid-leave2'):''">
+                                                                 <div v-if="date!== null">                                        
+                                                                     <input :name="`am1[]`"  @change="updateInput" :class="`form-control input-sm am1`"  style="text-align: center;" type="text" :value="`${date.am1}`"> 
+                                                                 </div>
+                                                                 <div v-else>
+                                                                      <input   :name="`am1[]`" class="form-control input-sm"  style="text-align: center;" type="text" readonly :value="`${date.am1}`">   
+                                                                 </div>
+                                                        </td>   
+                                                        <td style="width: 16.4%;padding:0px"   v-bind:class="date==null?([0,1].includes(1)==true?'paid-leave1':'paid-leave2'):''">
+                                                                <div v-if="date!== null">  
+                                                                    <input :name="`am2[]`"  @change="updateInput" :class="`form-control input-sm am2`"  style="text-align: center;" type="text" :value="`${date.am2}`">  
+                                                                </div>   
+                                                                <div v-else>
+                                                                   <input   :name="`am2[]`" class="form-control input-sm"  style="text-align: center;" type="text" readonly :value="`${date.am2}`">  
+                                                                </div>
+                                                        </td>
+                                                        <td style="width: 16.4%;padding:0px"  v-bind:class="date==null?([0,1].includes(2)==true?'paid-leave1':'paid-leave2'):''">
+                                                                <div v-if="date!== null">  
+                                                                        <input :name="`pm1[]`"  @change="updateInput"  :class="`form-control input-sm pm1`"  style="text-align: center;" type="text" :value="`${date.pm1}`"> 
+                                                                </div>
+                                                                <div v-else>
+                                                                       <input :name="`pm1[]`"    class="form-control input-sm"  style="text-align: center;" type="text" readonly :value="`${date.pm2}`"> 
+                                                                </div>
+                                                        </td>
+                                                        <td style="width: 16.4%;padding:0px"  v-bind:class="date==null?([0,1].includes(3)==true?'paid-leave1':'paid-leave2'):''">
+                                                                <div v-if="date!== null">
+                                                                      <input :name="`pm2[]`"  @change="updateInput"  :class="`form-control input-sm pm2`"  style="text-align: center;" type="text" :value="`${date.pm2}`"> 
+                                                                </div>
+                                                                <div v-else>
+                                                                       <input :name="`pm2[]`"    class="form-control input-sm"  style="text-align: center;" type="text" readonly :value="`${date.pm2}`">   
+                                                                </div>
+                                                        </td>
+                                
+                                                            <td  style="width: 200px;padding:0px" >
+                                                               <input name="total_hours[]" class="form-control input-sm thour" style="text-align: center;" type="text" :value="`${date.total_hours}`">
+                                                               <input name="date[]" class="form-control input-sm date" style="text-align: center;" type="hidden" :value="`${year}-${month}-${(dayindex+1).toString().length==1?'0'+(dayindex+1):(dayindex+1)}`">
+                                                            </td>           
+                                                            <td  style="width: 200px;padding:0px;" ><button type="button" onclick="this.blur();" :id="`autobut${dayindex}`" class="btn btn-secondary" @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">自動計算</button></td>     
+                                              
+                                                    </template>
+                                                   
+                                                </tr>
+                                           </div>  
+                                            <div v-else>    
+                                                <tr :class="`mainIndex_${dayindex}`">                                           
+                                                    <td :style="`width: 371.05px;height:50px;background-color:${checkBgColor(year,month,dayindex+1,1)};`"  > 
+                                                    </td>   
+                                            
+                                                    <td :style="`width: 368.05px;height:50px;background-color:${checkBgColor(year,month,dayindex+1,1)};`" > 
+                                                    </td>
+                                                
+                                                    <td style="width: 182px;height:50px;">  
                                                         
-                                                    <!-- </td>    --> 
-                                                <!-- </div>    -->
-                                            </tr>
-
-                                        </div>
-                                        <div v-else>                                           
-                                            <tr :class="`mainIndex_${dayindex}`"> 
-                                                <!-- {{name_of_day}} -->
-                                                   <!-- // style="width: 371.05px;height:50px;background-color:#FFDAB9"                  -->
-                                                    <!-- style="width: 371.05px;height:50px;" -->
-                                              <!-- :style="`{background-color:${checkBgColor(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()],null)}`" -->
-                                                <td :style="`width: 371.05px;height:50px;background-color:${checkBgColor(year,month,dayindex+1,1)};`"  > 
-                                                </td>   
-                                                <!-- <td style="width: 200px" > 
-                                                </td>  -->
-                                                <td :style="`width: 368.05px;height:50px;background-color:${checkBgColor(year,month,dayindex+1,1)};`" > 
-                                                </td> 
-                                                <!-- <td style="width: 200px" >  -->
-                                                <!-- </td>    -->
-                                                <td style="width: 182px;height:50px;">  
-                                                    
-                                                </td>  
-                                                <td style="width: 200px;height:50px;" >  
-                                                    
-                                                </td>                                                                      
-                                            </tr>                                        
-                                             <tr :class="['Sat','Sun'].includes(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])==false?`index_${dayindex}`:'' "> 
-                                                <!-- {{name_of_day}} -->
-                                                   <!-- // style="width: 371.05px;height:50px;background-color:#FFDAB9"                  -->
-                                                    <!-- style="width: 371.05px;height:50px;" -->
-                                              <!-- :style="`{background-color:${checkBgColor(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()],null)}`" -->
-                                                <td style="width: 371.05px;padding:0px" :class="['Sat','Sun'].includes(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])==false?'paid-leave1':''" > 
-                                                    <!-- <span class="context-menu-one btn btn-neutral">right click me</span> -->
-                                                </td>   
-                                                <!-- <td style="width: 200px" > 
-                                                </td>  -->
-                                                <td style="width: 368.05px;padding:0px" :class="['Sat','Sun'].includes(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])==false?'paid-leave2':''" > 
-                                                </td> 
-                                                <!-- <td style="width: 200px" >  -->
-                                                <!-- </td>    -->
-                                                <td style="width: 182px;padding:0px">  
-                                                    <input v-if="['Sat','Sun'].includes(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])==false" name="total_hours[]" class="form-control input-sm thour" style="text-align: center;" type="text">
-                                                    <input name="date[]" class="form-control input-sm date" style="text-align: center;" type="hidden" :value="`${year}-${month}-${(dayindex+1).toString().length==1?'0'+(dayindex+1):(dayindex+1)}`">
-                                                </td> 
-                                                <td style="width: 200px;padding:0px" >  
-                                                    <button :id="`autobut${dayindex}`" v-if="['Sat','Sun'].includes(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])==false" onclick="this.blur();" type="button" class="btn btn-secondary" @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">自動計算</button>  
-                                                </td>                                                                      
-                                            </tr>                  
-
-                                        </div>   
-                                    </td>
-                                    <!-- <td></td>
-                                    <td>
-                                        <button type="button" class="btn btn-secondary">自動計算</button>
-                                    </td> -->
+                                                    </td>  
+                                                    <td style="width: 200px;height:50px;" >  
+                                                        
+                                                    </td>                                                                      
+                                                </tr>  
+                                                <tr :class="['Sat','Sun'].includes(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])==false?`index_${dayindex}`:'' "> 
+                                                        <td style="width: 371.05px;padding:0px" :class="['Sat','Sun'].includes(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])==false?'paid-leave1':''" > 
+                                               
+                                                        </td> 
+                                                        <td style="width: 368.05px;padding:0px" :class="['Sat','Sun'].includes(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])==false?'paid-leave2':''" > 
+                                                        </td> 
+                                                        <td style="width: 182px;padding:0px">  
+                                                            <input v-if="['Sat','Sun'].includes(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])==false" name="total_hours[]" class="form-control input-sm thour" style="text-align: center;" type="text">
+                                                            <input name="date[]" class="form-control input-sm date" style="text-align: center;" type="hidden" :value="`${year}-${month}-${(dayindex+1).toString().length==1?'0'+(dayindex+1):(dayindex+1)}`">
+                                                        </td> 
+                                                        <td style="width: 200px;padding:0px" >  
+                                                            <button :id="`autobut${dayindex}`" v-if="['Sat','Sun'].includes(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])==false" onclick="this.blur();" type="button" class="btn btn-secondary" @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">自動計算</button>  
+                                                       </td>                                                                      
+                                                </tr>                  
+      
+                                            </div> 
+                                     </td> 
                                 </tr>
                          </tbody>
                     </table>
@@ -254,7 +231,8 @@
                 name_of_day:true,             
                 errors:null,
                 get_attend_data:[],
-                check_attend_data:true,               
+                check_attend_data:true,  
+                pp1:[],             
             }
         },
         created() {
@@ -644,7 +622,7 @@
                 // }) 
             },
             checkBgColor:function(year,month,dayindex,index){
-                          
+    
              
                 let custom_date=year+"/"+("0" + month).slice(-2)+("0" +parseInt(dayindex)).slice(-2);                
                 let val=this.days[new Date(year+'/'+month+'/'+parseInt(dayindex)).getDay()];
@@ -854,38 +832,13 @@
                                     that.ampm_arr.push(that.ampm_inner_arr);
                                 }
                         });
-                        that.memory='';       
-                        
-                            console.log(attend_data);
-                        let pp1=[];let pp2=[];let k='';
-                        for(let i=1;i<=this.dayCount;i++){
+                        that.memory=''; 
 
-
-                            for(let j=(k!=''?k:0+(i-1));j<attend_data.length;j++){
-                                    
-                                if(moment(that.year+"/"+that.month+"/"+i).format('YYYY-MM-DD')==attend_data[j].date){
-                                            pp1.push({"1":attend_data[j]});
-                                            break;
-                                }else if(moment(that.year+"/"+that.month+"/"+i).format('YYYY-MM-DD')<attend_data[j].date){
-                                       k=j;
-                                       pp1.push(null);
-                                            break;
-                                }else{
-                                         pp1.push(null);
-                                    continue;
-                                }
-
-
-                            }
-
-                        }
-                        pp2.push(pp1)
-                        console.log('pp2',pp2);
-                        return;
-
-
+                     
+                       
 
                         for(let i=1;i<=this.dayCount;i++){
+                            // console.log('count',i);
                                 //    console.log('testiung123',attend_data[i-1]);
                             for(let j = 0; j < that.ampm_arr.length; j++) {
                                     let connect_to_dayampm = that.ampm_arr[j];                                         
@@ -919,9 +872,7 @@
                                             for(let i=0;i<that.ampm_by_day.length;i++){
                                         
                                                 if(that.ampm_by_day[i]!=null){
-
                                                     // console.log("hay checking!!",that.get_attend_data[i]);
-
                                                     if(that.ampm_by_day[i].hour<12){        
                                                                                             
                                                     //    store_arr[0]=that.ampm_by_day[i]?that.ampm_by_day[i]:null;   
@@ -958,11 +909,16 @@
                                             // let tar=[];
                                             // console.log('ex1',ex1);
                                         
-                                             if(attend_data[i-1].date==moment(that.year+"/"+that.month+"/"+i).format('YYYY-MM-DD')){                                                   
-                                                  ex2.push({"0":ex1,"1":attend_data[i-1]});
-                                             }else{
-                                                   ex2.push({"0":ex1});
-                                             }  
+                                            //  if(attend_data[i-1].date==moment(that.year+"/"+that.month+"/"+i).format('YYYY-MM-DD')){                                                   
+                                            //       ex2.push({"0":ex1,"1":attend_data[i-1]});
+                                            //  }else{
+
+                                                    // console.log("i",i);
+                                                    //   console.log("j",j);
+                                                        // console.log("k",k);
+                                                            // console.log('zzz');
+                                                   ex2.push(ex1);
+                                            //  }  
 
                                             // ex2.push({"1":attend_data});
                                             // tar.push(ex1);
@@ -983,11 +939,14 @@
 
                                 }
                             }
+                                //  console.log('ddddd1',that.dayCount);
+                                //      console.log('ddddd2',i);
+                              
                                         if(that.status===1){                        
                                            that.status=0;                                
                                         }else{
-                                             console.log('else',attend_data[i-1].date);
-                                              console.log('elseif',moment(that.year+"/"+that.month+"/"+i).format('YYYY-MM-DD'));
+                                            //  console.log('else',attend_data[i-1].date);
+                                            //   console.log('elseif',moment(that.year+"/"+that.month+"/"+i).format('YYYY-MM-DD'));
                                             // if(attend_data[i-1].date==moment(that.year+"/"+that.month+"/"+i).format('YYYY-MM-DD')){                                                   
                                             //       ex2.push({"1":attend_data[i-1]});
                                             //  }else{
@@ -996,10 +955,104 @@
 
                                         //    that.ampm_by_day_arr.push(null);
                                         }
-                        }                              
+                        }   
+                              console.log('msuper',ex2);                 
+                       
+                                //   let pp1=[];
+                                  let pp2=[];let k=0;
+                        for(let i=1;i<=this.dayCount;i++){                                
+                            if(k<attend_data.length){
+                          
+                            for(let j=(k!=0?k:0+(i-1));j<attend_data.length;j++){                                   
+                                if(moment(that.year+"/"+that.month+"/"+i).format('YYYY-MM-DD')==attend_data[j].date){                                
+                                
+                                    // console.log('wah',ex2[j]);
+                                            if(ex2[j]!=null){
+                                                that.pp1.push({"0":ex2[j],"1":attend_data[j]});
+                                            }else{
+                                                that.pp1.push({"0":[],"1":attend_data[j]});
+                                            }
+                                            // pp1.push(attend_data[j]);
+                                            ++k;                                          
+                                            break;
+                                }else if(moment(that.year+"/"+that.month+"/"+i).format('YYYY-MM-DD')<attend_data[j].date){
+                                       k=j;
+                                       that.pp1.push(null);
+                                            break;
+                                }else{
+                                         that.pp1.push(null);
+                                    continue;
+                                }
+                            }
+                              }//else  //dd
+                                //   that.pp1.push(null);
+                        }
+                        // pp2.push(pp1)
+                          console.log('pp1',that.pp1);
+                        // that.ampm_by_day_arr.push(pp1);
+                        // console.log(that.ampm_by_day_arr);
+
                     });
-                    that.ampm_by_day_arr=ex2;
-                   console.log('checking',that.ampm_by_day_arr);
+                    
+                    // that.ampm_by_day_arr=ex2;
+                   
+                        // console.log('m',ex2.length);
+                        // console.log('n',attend_data.length);
+//                         setTimeout(function(){
+//     console.log('m2',ex2.length);
+// }, 1000)
+                      
+                        
+       // []
+                //    console.log('checking',Object.getOwnPropertyDescriptors(that.ampm_by_day_arr));
+                    // that.log(that.ampm_by_day_arr);
+
+
+//                     var objects = [{ 'a': 1 }, { 'b': 2 }];
+// var deep =$_.cloneDeep(objects);
+// console.log('ce',deep[0] === objects[0]);
+
+                //     let deep=$_.cloneDeep(that.ampm_by_day_arr);
+                //   console.log('hah22',deep);
+                //   console.log(deep[0] === that.ampm_by_day_arr[0]);
+                        //   let pp1=[];let pp2=[];let k=0;
+                        // for(let i=1;i<=this.dayCount;i++){                                
+                        //     if(k<attend_data.length){
+                          
+                        //     for(let j=(k!=0?k:0+(i-1));j<attend_data.length;j++){                                   
+                        //         if(moment(that.year+"/"+that.month+"/"+i).format('YYYY-MM-DD')==attend_data[j].date){
+
+                        //             //    for(let v in ex2){
+                        //             //         console.log('vvm',attend_data[v]);
+                        //             //         if(ex2[v].date==attend_data[j].date){
+
+                        //             //         }
+                        //             //     }
+                        //             // console.log('hah',ex2[j]);
+                        //             // console.log('wah',ex2[j]);
+                        //                     // if(){
+                        //                     //     pp1.push({"0":'',"1":attend_data[j]});
+                        //                     // }else{
+                        //                     //     pp1.push({"1":attend_data[j]});
+                        //                     // }
+                        //                     pp1.push(attend_data[j]);
+                        //                     ++k;                                          
+                        //                     break;
+                        //         }else if(moment(that.year+"/"+that.month+"/"+i).format('YYYY-MM-DD')<attend_data[j].date){
+                        //                k=j;
+                        //                pp1.push(null);
+                        //                     break;
+                        //         }else{
+                        //                  pp1.push(null);
+                        //             continue;
+                        //         }
+                        //     }
+                        //       }else  //dd
+                        //           pp1.push(null);
+                        // }
+                        // pp2.push(pp1)
+                        //   console.log('pp1',pp1);
+
                     this.axios
                     .get('http://127.0.0.1:8000/api/setting/delayTime/'+this.year+"/"+this.month)//+this.year+"/"+this.month
                     .then(response => { 
@@ -1009,6 +1062,18 @@
 
                 } 
 
+            },
+            log(){
+                    for (let i = 0; i < arguments.length; i += 1) {
+    if (typeof (arguments[i]) === 'object') {
+      try {
+        arguments[i] = JSON.parse(JSON.stringify(arguments[i]));
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }
+  console.log('gbv',...arguments);
             },
             showTimer(index,sec_index,day_leave=''){  //mainIndex_0
             //   console.log("sec",sec_index);         
