@@ -256,7 +256,6 @@
             },
 
             delayDataCalculate(){
-                let results = [];
                 if(this.delays.length == 0){
                     
                     this.dates.forEach(d => {
