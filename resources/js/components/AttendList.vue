@@ -526,7 +526,7 @@
                 
                   const {t_hr, t_min}=this.totalHourCal(am1,am2,pm1,pm2,total_am,total_pm,'',''); 
                   let res=isNaN((parseFloat(t_hr)+parseFloat(t_min)).toFixed(2))?'':(parseFloat(t_hr)+parseFloat(t_min)).toFixed(2);
-                  jQuery(event.target).parent().parent().parent().find(".thour").val(res);
+                  jQuery(event.target).parent().parent().parent().find(".thour").val(Math.abs(res));
             }, 
             allButtonClick:function(){ 
                 $('[id^=autobut]').click();
@@ -568,7 +568,7 @@
                                 }else{
                                        $('<input/>').attr({ type: 'hidden',name: 'pm_leave[]',value:1,class:'pmleave'}).appendTo(jQuery(this));
                                 }
-                             
+                                jQuery(this).parent().find('[id^=autobut]').click();                             
                             }else{
                                 that.showTimer(parent_class_name,class_name,'dash');
                                 if(class_name=='paid-leave1'){
@@ -576,6 +576,7 @@
                                 }else{
                                       $('<input/>').attr({ type: 'hidden',name: 'pm_leave[]',value:2,class:'pmleave'}).appendTo(jQuery(this));
                                 }
+                                jQuery(this).parent().find('[id^=autobut]').click();    
                             }
 
                             // var m = "clicked: " + key;
@@ -1260,7 +1261,7 @@
                 let total_am=0;let total_pm=0; 
                 const {t_hr, t_min}=this.totalHourCal(auto_am1,auto_am2,auto_pm1,auto_pm2,total_am,total_pm,t_am,p_am);               
                 let res=isNaN((parseFloat(t_hr)+parseFloat(t_min)).toFixed(2))?'':(parseFloat(t_hr)+parseFloat(t_min)).toFixed(2);                
-                jQuery("."+sec_index).find(".thour").val(res==0?"0.00":res);
+                jQuery("."+sec_index).find(".thour").val(res==0?"0.00":Math.abs(res));
             } 
             },
                 
@@ -1268,12 +1269,18 @@
                 if(t_am!=''){
                     total_am=4;
                 }else if(auto_am1!='' && auto_am2!='' && auto_am1!=undefined && auto_am2!=undefined){
-                    total_am= (+auto_am2[0] + (+auto_am2[1] / 60))-(+auto_am1[0] + (+auto_am1[1] / 60));                  
+                    total_am= (+auto_am2[0] + (+auto_am2[1] / 60))-(+auto_am1[0] + (+auto_am1[1] / 60));  
+                    if(total_am<0){
+                        total_am=0;
+                    }                
                 }
                 if(p_am!=''){
                     total_pm=4;
                 }else if(auto_pm1!='' && auto_pm2!=''  && auto_pm1!=undefined && auto_pm2!=undefined){
-                    total_pm=(+auto_pm2[0] + (+auto_pm2[1] / 60))-(+auto_pm1[0] + (+auto_pm1[1] / 60));                 
+                    total_pm=(+auto_pm2[0] + (+auto_pm2[1] / 60))-(+auto_pm1[0] + (+auto_pm1[1] / 60));  
+                     if(total_pm<0){
+                        total_pm=0;
+                    }                
                 }
                 //  console.log('y');
                 // console.log(total_am);
