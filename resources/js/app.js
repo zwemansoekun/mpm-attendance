@@ -8,6 +8,7 @@ require('./bootstrap');
 window.$=window.JQuery= require('jquery')//window.JQuery
 window.Vue = require('vue');
 window.moment = require('moment');
+window.$_=require('lodash');
 jQuery.noConflict(); 
 
 import App from './App.vue';
@@ -17,6 +18,7 @@ import axios from 'axios';
 import {routes} from './routes';
 import { Verify } from 'crypto';
 import VueSimpleAlert from "vue-simple-alert";
+// import _ from 'lodash';   
 
 
 Vue.use(VueRouter);
