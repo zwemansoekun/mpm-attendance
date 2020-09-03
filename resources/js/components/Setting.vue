@@ -107,12 +107,10 @@
                 errorMoney: null,
                 errorAm: null,
                 errorPm: null,
-                successMsg: null,
                 data_check_messg:false
             }
         },
         created() {
-            console.log('created');
             this.axios
             .get('http://127.0.0.1:8000/api/setting')
             .then(response => {
@@ -135,8 +133,6 @@
                 .then(response => {
                     this.dates=response.data;
             });
-            
-           
            
         },
         methods: {
@@ -264,10 +260,8 @@
                 if(this.delays.length == 0){
                     
                     this.dates.forEach(d => {
-                        console.log(this.settings);
                         let tempSetting  = this.settings.filter(s => s.create_month < d.recordedDateTime);
                         tempSetting.sort(compareSetting);
-                        console.log(tempSetting[tempSetting.length-1].am);
 
                         if(tempSetting == 0){
                             let data1 ={};
@@ -318,7 +312,6 @@
                         return 1;
                     return 0;
                 }
-
 
                 this.attendDelays.sort(compare);
             }
