@@ -52,62 +52,21 @@ class EmployeeDetailController extends Controller
             } else 
             {
                 $oldDetail = EmployeeDetail::find($detail['id']);
-                if($oldDetail->pay_month != $detail['pay_month'])
-                {
-                    $oldDetail->pay_month = $detail['pay_month'];
-                }
-                if($oldDetail->salary_amount != $detail['salary_amount'])
-                {
-                    $oldDetail->salary_amount = $detail['salary_amount'];
-                }
-                if($oldDetail->trans_money != $detail['trans_money'])
-                {
-                    $oldDetail->trans_money = $detail['trans_money'];
-                }
-                if($oldDetail->jlpt != $detail['jlpt'])
-                {
-                    $oldDetail->jlpt = $detail['jlpt'];
-                }
-                if($oldDetail->ssb != $detail['ssb'])
-                {
-                    $oldDetail->ssb = $detail['ssb'];
-                }
-                if($oldDetail->position != $detail['position'])
-                {
-                    $oldDetail->position = $detail['position'];
-                }
-                if($oldDetail->address != $detail['address'])
-                {
-                    $oldDetail->address = $detail['address'];
-                }
-                if($oldDetail->phone_no != $detail['phone_no'])
-                {
-                    $oldDetail->phone_no = $detail['phone_no'];
-                }
-                if($oldDetail->nrc_no != $detail['nrc_no'])
-                {
-                    $oldDetail->nrc_no = $detail['nrc_no'];
-                }
-                if($oldDetail->bank_account != $detail['bank_account'])
-                {
-                    $oldDetail->bank_account = $detail['bank_account'];
-                }
-                if($oldDetail->member != $detail['member'])
-                {
-                    $oldDetail->member = $detail['member'];
-                }
-                if($oldDetail->child != $detail['child'])
-                {
-                    $oldDetail->child = $detail['child'];
-                }
-                if($oldDetail->emg_ph_no != $detail['emg_ph_no'])
-                {
-                    $oldDetail->emg_ph_no = $detail['emg_ph_no'];
-                }
-                if($oldDetail->waste_time != $detail['waste_time'])
-                {
-                    $oldDetail->waste_time = $detail['waste_time'];
-                }
+
+                $oldDetail->pay_month = $detail['pay_month'];
+                $oldDetail->salary_amount = $detail['salary_amount'];
+                $oldDetail->trans_money = $detail['trans_money'];
+                $oldDetail->jlpt = $detail['jlpt'];
+                $oldDetail->ssb = $detail['ssb'];
+                $oldDetail->position = $detail['position'];
+                $oldDetail->address = $detail['address'];
+                $oldDetail->phone_no = $detail['phone_no'];
+                $oldDetail->nrc_no = $detail['nrc_no'];
+                $oldDetail->bank_account = $detail['bank_account'];
+                $oldDetail->member = $detail['member'];
+                $oldDetail->child = $detail['child'];
+                $oldDetail->emg_ph_no = $detail['emg_ph_no'];
+                $oldDetail->waste_time = $detail['waste_time'];
 
                 $oldDetail->save();
             }
