@@ -510,11 +510,11 @@ import Datepicker from 'vuejs-datepicker';
                         var year = date.getFullYear();
                                 
                         this.empDetails[i].pay_month = year+"/"+((month + 1) <10 ? '0'+(month + 1) : (month + 1));
-                    }
-                    if(this.empDetails[i].pay_month != null && !this.validatePayMonthFormat(this.empDetails[i].pay_month))
-                    {
-                        this.errorFlg = true;
-                        Vue.set(this.empDetails[i] , 'payMonthErr','給与年月をフォーマット(YYYY/MM)で入力してください。');
+
+                        if(!this.validatePayMonthFormat(this.empDetails[i].pay_month)){
+                            this.errorFlg = true;
+                            Vue.set(this.empDetails[i] , 'payMonthErr','給与年月をフォーマット(YYYY/MM)で入力してください。');
+                        }
                     }
 
                     if(this.empDetails[i].salary_amount == 0)
