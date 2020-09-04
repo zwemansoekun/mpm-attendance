@@ -215,8 +215,8 @@
                 this.axios
                 .post('http://127.0.0.1:8000/api/delayTime/updateAm/'+id, delayTime)
                 .then((response) => {
-                    //let i = this.attendDelays.map(item => item.id).indexOf(id); // find index of your object
-                    //this.attendDelays[i] = response.data;
+                    let i = this.attendDelays.map(item => item.month).indexOf(delayTime.month); // find index of object
+                    this.attendDelays[i] = response.data;
 
                     this.data_check_messg = true;
                     setTimeout(() => {
@@ -237,8 +237,8 @@
                this.axios
                .post('http://127.0.0.1:8000/api/delayTime/updatePm/'+id, delayTime)
                .then((response) => {
-                    //let i = this.attendDelays.map(item => item.id).indexOf(id); // find index of your object
-                   // this.attendDelays[i] = response.data;
+                    let i = this.attendDelays.map(item => item.month).indexOf(delayTime.month); // find index of object
+                    this.attendDelays[i] = response.data;
                    
                     this.data_check_messg = true;
                     setTimeout(() => {
