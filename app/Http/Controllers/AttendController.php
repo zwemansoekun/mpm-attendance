@@ -49,28 +49,35 @@ class AttendController extends Controller
             //     // '*.emp_no.required'=> 'First Name Should be Minimum of 8 Character', // custom message
             //     '*.total_hours.numeric'=> 'Total Hour is Required', // custom message
             //     // '*.pm2.required'=> 'Total pm is Required'
-            // ]);            
-  
-
+            // ]); 
+         
             foreach($request->all() as $key => $val){
                  
                     $validator = Validator::make($val, [
                             'date' => 'required|date|date_format:Y-m-d',
-                            // 'emp_no' => 'required|int',
-                            'total_hours' => 'numeric',
-                            'pm2' => 'numeric|nullable',
+                            'total_hours' => 'numeric|nullable',
+                            'am1'=>'date_format:H:i|nullable',
+                            'am2'=>'date_format:H:i|nullable',
+                            'pm1'=>'date_format:H:i|nullable',
+                            'pm2'=>'date_format:H:i|nullable',
+                            'am_leave'=>'numeric|nullable',
+                            'pm_leave'=>'numeric|nullable',
                     ],[
-                        'date.required'=> 'Date is Required', // custom message
-                        // '*.emp_no.required'=> 'First Name Should be Minimum of 8 Character', // custom message
-                        'total_hours.numeric'=> 'Total Hour is Required', // custom message
-                        'pm2.numeric'=> 'Total pm is Required'
+                        'date.required'=> '日付は必要です。', // custom message
+                        'date.date_format:Y-m-d'=> '日付の形式をチェックして下さい！', // custom message
+                        'total_hours.numeric'=> '合計時間をチェックして下さい！', 
+                        'am1.date_format:H:i'=> 'AM1をチェックして下さい！',
+                        'am2.date_format:H:i'=> 'AM2をチェックして下さい！',
+                        'pm1.date_format:H:i'=> 'PM1をチェックして下さい！',
+                        'pm2.date_format:H:i'=> 'PM2をチェックして下さい！',
+                        'am_leave.numeric'=> 'AMの（欠勤/有休）をチェックして下さい！',
+                        'pm_leave.numeric'=> 'PMの（欠勤/有休）をチェックして下さい！',
                     ]);
-
-                  
+                    if ($validator->fails()) {
+                        return ['errors' => $validator->errors()->all()];                               
+                    }
             }
-            if ($validator->fails()) {
-                return ['errors' => $validator->errors()->all()];                               
-            } 
+         
 
             $data=$request->all();
             // Model::insert($data);

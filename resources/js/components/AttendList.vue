@@ -49,7 +49,7 @@
                               <button type="button" class="btn btn-secondary" style="width: 220px;" onclick="this.blur();" @click="allButtonClick()">全て自動計算</button>
                          </div> 
                     </div>                 
-                    <form id="form" class="" @submit.prevent="attendSave">
+                    <form id="form" class="" @submit.prevent="attendSave"  autocomplete="on">
                     <div class="row mt-3">
                         <div class="col-md-4">
                               <input name="emp_no" ref="myButton" class="form-control input-sm date" style="text-align: center;" type="hidden" :value="`${emp_no}`">
@@ -85,30 +85,30 @@
                             </tr>
                         </thead>
                         <tbody> 
-                                <tr v-bind:key="dayindex" v-for="(day,dayindex) in pp1" v-bind:class="day_name(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])">                                
+                                    <tr v-bind:key="dayindex" v-for="(day,dayindex) in pp1" v-bind:class="day_name(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])">                                
                                     <th style="width: 100px;" scope="row">{{dayindex+1}} {{ days[new Date(year+"/"+month+"/"+(dayindex+1)).getDay()]}}</th>
                                      <td colspan="4"    style="text-align: center;padding:0px">
                                          <!-- {{day}} -->
                                            <div v-if="day!==null">
                                                 <tr :class="key==0?`mainIndex_${dayindex}`:`index_${dayindex}`" v-bind:key="key"  v-for="(date,key) in day" >                                                    
                                                      <template v-if="key==0">                                                         
-                                                        <td style="width: 16.4%;" v-bind:class="`bg-${checkColor(date.am1,key)}`"  :style="`background-color:${checkBgColor(year,month,dayindex+1,date.length==0)};`">
-                                                        <div v-if="date!== null"  :class="ampm_index(0)"> 
+                                                        <td style="width: 16.4%;" v-bind:class="`bg-${checkColor(date.am1,key)}`"  :style="`background-color:${checkBgColor(year,month,dayindex+1,date.am1==null)};`">
+                                                        <div v-if="date.am1!== null"  :class="ampm_index(0)"> 
                                                             {{date.am1}}  
                                                         </div>
                                                     </td>
-                                                    <td style="width: 16.4%;"   v-bind:class="`bg-${checkColor(date.am2,key)}`"  :style="`background-color:${checkBgColor(year,month,dayindex+1,date.length==0)};`">
-                                                        <div v-if="date!== null"  :class="ampm_index(1)"> 
+                                                    <td style="width: 16.4%;"   v-bind:class="`bg-${checkColor(date.am2,key)}`"  :style="`background-color:${checkBgColor(year,month,dayindex+1,date.am2==null)};`">
+                                                        <div v-if="date.am2!== null"  :class="ampm_index(1)"> 
                                                             {{date.am2}}  
                                                         </div>
                                                     </td>
-                                                    <td style="width: 16.4%;"  v-bind:class="`bg-${checkColor(date.pm1,key)}`"  :style="`background-color:${checkBgColor(year,month,dayindex+1,date.length==0)};`">
-                                                        <div v-if="date!== null"  :class="ampm_index(2)"> 
+                                                    <td style="width: 16.4%;"  v-bind:class="`bg-${checkColor(date.pm1,key)}`"  :style="`background-color:${checkBgColor(year,month,dayindex+1,date.pm1==null)};`">
+                                                        <div v-if="date.pm1!== null"  :class="ampm_index(2)"> 
                                                             {{date.pm1}}  
                                                         </div>
                                                     </td>
-                                                    <td style="width: 16.4%;"  v-bind:class="`bg-${checkColor(date.pm2,key)}`"  :style="`background-color:${checkBgColor(year,month,dayindex+1,date.length==0)};`">
-                                                        <div v-if="date!== null"  :class="ampm_index(3)"> 
+                                                    <td style="width: 16.4%;"  v-bind:class="`bg-${checkColor(date.pm2,key)}`"  :style="`background-color:${checkBgColor(year,month,dayindex+1,date.pm2==null)};`">
+                                                        <div v-if="date.pm2!== null"  :class="ampm_index(3)"> 
                                                             {{date.pm2}}   
                                                         </div>
                                                     </td>
@@ -118,42 +118,49 @@
                                                     </td>
                                                     </template>    
                                                     <template v-else>
-
-                                                        <td style="width: 16.4%;padding:0px" v-bind:class="date==null?([0,1].includes(0)==true?'paid-leave1':'paid-leave2'):''">
-                                                                 <div v-if="date!== null">                                        
-                                                                     <input :name="`am1[]`"  @change="updateInput" :class="`form-control input-sm am1`"  style="text-align: center;" type="text" :value="`${date.am1}`"> 
+                                                         <!-- {{old("am1[]")}}   :value="`${date.am1}`!=undefined?date.am1:''"-->
+                                                        <td style="width: 16.4%;padding:0px" v-bind:class="day[0].am1==null?([0,1].includes(0)==true?'paid-leave1':'paid-leave2'):''">
+                                                        <!-- {{date.am1!=undefined?date.am1:23}} -->
+                                                                 <div v-if="day[0].am1!== null">   
+                                                                    <!-- <template v-if="form=='edit'">                                      -->
+                                                                        <input :name="`am1[]`"  @change="updateInput"  :class="`form-control input-sm am1`"  style="text-align: center;" type="text" :value="`${date.am1}`!=undefined?date.am1:`${old(am1)}`">
+                                                                    <!-- </template>    -->
+                                                                    <!-- <template>
+                                                                           <input :name="`am1[]`"  @change="updateInput"  :class="`form-control input-sm am1`"  style="text-align: center;" type="text" @value="`${date.am1}`!=undefined?date.am1:`${old(am1)}`">      
+                                                                    </template>  -->
                                                                  </div>
                                                                  <div v-else>
-                                                                      <input   :name="`am1[]`" class="form-control input-sm"  style="text-align: center;" type="text" readonly :value="`${date.am1}`">   
+                                                                      <input   class="form-control input-sm"  style="text-align: center;" type="text" readonly :value="`${date.am1}`!=undefined?date.am1:null">   
                                                                  </div>
                                                         </td>   
-                                                        <td style="width: 16.4%;padding:0px"   v-bind:class="date==null?([0,1].includes(1)==true?'paid-leave1':'paid-leave2'):''">
-                                                                <div v-if="date!== null">  
-                                                                    <input :name="`am2[]`"  @change="updateInput" :class="`form-control input-sm am2`"  style="text-align: center;" type="text" :value="`${date.am2}`">  
+                                                        <td style="width: 16.4%;padding:0px"   v-bind:class="day[0].am2==null?([0,1].includes(1)==true?'paid-leave1':'paid-leave2'):''">
+                                                     
+                                                                <div v-if="day[0].am2!== null">  
+                                                                    <input :name="`am2[]`"  @change="updateInput" :class="`form-control input-sm am2`"  style="text-align: center;" type="text" :value="`${date.am2}`!=undefined?date.am2:`${old(am2)}`">  
                                                                 </div>   
                                                                 <div v-else>
-                                                                   <input   :name="`am2[]`" class="form-control input-sm"  style="text-align: center;" type="text" readonly :value="`${date.am2}`">  
+                                                                   <input    class="form-control input-sm"  style="text-align: center;" type="text" readonly :value="`${date.am2}`!=undefined?date.am2:null">  
                                                                 </div>
                                                         </td>
-                                                        <td style="width: 16.4%;padding:0px"  v-bind:class="date==null?([0,1].includes(2)==true?'paid-leave1':'paid-leave2'):''">
-                                                                <div v-if="date!== null">  
-                                                                        <input :name="`pm1[]`"  @change="updateInput"  :class="`form-control input-sm pm1`"  style="text-align: center;" type="text" :value="`${date.pm1}`"> 
+                                                        <td style="width: 16.4%;padding:0px"  v-bind:class="day[0].pm1==null?([0,1].includes(2)==true?'paid-leave1':'paid-leave2'):''">
+                                                                <div v-if="day[0].pm1!== null">  
+                                                                        <input :name="`pm1[]`"  @change="updateInput"  :class="`form-control input-sm pm1`"  style="text-align: center;" type="text" :value="`${date.pm1}`!=undefined?date.pm1:`${old(pm1)}`"> 
                                                                 </div>
                                                                 <div v-else>
-                                                                       <input :name="`pm1[]`"    class="form-control input-sm"  style="text-align: center;" type="text" readonly :value="`${date.pm2}`"> 
+                                                                       <input    class="form-control input-sm"  style="text-align: center;" type="text" readonly :value="`${date.pm1}`!=undefined?date.pm1:null"> 
                                                                 </div>
                                                         </td>
-                                                        <td style="width: 16.4%;padding:0px"  v-bind:class="date==null?([0,1].includes(3)==true?'paid-leave1':'paid-leave2'):''">
-                                                                <div v-if="date!== null">
-                                                                      <input :name="`pm2[]`"  @change="updateInput"  :class="`form-control input-sm pm2`"  style="text-align: center;" type="text" :value="`${date.pm2}`"> 
+                                                        <td style="width: 16.4%;padding:0px"  v-bind:class="day[0].pm2==null?([0,1].includes(3)==true?'paid-leave1':'paid-leave2'):''">
+                                                                <div v-if="day[0].pm2!== null">
+                                                                      <input :name="`pm2[]`"  @change="updateInput"  :class="`form-control input-sm pm2`"  style="text-align: center;" type="text" :value="`${date.pm2}`!=undefined?date.pm2:`${old(pm2)}`"> 
                                                                 </div>
                                                                 <div v-else>
-                                                                       <input :name="`pm2[]`"    class="form-control input-sm"  style="text-align: center;" type="text" readonly :value="`${date.pm2}`">   
+                                                                       <input   class="form-control input-sm"  style="text-align: center;" type="text" readonly  :value="`${date.pm2}`!=undefined?date.pm2:null">   
                                                                 </div>
                                                         </td>
                                 
                                                             <td  style="width: 200px;padding:0px" >
-                                                               <input name="total_hours[]" class="form-control input-sm thour" style="text-align: center;" type="text" :value="`${date.total_hours}`">
+                                                               <input name="total_hours[]" class="form-control input-sm thour" style="text-align: center;" type="text" :value="`${date.total_hours}`!=undefined?date.total_hours:`${old(total_hours)}`">
                                                                <input name="date[]" class="form-control input-sm date" style="text-align: center;" type="hidden" :value="`${year}-${month}-${(dayindex+1).toString().length==1?'0'+(dayindex+1):(dayindex+1)}`">
                                                             </td>           
                                                             <td  style="width: 200px;padding:0px;" ><button type="button" onclick="this.blur();" :id="`autobut${dayindex}`" class="btn btn-secondary" @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">自動計算</button></td>     
@@ -195,6 +202,8 @@
                                             </div> 
                                      </td> 
                                 </tr>
+                       
+                              
                          </tbody>
                     </table>
                      </form>
@@ -232,7 +241,8 @@
                 errors:null,
                 get_attend_data:[],
                 check_attend_data:true,  
-                pp1:[],             
+                pp1:[], 
+                form:'',
             }
         },
         created() {
@@ -243,7 +253,6 @@
                     this.emps=response.data;
                   
                 });
-
             this.axios
             .get('http://localhost:5000/attendances/all/date')
             .then(response => {
@@ -251,10 +260,8 @@
                 this.dates=response.data;
             
             });    
-
         },
         computed: {
-
                 empv: function(val)
             {                  
               this.ems=val; 
@@ -279,7 +286,7 @@
                 if(this.error_check_messg==true){
                     setTimeout(() => {
                         this.error_check_messg = false
-                    },3000)
+                    },5000)
                     return false;
                 }
             }  
@@ -299,19 +306,17 @@
                 let val='';
         
                 if(event.target.value!=''){
-
                   let  val=event.target.value;
                     let split_name=val.split(" ");
                     this.emp_no=split_name[0];
-
                     val=val.replace(this.emp_no,'');
                     this.emp_name=val;
-
                 }  
                 
                 if(val!='' && this.select_date!=''){   
-                         this.update_call();                         
-                    this.ampm_calling();             
+                    this.update_call();
+                               
+                    // this.ampm_calling();             
                 }
             },
             dateChange:function(event){
@@ -326,8 +331,9 @@
                    
                 }  
                  if(val!='' && this.select_employee!=''){
-                          this.update_call();
-                     this.ampm_calling();
+                      this.update_call();
+                   
+                    //  this.ampm_calling();
                 }
             },
             attendSave:function(){
@@ -342,17 +348,16 @@
                             "am2[]": "required",
                             "pm1[]": "required",
                             "pm2[]": "required",
-                            // "thour[]":"required",
-                            "am_leave[]":"required",
-                            "pm_leave[]":"required",
+                            "total_hours[]":"required",
+                            // "am_leave[]":"required",
+                            // "pm_leave[]":"required",
                     },  
                      errorPlacement: function(error,element) {
                         return true;
                     },
                 });
-                let temp_arr=[];let am1,am2,pm1,pm2,thour,date;let am_leave=0,pm_leave=0;   let data_arr={};let eg_arr=[];
+                let temp_arr=[];let am1,am2,pm1,pm2,thour,date;let am_leave=null,pm_leave=null;   let data_arr={};let eg_arr=[];
                 if(jQuery('#form').valid()){
-
                         //  alert($('#form').serialize());
                     //   console.log($('#form').serializeArray());
                     // var tb = $('#attendTable:eq(0) tbody tr');
@@ -363,7 +368,6 @@
                         //      return;
                         //  }
                         //  console.log('key',key);
-
                         //  console.log('value',value);
                          let that=this;
                          $(that).find('td').each(function (index,v2) {
@@ -416,24 +420,34 @@
                                        data_arr['date']=date;
                                 //    console.log(date);
                             }
+                            if(jQuery(this).find('.amleave').val()){
+                                
+                                  am_leave=jQuery(this).find('.amleave').val();
+                                    //  data_arr['date']=date;
+                                    //    data_arr['date']=date;
+                                //    console.log(date);
+                            }
+                              if(jQuery(this).find('.pmleave').val()){
+                                
+                                  pm_leave=jQuery(this).find('.pmleave').val();
+                                    //  data_arr['date']=date;
+                                    //    data_arr['date']=date;
+                                //    console.log(date);
+                            }
                            
-
                             if (isLastElement) {
-                      
-                                //noted!!    
-                                // data_arr['emp_no']=those.emp_no;
-                                // data_arr['am_leave']=am_leave;
-                                // data_arr['pm_leave']=pm_leave;
-                                // those.emp_no=those.$refs.myButton.value;
-                                // temp_arr.push(data_arr);
-                                // data_arr={};am_leave=0;pm_leave=0;
-
+                                        
+                               if(am1=='' && am2=='' && am_leave==null){                               
+                                   am_leave=0;
+                               }
+                               if(pm1=='' && pm2=='' && pm_leave==null){                                  
+                                   pm_leave=0;
+                               }
                                 temp_arr.push({"date": date,"emp_no":those.emp_no,"total_hours":thour,"am1": am1 ,"am2":am2,"pm1":pm1,"pm2":pm2,"am_leave":am_leave,"pm_leave":pm_leave}); 
                                 // console.log('temp',temp_arr);
-                                date='';am1='';am2='';pm1='';pm2='';thour='',am_leave=0,pm_leave=0;
+                                date='';am1='';am2='';pm1='';pm2='';thour='',am_leave=null,pm_leave=null;
                                 return false;
                             }
-
                          });
                         //  console.log('temp',temp_arr);
                         // $(value+'tr[class^=index_]').each(function (key1,value1) {
@@ -446,16 +460,15 @@
                         // ary.push({ Name: name, Value: value });               
                    });
 
-                    console.log(temp_arr);
+                    // console.log(temp_arr);
                     this.axios({
                       url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/attendList",
                       method: 'post',
                       data: temp_arr
                     })
                     .then(function (response) {
-                        // your action after success
-                        console.log('res',response.data.errors);
-                         console.log('res2',response.data);
+                        console.log('sdfsdaf',response);
+                        // your action after success                      
                         if(response.data){
                             if(response.data.message==true){
                                 those.$fire({
@@ -471,27 +484,27 @@
                                 });
                             }else{
                                 those.$fire({
-                                        title: "失敗！！",
-                                        text: "データの登録は出来ません。",
-                                        type: "error",
-                                        timer: 3000,
-                                        showCancelButton: false,
-                                        showConfirmButton: false,
-                                        // position:'center',
+                                title: "失敗！！",
+                                text: "データの登録は出来ません。",
+                                type: "error",
+                                timer: 1500,
+                                showCancelButton: false,
+                                showConfirmButton: false,
+                                // position:'center',
                                 }).then(r => {
-                                        //    console.log(r.value);
+                                //    console.log(r.value);
                                 }); 
-                                those.errors=response.data.errors;
-                                console.log(response.data.errors);
-                            }                           
+                                those.errors=response.data.errors;                             
+                            }                       
                         }
-                      
                     })
                     .catch(function (error) {
-                        those.$fire({
+                    });
+                }else{
+                     those.$fire({
                         title: "失敗！！",
-                        text: "データの登録は出来ません。",
-                        type: "error",
+                        text: "データを記入してください。",
+                        type: "warning",
                         timer: 3000,
                         showCancelButton: false,
                         showConfirmButton: false,
@@ -499,14 +512,6 @@
                         }).then(r => {
                         //    console.log(r.value);
                         }); 
-                        those.errors=error.response.data.errors;
-                        console.log(response.data.errors);
-                    });
-
-
-
-                }else{
-                    alert("データを記入してください。");
                     return false;
                 }
 // });
@@ -526,7 +531,9 @@
                 
                   const {t_hr, t_min}=this.totalHourCal(am1,am2,pm1,pm2,total_am,total_pm,'',''); 
                   let res=isNaN((parseFloat(t_hr)+parseFloat(t_min)).toFixed(2))?'':(parseFloat(t_hr)+parseFloat(t_min)).toFixed(2);
-                  jQuery(event.target).parent().parent().parent().find(".thour").val(Math.abs(res));
+
+                  jQuery(event.target).parent().parent().parent().find(".thour").val(Math.abs(res).toFixed(2));
+
             }, 
             allButtonClick:function(){ 
                 $('[id^=autobut]').click();
@@ -568,7 +575,9 @@
                                 }else{
                                        $('<input/>').attr({ type: 'hidden',name: 'pm_leave[]',value:1,class:'pmleave'}).appendTo(jQuery(this));
                                 }
-                                jQuery(this).parent().find('[id^=autobut]').click();                             
+
+                                   jQuery(this).parent().find('[id^=autobut]').click();
+
                             }else{
                                 that.showTimer(parent_class_name,class_name,'dash');
                                 if(class_name=='paid-leave1'){
@@ -623,8 +632,7 @@
                 // }) 
             },
             checkBgColor:function(year,month,dayindex,index){
-    
-             
+               
                 let custom_date=year+"/"+("0" + month).slice(-2)+("0" +parseInt(dayindex)).slice(-2);                
                 let val=this.days[new Date(year+'/'+month+'/'+parseInt(dayindex)).getDay()];
                 let cur_date=new Date().getFullYear()+"/"+("0" + parseInt(new Date().getMonth()+1)).slice(-2)+"/"+("0" +new Date().getDate()).slice(-2); 
@@ -916,7 +924,7 @@
                                                     //   console.log("j",j);
                                                         // console.log("k",k);
                                                             // console.log('zzz');
-                                                   ex2.push(ex1);
+                                                   ex2.push({"0":ex1,"1":[]});
                                             //  }  
 
                                             // ex2.push({"1":attend_data});
@@ -955,10 +963,11 @@
                                         //    that.ampm_by_day_arr.push(null);
                                         }
                         }   
-                              console.log('msuper',ex2);                 
+                              console.log('msuper',ex2);   
+                              console.log('getdata',attend_data);              
                        
-                                //   let pp1=[];
-                                  let pp2=[];let k=0;
+                           if(attend_data.length!=0){
+                                               let pp2=[];let k=0;
                         for(let i=1;i<=this.dayCount;i++){                                
                             if(k<attend_data.length){
                           
@@ -966,8 +975,8 @@
                                 if(moment(that.year+"/"+that.month+"/"+i).format('YYYY-MM-DD')==attend_data[j].date){                                
                                 
                                     // console.log('wah',ex2[j]);
-                                            if(ex2[j]!=null){
-                                                that.pp1.push({"0":ex2[j],"1":attend_data[j]});
+                                            if(ex2[i-1]!=null){
+                                                that.pp1.push({"0":ex2[i-1][0],"1":attend_data[j]});
                                             }else{
                                                 that.pp1.push({"0":[],"1":attend_data[j]});
                                             }
@@ -986,6 +995,13 @@
                               }//else  //dd
                                 //   that.pp1.push(null);
                         }
+                            that.form="edit";
+                           }else{
+                               that.pp1=ex2;
+                            //    that.form="register";
+                           }
+                       
+
                         // pp2.push(pp1)
                           console.log('pp1',that.pp1);
                         // that.ampm_by_day_arr.push(pp1);
@@ -1062,18 +1078,7 @@
                 } 
 
             },
-            log(){
-                    for (let i = 0; i < arguments.length; i += 1) {
-    if (typeof (arguments[i]) === 'object') {
-      try {
-        arguments[i] = JSON.parse(JSON.stringify(arguments[i]));
-      } catch (e) {
-        console.error(e);
-      }
-    }
-  }
-  console.log('gbv',...arguments);
-            },
+         
             showTimer(index,sec_index,day_leave=''){  //mainIndex_0
             //   console.log("sec",sec_index);         
               let am_leave='';let pm_leave=''; 
@@ -1260,8 +1265,11 @@
                
                 let total_am=0;let total_pm=0; 
                 const {t_hr, t_min}=this.totalHourCal(auto_am1,auto_am2,auto_pm1,auto_pm2,total_am,total_pm,t_am,p_am);               
-                let res=isNaN((parseFloat(t_hr)+parseFloat(t_min)).toFixed(2))?'':(parseFloat(t_hr)+parseFloat(t_min)).toFixed(2);                
-                jQuery("."+sec_index).find(".thour").val(res==0?"0.00":Math.abs(res));
+
+                let res=isNaN((parseFloat(t_hr)+parseFloat(t_min)).toFixed(2))?'':(parseFloat(t_hr)+parseFloat(t_min)).toFixed(2);   
+                   
+                jQuery("."+sec_index).find(".thour").val(res==0?"0.00":Math.abs(res).toFixed(2));
+
             } 
             },
                 
@@ -1337,7 +1345,7 @@
                     // }
         //  console.log('z',name);
                     // jQuery("."+sec_index).find("[name='thour']").val(parseInt(total_am)+parseInt(total_pm));
-                    jQuery("."+sec_index).find(name).val(ap_split[0]+":"+ap_split[1]);
+                    jQuery("."+sec_index).find(name).val((ap_split[0].toString().length==1?"0"+ap_split[0]:ap_split[0])+":"+ap_split[1]);
                     return ap_split!=''?ap_split:'';
                     // total_hour+=ap_split[0];
                     // total_minute+=ap_split[1];
