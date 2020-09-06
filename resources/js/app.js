@@ -18,7 +18,7 @@ import axios from 'axios';
 import {routes} from './routes';
 import { Verify } from 'crypto';
 import VueSimpleAlert from "vue-simple-alert";
-// import _ from 'lodash';   
+
 
 
 Vue.use(VueRouter);
