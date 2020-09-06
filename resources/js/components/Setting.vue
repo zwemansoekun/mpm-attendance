@@ -107,12 +107,10 @@
                 errorMoney: null,
                 errorAm: null,
                 errorPm: null,
-                successMsg: null,
                 data_check_messg:false
             }
         },
         created() {
-            console.log('created');
             this.axios
             .get('http://127.0.0.1:8000/api/setting')
             .then(response => {
@@ -135,8 +133,6 @@
                 .then(response => {
                     this.dates=response.data;
             });
-            
-           
            
         },
         methods: {
@@ -219,8 +215,8 @@
                 this.axios
                 .post('http://127.0.0.1:8000/api/delayTime/updateAm/'+id, delayTime)
                 .then((response) => {
-                    //let i = this.attendDelays.map(item => item.id).indexOf(id); // find index of your object
-                    //this.attendDelays[i] = response.data;
+                    let i = this.attendDelays.map(item => item.month).indexOf(delayTime.month); // find index of object
+                    this.attendDelays[i] = response.data;
 
                     this.data_check_messg = true;
                     setTimeout(() => {
@@ -241,8 +237,8 @@
                this.axios
                .post('http://127.0.0.1:8000/api/delayTime/updatePm/'+id, delayTime)
                .then((response) => {
-                    //let i = this.attendDelays.map(item => item.id).indexOf(id); // find index of your object
-                   // this.attendDelays[i] = response.data;
+                    let i = this.attendDelays.map(item => item.month).indexOf(delayTime.month); // find index of object
+                    this.attendDelays[i] = response.data;
                    
                     this.data_check_messg = true;
                     setTimeout(() => {
@@ -260,14 +256,11 @@
             },
 
             delayDataCalculate(){
-                let results = [];
                 if(this.delays.length == 0){
                     
                     this.dates.forEach(d => {
-                        console.log(this.settings);
                         let tempSetting  = this.settings.filter(s => s.create_month < d.recordedDateTime);
                         tempSetting.sort(compareSetting);
-                        console.log(tempSetting[tempSetting.length-1].am);
 
                         if(tempSetting == 0){
                             let data1 ={};
@@ -318,7 +311,6 @@
                         return 1;
                     return 0;
                 }
-
 
                 this.attendDelays.sort(compare);
             }
