@@ -1,7 +1,7 @@
 <template>
     <div class="col-md-10">
             
-        <div class="container">
+        <div class="container-fluid">
             <div class="row">
                 <div class="col-md-4"> 
                     <select class="form-control" id="selectDate"  @change="dateChange($event)" name="date_selected" required focus v-model="select_date">
@@ -15,7 +15,7 @@
                  <strong >データは成功しました。</strong> 
             </div>
 
-            <table class="table table-bordered mt-5">
+            <table class="table table-bordered mt-5" v-if="formChange">
                 <thead>
                     <tr>
                         <th scope="col">年月</th>
@@ -45,9 +45,120 @@
                     </tr>
                 </tbody>
             </table>
-
         </div>
-       
+
+        
+        <div class="container-fluid" v-if="!formChange">
+                <div class="row" >
+                    <div class="col-md-4 mt-4"> 
+                        <h4><strong>給与手当一覧　{{this.select_date}}分</strong></h4>      
+                    </div>
+                </div>
+            
+                <div class="row justify-content-md-center mt-4"> 
+                      <button type="button" class="btn btn-secondary mr-3" onclick="this.blur();">エンジニアコスト一覧表</button>
+                      <button type="button" class="btn btn-secondary mr-3" onclick="this.blur();">給与明細作成</button>
+                      <button type="button" class="btn btn-secondary mr-3" onclick="this.blur();">編集</button>
+                </div>
+                 <div class="row" >
+                    <div class="col-md-2 mt-4"> 
+                        {{this.paymentDate(this.select_date,1)}} 
+                    </div>
+                    <div class="col-md-3 mt-4"> 
+                        支給
+                    </div>    
+                </div>
+                <div class="row" >
+                    <div class="col-md-9">
+                             <table id="" class="table table-sm table-bordered">
+                            <tr>
+                                <th rowspan="2"  class="align-middle text-center">
+                                    従業員番号
+                                </th>
+                                <th rowspan="2"  class="align-middle text-center">
+                                    名前
+                                </th>
+                                <th rowspan="2" class="align-middle text-center">
+
+                                </th>
+                                <th colspan="5"  class="align-middle text-center">
+                                    控除前
+                                </th>
+                                <th colspan="3"  class="align-middle text-center">
+                                    控除額
+                                </th>
+                                <th colspan="3"  class="align-middle text-center">
+                                    その他調整(控除の場合-)
+                                </th>
+                                <th rowspan="2" style="text-align: center;"  class="align-middle text-center">
+                                    支給額
+                                </th>
+                            </tr>
+                            <tr>  
+                                <th  class="align-middle text-center">
+                                    基本給
+                                </th>
+                                <th  class="align-middle text-center">
+                                    通勤交通費
+                                </th>
+                                <th  class="align-middle text-center">
+                                    JLPT
+                                </th>
+                                <th  class="align-middle text-center">
+                                    ボーナス
+                                </th>
+                                <th  class="align-middle text-center">
+                                    合計
+                                </th>
+                                <th  class="align-middle text-center">
+                                    所得税
+                                </th>
+                                <th  class="align-middle text-center">
+                                    SSB
+                                </th>
+                                <th  class="align-middle text-center">
+                                    遅刻欠勤早退
+                                </th> 
+                                <th  class="align-middle text-center">
+
+                                </th>
+                                <th  class="align-middle text-center">
+                                    
+                                </th>
+                                <th  class="align-middle text-center">
+                                    
+                                </th>
+                                
+                            </tr>
+                        </table>    
+                    </div>
+                    <div class="col-md-3">
+                        <table class="table table-sm table-bordered">
+                            <tr>
+                                <th  colspan="2" class="align-middle text-center">
+                                        SSB
+                                </th>
+                                 <th  rowspan="3" class="align-middle text-center">
+                                        備考
+                                </th>
+                            </tr>
+                            <tr>
+                                <th rowspan="2" class="align-middle text-center">
+                                        総額
+                                </th>
+                                 <th   class="align-middle text-center">
+                                        会社負担分
+                                </th>
+                            </tr>
+                            <tr>
+                                   <th   class="align-middle text-center">
+                                      300000
+                                </th>   
+                            </tr>
+                        </table>
+                    </div> 
+                </div>
+        </div>
     </div>    
 </template>
 
@@ -64,7 +175,8 @@
                 delays:[],
                 attendDelays:[],
                 temp: [],
-                data_check_messg:false
+                data_check_messg:false,
+                formChange:true,
             }
         },
         created() {
@@ -93,11 +205,14 @@
            
         },
         methods: {
-            paymentDate(month){
+            paymentDate(month,date_flash=''){
                 var futureMonth = new Date(month);
                 futureMonth.setMonth(futureMonth.getMonth() + 1);
                 futureMonth.setDate(futureMonth.getDate()+ 9);
-                return moment(futureMonth).format('MM/DD/YYYY');
+                if(date_flash!=''){
+                   return moment(futureMonth).format('YYYY/MM/DD');     
+                }else
+                   return moment(futureMonth).format('MM/DD/YYYY');
             },
             updateDelayMoney(id , delayTime){
                 if(delayTime.money == 0){
@@ -185,6 +300,12 @@
             validateDecimal: function(number){
                 var re = /^-?\d+(?:\.?\d+)?$/;
                 return re.test(number);
+            },
+            dateChange:function($event){
+                let that=this;
+                that.formChange=false;
+
+
             }
 
         }

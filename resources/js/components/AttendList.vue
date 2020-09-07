@@ -122,10 +122,10 @@
 
                                                 <template v-if=" date!='' && date.am_leave!=0 && date.am_leave!=null">   
                                                         <template v-if="date.am_leave==1">
-                                                                <td class="paid-leave1" colspan="2" style="width: 220px; padding: 0px; text-align: center;">〇<input type="hidden" name="am_leave[]" value="1" class="amleave"></td>
+                                                                <td class="paid-leave1" colspan="2" style="width: 371.05px; padding: 0px; text-align: center;">〇<input type="hidden" name="am_leave[]" value="1" class="amleave"></td>
                                                         </template>     
                                                         <template v-else-if="date.am_leave==2">
-                                                                <td class="paid-leave1" colspan="2" style="width: 220px; padding: 0px; text-align: center;">-<input type="hidden" name="am_leave[]" value="2" class="amleave"></td>
+                                                                <td class="paid-leave1" colspan="2" style="width: 371.05px; padding: 0px; text-align: center;">-<input type="hidden" name="am_leave[]" value="2" class="amleave"></td>
                                                         </template>
                                                 </template>   
                                                 <template v-else>
@@ -163,10 +163,10 @@
                                                 <!-- pm leave -->
                                                  <template v-if=" date!='' && date.pm_leave!=0 && date.pm_leave!=null"> 
                                                         <template v-if="date.pm_leave==1">
-                                                                <td class="paid-leave2" colspan="2" style="width: 220px; padding: 0px; text-align: center;">〇<input type="hidden" name="pm_leave[]" value="1" class="pmleave"></td>
+                                                                <td class="paid-leave2" colspan="2" style="width: 368.05px; padding: 0px; text-align: center;">〇<input type="hidden" name="pm_leave[]" value="1" class="pmleave"></td>
                                                         </template>     
                                                         <template v-else-if="date.pm_leave==2">
-                                                                <td class="paid-leave2" colspan="2" style="width: 220px; padding: 0px; text-align: center;">-<input type="hidden" name="pm_leave[]" value="2" class="pmleave"></td>
+                                                                <td class="paid-leave2" colspan="2" style="width: 368.05px; padding: 0px; text-align: center;">-<input type="hidden" name="pm_leave[]" value="2" class="pmleave"></td>
                                                         </template>       
                                                  </template>
                                                 <template v-else>
