@@ -27,6 +27,8 @@ Route::get('/attendManage/download/{year}', 'AttendManageController@download');
 Route::post('/attendList','AttendController@store');
 Route::post('/attendList/getmonth','AttendController@getmonth');
 
+Route::get('/salaryList/{yearmonth}', 'SalaryController@list');
+
 Route::get('{any}', function () {
          return view('layouts.app');
 })->where('any', '.*');

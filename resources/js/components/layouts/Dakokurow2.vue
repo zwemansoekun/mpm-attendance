@@ -33,7 +33,7 @@
                     <!-- <template v-if="day[1].length!=0 && key==1"> -->
             <input name="id[]" class="form-control input-sm idx" style="text-align: center;" type="hidden" :value="`${child_date.id?child_date.id:''}`">   
                     <!-- </template>     -->
-            <button :id="`autobut${dayindex}`" v-if="['Sat','Sun'].includes(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])==false" onclick="this.blur();" type="button" class="btn btn-secondary" @click="childShowTimer()" >自動計算</button>  
+            <button :id="`autobut${dayindex}`" v-if="['Sat','Sun'].includes(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])==false" onclick="this.blur();" type="button" class="btn" style="background-color:#E7E6E6" @click="childShowTimer()" >自動計算</button>  
         </td> 
         <!-- <div :bay="bay" :style="`width: 371.05px;height:50px;background-color:${checkBgColor(year,month,dayindex+1,1)};`">{{bay}}</div> -->
  
@@ -62,9 +62,9 @@ export default {
                 let cur_date=new Date().getFullYear()+"/"+("0" + parseInt(new Date().getMonth()+1)).slice(-2)+"/"+("0" +new Date().getDate()).slice(-2); 
                
                 if(index==1){                
-                    return (val!=="Sat" && val!=="Sun" && cur_date>custom_date)? '#FFDAB9' : '';
+                    return (val!=="Sat" && val!=="Sun" && cur_date>custom_date)? '#FBE5D6' : '';
                 }else if(index==true && cur_date>custom_date){
-                    return '#FFDAB9';
+                    return '#FBE5D6';
                 }
 
             },

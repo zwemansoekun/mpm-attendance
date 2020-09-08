@@ -36,9 +36,9 @@ export default {
                 let cur_date=new Date().getFullYear()+"/"+("0" + parseInt(new Date().getMonth()+1)).slice(-2)+"/"+("0" +new Date().getDate()).slice(-2); 
                
                 if(index==1){                
-                    return (val!=="Sat" && val!=="Sun" && cur_date>custom_date)? '#FFDAB9' : '';
+                    return (val!=="Sat" && val!=="Sun" && cur_date>custom_date)? '#FBE5D6' : '';
                 }else if(index==true && cur_date>custom_date){
-                    return '#FFDAB9';
+                    return '#FBE5D6';
                 }
 
             },
