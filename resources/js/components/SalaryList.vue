@@ -56,83 +56,96 @@
                 </div>
             
                 <div class="row justify-content-md-center mt-4"> 
-                      <button type="button" class="btn btn-secondary mr-3" onclick="this.blur();">エンジニアコスト一覧表</button>
-                      <button type="button" class="btn btn-secondary mr-3" onclick="this.blur();">給与明細作成</button>
-                      <button type="button" class="btn btn-secondary mr-3" onclick="this.blur();">編集</button>
+                      <button type="button" style="background-color:#E7E6E6" class="btn  mr-3" onclick="this.blur();">エンジニアコスト一覧表</button>
+                      <button type="button" style="background-color:#E7E6E6" class="btn  mr-3" onclick="this.blur();">給与明細作成</button>
+                      <button type="button" style="background-color:#E7E6E6" class="btn  mr-3" onclick="this.blur();">編集</button>
                 </div>
-                 <div class="row" >
-                    <div class="col-md-2 mt-4"> 
-                        {{this.paymentDate(this.select_date,1)}} 
-                    </div>
-                    <div class="col-md-3 mt-4"> 
-                        支給
-                    </div>    
-                </div>
+             
                 <div class="row" >
                     <div class="col-md-9">
+                      
+                            <span class="col-md-2 mt-4" style="background-color:#DEEBF7"> 
+                                    {{this.paymentDate(this.select_date,1)}}     
+                            </span>
+                            <span class="col-md-2 mt-4"> 
+                                    支給
+                            </span>  
+                       
+                       
                              <table id="" class="table table-sm table-bordered">
                             <tr>
-                                <th rowspan="2"  class="align-middle text-center">
-                                    従業員番号
+                                <th  class="border-bottom-0">
+                                   
                                 </th>
-                                <th rowspan="2"  class="align-middle text-center">
+                                <th rowspan="3"  class="align-middle text-center">
                                     名前
                                 </th>
-                                <th rowspan="2" class="align-middle text-center">
+                                <th rowspan="3" class="align-middle text-center">
 
                                 </th>
-                                <th colspan="5"  class="align-middle text-center">
+                                <th colspan="5"  style="background-color:#FBE5D6" class="align-middle text-center">
                                     控除前
                                 </th>
-                                <th colspan="3"  class="align-middle text-center">
+                                <th colspan="3"   style="background-color:#D9D9D9" class="align-middle text-center">
                                     控除額
                                 </th>
-                                <th colspan="3"  class="align-middle text-center">
+                                <th colspan="3"  style="background-color:#D9D9D9" class="align-middle text-center">
                                     その他調整(控除の場合-)
                                 </th>
-                                <th rowspan="2" style="text-align: center;"  class="align-middle text-center">
+                                <th rowspan="2" style="text-align: center;background-color:#DAE3F3"  class="align-middle text-center border-bottom-0">
                                     支給額
                                 </th>
                             </tr>
                             <tr>  
-                                <th  class="align-middle text-center">
+                                 <th   class="align-middle text-center border-bottom-0 border-top-0">
+                                    従業員番号
+                                </th>
+                                <th  rowspan="2"  class="text-center align-middle"  style="background-color:#FBE5D6">
                                     基本給
                                 </th>
-                                <th  class="align-middle text-center">
+                                <th   rowspan="2" class="text-center align-middle"  style="background-color:#FBE5D6">
                                     通勤交通費
                                 </th>
-                                <th  class="align-middle text-center">
+                                <th   rowspan="2" class="text-center align-middle"  style="background-color:#FBE5D6">
                                     JLPT
                                 </th>
-                                <th  class="align-middle text-center">
+                                <th  rowspan="2" class="text-center align-middle"  style="background-color:#FBE5D6">
                                     ボーナス
                                 </th>
-                                <th  class="align-middle text-center">
+                                <th   rowspan="2" class="text-center align-middle"  style="background-color:#FBE5D6">
                                     合計
                                 </th>
-                                <th  class="align-middle text-center">
+                                <th   rowspan="2" class="text-center align-middle" style="background-color:#D9D9D9">
                                     所得税
                                 </th>
-                                <th  class="align-middle text-center">
+                                <th   rowspan="2" class="text-center align-middle" style="background-color:#D9D9D9">
                                     SSB
                                 </th>
-                                <th  class="align-middle text-center">
+                                <th   rowspan="2" class="text-center align-middle" style="background-color:#D9D9D9">
                                     遅刻欠勤早退
                                 </th> 
-                                <th  class="align-middle text-center">
+                                <th  rowspan="2" class="text-center" style="background-color:#D9D9D9">
 
                                 </th>
-                                <th  class="align-middle text-center">
+                                <th  rowspan="2" class="text-center" style="background-color:#D9D9D9">
                                     
                                 </th>
-                                <th  class="align-middle text-center">
+                                <th rowspan="2" class="text-center" style="background-color:#D9D9D9">
                                     
                                 </th>
                                 
                             </tr>
+                            <tr>
+                                <th  class="border-top-0">
+                                </th>
+                                <th class="align-middle text-right border-top-0" style="background-color:#DAE3F3">
+                                      400000
+                                </th>  
+                            </tr>
                         </table>    
                     </div>
                     <div class="col-md-3">
+                        <span  class="col-md-2 mt-4"></span>
                         <table class="table table-sm table-bordered">
                             <tr>
                                 <th  colspan="2" class="align-middle text-center">
@@ -146,12 +159,12 @@
                                 <th rowspan="2" class="align-middle text-center">
                                         総額
                                 </th>
-                                 <th   class="align-middle text-center">
+                                 <th   class="align-middle text-center border-bottom-0" style="background-color:yellow">
                                         会社負担分
                                 </th>
                             </tr>
                             <tr>
-                                   <th   class="align-middle text-center">
+                                   <th   class="align-middle text-right border-top-0" style="background-color:yellow">
                                       300000
                                 </th>   
                             </tr>
@@ -177,6 +190,8 @@
                 temp: [],
                 data_check_messg:false,
                 formChange:true,
+                year:'',
+                month:'',
             }
         },
         created() {
@@ -302,11 +317,36 @@
                 return re.test(number);
             },
             dateChange:function($event){
-                let that=this;
-                that.formChange=false;
+                let that=this;let val='';
+             
+                
+                if(event.target.value!=''){
+                    that.formChange=false;
+                    val=event.target.value;
 
+                    let split_date=val.split("/");                  
+                    this.year=split_date[0];
+                  
+                    val=val.replace(this.year+"/",'');
+                    this.month=val;
 
-            }
+                }else{
+                    return false;
+                }
+
+                // if(event.target.value!=''){
+
+                    this.axios
+                    .get((window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/salaryList/"+this.year+"-"+this.month)                 
+                    .then(response => {
+                        console.log('salary',response.data);
+                    })
+                    .catch(function (error) {
+                        console.log(error.response)
+                    });
+
+                // }
+            }   
 
         }
     }

@@ -8,9 +8,11 @@
                     
                     <select class="form-control" id="selectEmployee" @change="empChange($event)"  name="employ_selected" required focus v-model="select_employee">
                         <option value="" disabled selected>Please select employee</option>
-                        <option v-bind:key="emp.id" v-for="emp in emps"> {{emp.id }} {{emp.name }}</option>
+                        <!-- <option v-bind:key="emp.id" v-for="emp in emps"> {{emp.id }} {{emp.name }}</option> -->
+                        <option v-bind:key="emp.id" v-for="emp in emps" v-bind:label="employeeCodeAndName(emp)"> {{ emp.id }} {{ emp.employeeId }} {{emp.name }}</option>
                     </select>                      
-                </div>                         
+                </div>         
+                      
                 <div class="col-md-4 offset-md-2"> 
                     <select class="form-control" id="selectDate"  @change="dateChange($event)" name="date_selected" required focus v-model="select_date">
                         <option value="" disabled selected>Please select Year/Month</option>
@@ -39,10 +41,10 @@
                 <!-- //form -->                      
             <div class="row">
                 <div class="col-md-4">
-                    <button type="button" class="btn btn-secondary" onclick="this.blur();">出勤簿生成</button>
+                    <button type="button" class="btn" style="background-color:#E7E6E6" onclick="this.blur();">出勤簿生成</button>
                 </div>
                 <div class="col-md-4 offset-md-2">
-                    <button type="button" class="btn btn-secondary" style="width: 220px;" onclick="this.blur();" @click="allButtonClick()">全て自動計算</button>
+                    <button type="button" class="btn" style="width: 220px;background-color:#E7E6E6;" onclick="this.blur();" @click="allButtonClick()">全て自動計算</button>
                 </div> 
             </div>                 
                 <form id="form" class="" @submit.prevent="attendSave"  autocomplete="on">
@@ -52,7 +54,7 @@
                             <button type="submit" class="btn btn-primary" onclick="this.blur();" >登録</button>
                         </div>
                         <div class="col-md-4 offset-md-2">
-                            <button type="button" class="btn btn-secondary" onclick="this.blur();" @click="filterInput()" style="width: 220px;color: red;">空のところだけ自動計算</button>
+                            <button type="button" class="btn" onclick="this.blur();" @click="filterInput()" style="width: 220px;color: red;background-color:#E7E6E6">空のところだけ自動計算</button>
                         </div>
                     </div>
                     <!-- v-on:submit.prevent="attendSave" -->
@@ -62,7 +64,7 @@
                         <div class="col-md-4"> {{this.select_date}}</div>                          
                     </div>  
                     <div class="row">
-                        <div class="col-md-4"> Employee No.{{emp_no}}</div>                          
+                        <div class="col-md-4"> Employee No.{{emp_code}}</div>                          
                     </div>    
                     <div class="row">
                         <div class="col-md-4"> Name: {{emp_name}}</div>                          
@@ -214,7 +216,7 @@
                                                     <!-- <template v-if="day[1].length!=0 && key==1"> -->
                                                         <input name="id[]" class="form-control input-sm idx" style="text-align: center;" type="hidden" :value="`${date.id?date.id:''}`">   
                                                     <!-- </template>     -->
-                                                        <button type="button" onclick="this.blur();" :id="`autobut${dayindex}`" class="btn btn-secondary" @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">自動計算</button>
+                                                        <button type="button" onclick="this.blur();" :id="`autobut${dayindex}`" class="btn" style="background-color:#E7E6E6"  @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">自動計算</button>
                                                 </td>     
                                               
                                             </template>                                                                                         
@@ -269,6 +271,7 @@ import Dakokurow2 from './layouts/Dakokurow2.vue';
                 select_date:'',          
                 emps:[],          
                 dates:[],
+                emp_code:'',
                 emp_no:'',
                 emp_name:'',
                 year:'',
@@ -308,7 +311,9 @@ import Dakokurow2 from './layouts/Dakokurow2.vue';
                 .get('http://localhost:5000/attendances/all/date')
                 .then(response => {
              
-                this.dates=response.data;
+                this.dates=response.data.filter(function (el) {
+                     return el['recordedDateTime'] != null;
+                });
             
                 });    
         },
@@ -345,7 +350,9 @@ import Dakokurow2 from './layouts/Dakokurow2.vue';
               this.mouse_rclick();
         },      
         methods: {  
-            
+            employeeCodeAndName: function(value){
+                return value.employeeId+' '+value.name;
+            },
             empChange:function(event){
                 let val='';
         
@@ -353,7 +360,9 @@ import Dakokurow2 from './layouts/Dakokurow2.vue';
                     let  val=event.target.value;
                     let split_name=val.split(" ");
                     this.emp_no=split_name[0];
+                    this.emp_code=split_name[1];
                     val=val.replace(this.emp_no,'');
+                    val=val.replace(this.emp_code,'');
                     this.emp_name=val;
                 }  
                 
@@ -602,9 +611,9 @@ import Dakokurow2 from './layouts/Dakokurow2.vue';
                 let cur_date=new Date().getFullYear()+"/"+("0" + parseInt(new Date().getMonth()+1)).slice(-2)+"/"+("0" +new Date().getDate()).slice(-2); 
                
                 if(index==1){                
-                    return (val!=="Sat" && val!=="Sun" && cur_date>custom_date)? '#FFDAB9' : '';
+                    return (val!=="Sat" && val!=="Sun" && cur_date>custom_date)? '#FBE5D6' : '';
                 }else if(index==true && cur_date>custom_date){
-                    return '#FFDAB9';
+                    return '#FBE5D6';
                 }
 
             },
@@ -664,19 +673,21 @@ import Dakokurow2 from './layouts/Dakokurow2.vue';
                       data:up_data,
                     })                  
                     .then(response=>{ 
-
+                        that.get_attend_data=[];
+                        that.data_combine=[];
                         that.check_attend_data=false;                        
                         that.get_attend_data=response.data;
-                        console.log('res',that.get_attend_data);   
+                        console.log('nores',that.get_attend_data);   
                         that.ampm_calling(that.get_attend_data);                  
                     })
                     .catch(function (error) {
+                         console.log('nopar byar',that.get_attend_data); 
                         console.log('geterror',error.response);
                     }); 
 
            },   
             ampm_calling(attend_data=''){        
-                    console.log('ampmin',attend_data);           
+                    // console.log('ampmin',attend_data);           
                     let that = this;
                     let those=this;
                     this.ampm_by_day_arr=[];
@@ -701,33 +712,41 @@ import Dakokurow2 from './layouts/Dakokurow2.vue';
                             return false;
                         }else{
                             this.form_open=true;
-                        }                       
+                        }             
+                        console.log('api return',response.data);
                         let memory_record={};let push_record=[];
                         response.data.forEach(function(res, index) {
                                 if (res.recordedDateTime === that.memory && that.memory !== "") {
                                     that.memory = res.recordedDateTime;
-                                     memory_record[res.recordedDateTime]= res    
+                                    //   console.log('t1',Object.keys(memory_record).length);
+                                     memory_record[res.recordedDateTime]= res 
+                                    // console.log('y1',Object.keys(memory_record).length);
+                                        
                                     that.ampm_inner_arr.push(res);
                                 } else if (res.recordedDateTime !== that.memory && that.memory !== "") {
                                     push_record.push(memory_record);
-                                    that.ampm_arr.push(that.ampm_inner_arr);
+                                    that.ampm_arr.push(that.ampm_inner_arr);//.slice(0,4)
                                     memory_record={};
                                     that.ampm_inner_arr = [];
                                     that.memory = res.recordedDateTime;
+                                        //  console.log('t2',Object.keys(memory_record).length);
                                     memory_record[ res.recordedDateTime]= res 
+                                        //  console.log('y2',Object.keys(memory_record).length);
                                     // push_record.push(memory_record);    
                                     that.ampm_inner_arr.push(res);
                                 } else {
-                                    that.memory = res.recordedDateTime;     
-                                    memory_record[ res.recordedDateTime]= res                          
+                                    that.memory = res.recordedDateTime;   
+                                        //  console.log('t3',Object.keys(memory_record).length);  
+                                    memory_record[ res.recordedDateTime]= res    
+                                        //  console.log('y3',Object.keys(memory_record).length);                      
                                     that.ampm_inner_arr.push(res);
                                 }
                                 if(response.data.length - 1 === index) {
                                     push_record.push(memory_record);   
-                                    that.ampm_arr.push(that.ampm_inner_arr);
+                                    that.ampm_arr.push(that.ampm_inner_arr);//.slice(0,4)
                                 }
                         });
-
+                        console.log('second filter',that.ampm_arr);
                         that.memory=''; 
 
                         for(let i=1;i<=this.dayCount;i++){
@@ -746,18 +765,18 @@ import Dakokurow2 from './layouts/Dakokurow2.vue';
                                                     that.ampm_by_day.push(null); //{"am_pm":"00:00","hour":"00","minute":"00"}
                                                 }
                                             } 
-                                                                          
+                                            // console.log('third filter',that.ampm_by_day);                           
                                             let store_arr=[];
                                             for(let i=0;i<that.ampm_by_day.length;i++){
                                         
-                                                if(that.ampm_by_day[i]!=null){                                                
-                                                    if(that.ampm_by_day[i].hour<12){   
+                                                if(that.ampm_by_day[i]!=null ){                                                
+                                                    if(that.ampm_by_day[i].hour<12 && pre_store['am1']==undefined){   
                                                         pre_store['am1']=that.ampm_by_day[i]?that.ampm_by_day[i].am_pm:null;                                                      
-                                                    }else if(that.ampm_by_day[i].hour>=12 && that.ampm_by_day[i].minute>=0  && that.ampm_by_day[i].hour<13 && pre_store['am2']==undefined && pre_store['am1']!=undefined ){  //&& store_arr[0]!==undefined
+                                                    }else if(pre_store['am1']!=undefined && that.ampm_by_day[i].minute>=0  && that.ampm_by_day[i].hour<13 && pre_store['am2']==undefined && pre_store['am1']!=undefined ){  //&& store_arr[0]!==undefined   //that.ampm_by_day[i].hour>=12
                                                         pre_store['am2']=that.ampm_by_day[i]?that.ampm_by_day[i].am_pm:null;                                                      
                                                     }else if( ( (that.ampm_by_day[i].hour>=12 && that.ampm_by_day[i].minute>=0 ) || (that.ampm_by_day[i].hour>=12 && that.ampm_by_day[i].minute>=0   ) )&& that.ampm_by_day[i].hour<17 && pre_store['pm1']==null){ //&& store_arr[1]!==undefined   //&& store_arr[1]===undefined                                                    
                                                         pre_store['pm1']=that.ampm_by_day[i]?that.ampm_by_day[i].am_pm:null;                                                     
-                                                    }else if(that.ampm_by_day[i].hour>=17 && that.ampm_by_day[i].minute>=0){
+                                                    }else if(pre_store['pm1']!=undefined && that.ampm_by_day[i].minute>=0){//that.ampm_by_day[i].hour>=17
                                                         pre_store['pm2']=that.ampm_by_day[i]?that.ampm_by_day[i].am_pm:null;                                                      
                                                     }
                                                     if(pre_store['am1']==undefined){
@@ -777,7 +796,7 @@ import Dakokurow2 from './layouts/Dakokurow2.vue';
                                             } 
                                            
                                             tem_store.push({"0":pre_store,"1":[]});
-                                          
+                                              console.log('fourth filter',tem_store);       
                                             pre_store={};//tar=[];
                                           
                                             that.status=1; 
@@ -866,17 +885,13 @@ import Dakokurow2 from './layouts/Dakokurow2.vue';
               }else if( (am_leave=='' && (pm_leave==1 && pm1=='' && pm2=='' ) ) || (am_leave==2 && (pm_leave==1 && pm1=='' && pm2=='' ) ) ){
                     p_am=4;
               }
-                console.log('a',am1);
-                  console.log('b',am2);
-                console.log('c',pm1);
-                  console.log('d',pm2);
+             
 
               if(day_leave=='circle' || day_leave=='dash'){           
               
                     let leave_sign=day_leave=='circle'?"〇":"-";
                     if(am1=='' && am2=='' && sec_index=='paid-leave1'){ 
-                            console.log(leave_sign);
-                             console.log('uturururu');
+                          
                         if(jQuery("."+index).children('td').length==6){
                             jQuery("."+index).find("td:first").attr('colspan','2').find("td:first").remove();
                             jQuery("."+index).find("td:nth-child(2)").remove();
@@ -885,7 +900,7 @@ import Dakokurow2 from './layouts/Dakokurow2.vue';
                          jQuery("."+index).find("[class^=paid-leave1]").text(leave_sign);
                          
                     }else if(pm1== '' && pm2=='' && sec_index=='paid-leave2'){
- console.log('asdasdasdasd');
+ 
                         if(jQuery("."+index).children('td').length==6){
                             jQuery("."+index).find("td:nth-child(3)").attr('colspan','2').find("td:nth-child(3)").remove();
                             jQuery("."+index).find("td:nth-child(4)").remove();
@@ -915,19 +930,19 @@ import Dakokurow2 from './layouts/Dakokurow2.vue';
                    
                 if(jQuery("."+sec_index).find(".am1").hasClass('checkColumn')){
                      auto_am1=this.ampm_time_check(ap_split1,".am1",sec_index);   
-                     console.log('a',auto_am1);  
+                   
                 }
                  if(jQuery("."+sec_index).find(".am2").hasClass('checkColumn')){
                       auto_am2=this.ampm_time_check(ap_split2,".am2",sec_index);   
-                      console.log('b',auto_am2);
+                   
                 }
                 if(jQuery("."+sec_index).find(".pm1").hasClass('checkColumn')){
                        auto_pm1=this.ampm_time_check(ap_split3,".pm1",sec_index);   
-                       console.log('c',auto_pm1);
+                   
                 }
                 if(jQuery("."+sec_index).find(".pm2").hasClass('checkColumn') ){
                        auto_pm2=this.ampm_time_check(ap_split4,".pm2",sec_index); 
-                       console.log('d',auto_pm2);
+                   
                 }
                 // karanotokoro
                 if( auto_am1==undefined || auto_am2==undefined || auto_pm1==undefined || auto_pm2==undefined ){
@@ -960,22 +975,22 @@ import Dakokurow2 from './layouts/Dakokurow2.vue';
                                         // auto_am1=[];auto_am2=[];auto_pm1=[];auto_pm2=[];
                                      if(name==".am1"){
                                           auto_am1=[];
-                                         console.log('h',h1);
+                                        
                                            auto_am1[0]=h1;      //this.ampm_time_check(split_ap,"am1",sec_index);   
                                            auto_am1[1]=m1;
                                      }else if(name==".am2"){
                                            auto_am2=[];
-                                           console.log('h1',h1);
+                                      
                                            auto_am2[0]=h1;           //this.ampm_time_check(split_ap,"am2",sec_index);   
                                            auto_am2[1]=m1;  
                                      }else if(name==".pm1"){
                                             auto_pm1=[];
-                                           console.log('h2',h1);
+                                      
                                             auto_pm1[0]=h1;            //this.ampm_time_check(split_ap,"pm1",sec_index);  
                                             auto_pm1[1]=m1;  
                                      }else if(name==".pm2"){
                                            auto_pm2=[];
-                                           console.log('h3',h1);
+                                       
                                             auto_pm2[0]=h1;            //this.ampm_time_check(split_ap,"pm2",sec_index);  
                                             auto_pm2[1]=m1;  
                                      }       
@@ -1024,16 +1039,18 @@ import Dakokurow2 from './layouts/Dakokurow2.vue';
                       return false;   
                 }
 
-                if(name==".am2"){
-                    ap_split[0]=12;ap_split[1]="00";     
-                }else if(name==".pm2"){
-                    ap_split[0]=17;ap_split[1]="00";  
+                if( (name==".am2" || name==".pm2") && (ap_split[1]>0 && ap_split[1]<30 ) ){
+                    // ap_split[0]=12;
+                    ap_split[1]="00";     
+                }else if((name==".am2" || name==".pm2") && (ap_split[1]>30 && ap_split[1]<60 ) ){
+                    // ap_split[0]=17;
+                    ap_split[1]="30";  
                 }else{
                     if( (ap_split[0]<8 && ap_split[1]<60) || (ap_split[0]==8 && ap_split[1]<6) ){
                         ap_split[0]=8;ap_split[1]="00";     
                     }else if(ap_split[0]==13 && ap_split[1]<16){
                         ap_split[0]=13;ap_split[1]="00"; 
-                    }else if( ( ap_split[0]==8  && ( ap_split[1]>=6 && ap_split[1]<=30) ) || (ap_split[0]>8 && (ap_split[1]>=0 && ap_split[1]<=30) )    ) {
+                    }else if( ( ap_split[0]==8  && ( ap_split[1]>=6 && ap_split[1]<=30) ) || (ap_split[0]>8 && (ap_split[1]>0 && ap_split[1]<=30) )    ) {
                         ap_split[0]=ap_split[0];ap_split[1]="30"; 
                     }else if(ap_split[0]>=8 && (ap_split[1]>=30 && ap_split[1]<=60 ) ){
                         ap_split[0]=parseInt(ap_split[0])+1;ap_split[1]="00"; 

@@ -27,6 +27,9 @@ Route::get('/attendManage/download/{year}', 'AttendManageController@download');
 Route::post('/attendList','AttendController@store');
 Route::post('/attendList/getmonth','AttendController@getmonth');
 
+
+Route::get('/salaryList/{yearmonth}', 'SalaryController@list');
+
 Route::get('/settings',  'SettingController@index');
 Route::get('/setting/all', 'SettingController@all');
 Route::post('/setting/updateMoney/{id}',  'SettingController@updateMoney');
@@ -44,6 +47,7 @@ Route::post('/employee/save/{id}', 'EmployeeController@save');
 Route::get('/employeeDetail/lastData/{emp_id}', 'EmployeeDetailController@findLastDataByEmployee');
 Route::get('/employeeDetail/{emp_id}', 'EmployeeDetailController@findByEmployee');
 Route::post('/employeeDetail/updateAll', 'EmployeeDetailController@updateAll');
+
 
 Route::get('{any}', function () {
          return view('layouts.app');
