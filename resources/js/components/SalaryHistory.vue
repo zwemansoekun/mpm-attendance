@@ -379,18 +379,28 @@ import Datepicker from 'vuejs-datepicker';
                 return numeral(data).format('0,0');   
             },
             findEmployeeData(){
-                this.axios
-                .get('http://127.0.0.1:8000/api/employee/'+this.emp_id)
-                .then((response) => {
-                    this.empData = response.data;
+                let that=this;
+                this.axios({
+                    url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/employee/"+this.emp_id,
+                    method: 'get'
                 })
+                .then(function (response) {
+                    that.empData = response.data;
+                })
+                .catch(function (error) {
+                });
             },
             findLastHistory(){
-                this.axios
-                .get('http://127.0.0.1:8000/api/employeeDetail/lastData/'+this.emp_id)
-                .then((response) => {
-                    this.empDetail = response.data;
+                let that=this;
+                this.axios({
+                    url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/employeeDetail/lastData/"+this.emp_id,
+                    method: 'get'
                 })
+                .then(function (response) {
+                    that.empDetail = response.data;
+                })
+                .catch(function (error) {
+                });
             },
             showHistory(){
                 this.form_detail_open = true;
@@ -398,22 +408,26 @@ import Datepicker from 'vuejs-datepicker';
                 this.findEmployeeHistory();
             },
             findEmployeeHistory(){
-                this.axios
-                .get('http://127.0.0.1:8000/api/employeeDetail/'+this.emp_id)
-                .then((response) => {
-                    this.empDetails = response.data;
-                    for(let i=0; i < this.empDetails.length; i++)
+                let that=this;
+                this.axios({
+                    url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/employeeDetail/"+this.emp_id,
+                    method: 'get'
+                })
+                .then(function (response) {
+                    that.empDetails = response.data;
+                    for(let i=0; i < that.empDetails.length; i++)
                     {  
-                        var dtObj = new Date(this.empDetails[i]['pay_month']); 
+                        var dtObj = new Date(that.empDetails[i]['pay_month']); 
 
-                        this.empDetails[i]['pay_month'] = dtObj;
-                        if(i+1 < this.empDetails.length && this.empDetails[i]['salary_amount'] != this.empDetails[i+1]['salary_amount'])
+                        that.empDetails[i]['pay_month'] = dtObj;
+                        if(i+1 < that.empDetails.length && that.empDetails[i]['salary_amount'] != that.empDetails[i+1]['salary_amount'])
                         {
-                            Vue.set(this.empDetails[i+1], 'color', true);
+                            Vue.set(that.empDetails[i+1], 'color', true);
                         }
                     }
-                    
                 })
+                .catch(function (error) {
+                });
             },
             newHistoryCreate(){
                 this.edit = true;
@@ -600,23 +614,34 @@ import Datepicker from 'vuejs-datepicker';
                     return this.duplicateErrors;
                 }
 
-                this.axios
-                .post('http://127.0.0.1:8000/api/employee/save/'+this.emp_id,this.empData)
-                .then((response) => {
-
+                this.axios({
+                    url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/employee/save/"+this.emp_id,
+                    method: 'post',
+                    data: this.empData
                 })
-                
-                this.axios
-                .post('http://127.0.0.1:8000/api/employeeDetail/updateAll',this.empDetails)
-                .then((response) => {
-                    this.edit = false;
-                    this.findEmployeeHistory();
+                .then(function (response) {
                     
-                    this.success_msg = true;
+                })
+                .catch(function (error) {
+                });
+
+                let that=this;
+                this.axios({
+                    url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/employeeDetail/updateAll",
+                    method: 'post',
+                    data: this.empDetails
+                })
+                .then(function (response) {
+                    that.edit = false;
+                    that.findEmployeeHistory();
+                    
+                    that.success_msg = true;
                     setTimeout(() => {
-                        this.success_msg = false;
+                        that.success_msg = false;
                     },2000)
                 })
+                .catch(function (error) {
+                });
                 
             },
             validateNumber: function(value){
