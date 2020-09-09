@@ -6,3 +6,7 @@
 
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
+
+#salaryTable  > tr > th, #salaryTable tbody >tr >td {
+    border-color: black;
+ }

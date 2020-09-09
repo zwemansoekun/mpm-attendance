@@ -13,4 +13,9 @@ class EmployeeDetail extends Model
     // {
     //     return $this->belongsTo('App\Employee');
     // }
+    public function employee()
+    {
+        // return $this->hasMany('App\Employee','emp_id');
+        return $this->belongsTo('App\Employee','emp_id','emp_id');
+    }
 }
