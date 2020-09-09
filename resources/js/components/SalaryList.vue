@@ -71,8 +71,8 @@
                                     支給
                             </span>  
                        
-                       
-                             <table id="" class="table table-sm table-bordered">
+                            {{salaries}}
+                            <table id="salaryTable" class="table table-sm table-bordered">
                             <tr>
                                 <th  class="border-bottom-0">
                                    
@@ -142,8 +142,55 @@
                                       400000
                                 </th>  
                             </tr>
+
+                            <tbody>
+                                <!-- <tr> -->
+                                    <!-- <table class="table table-sm table-bordered"> -->
+                                         <tr v-bind:key="key" v-for="(salary,key) in salaries">
+                                            <td rowspan="2"  class="text-center align-middle">0001</td>
+                                            <td rowspan="2" class="text-center align-middle">may wathone htoo</td>
+                                            <td style="background-color:#D9D9D9">計算値</td>
+                                            <td style="background-color:#D9D9D9" class="text-right align-middle">100,000</td>
+                                            <td style="background-color:#D9D9D9" class="text-right align-middle">4800</td>
+                                            <td style="background-color:#D9D9D9" class="text-right align-middle">???</td>
+                                            <td style="background-color:#D9D9D9" class="text-right align-middle">???</td>
+                                            <td style="background-color:#D9D9D9" class="text-right align-middle">1048,000</td>
+
+                                            <td style="background-color:#D9D9D9" class="text-right align-middle">???</td>
+                                            <td style="background-color:#D9D9D9" class="text-right align-middle">???</td>
+                                            <td style="background-color:#D9D9D9" class="text-right align-middle">12458</td>
+
+                                            <td style="background-color:#D9D9D9" class="text-right align-middle">???</td>
+                                            <td style="background-color:#D9D9D9" class="text-right align-middle">???</td>
+                                            <td style="background-color:#D9D9D9" class="text-right align-middle">???</td>
+                                            <td style="background-color:#D9D9D9" class="text-right align-middle">???</td>
+                                        </tr>
+                                        <tr>
+                                            <td>実際</td>
+                                            <td class="text-right align-middle">100,000</td>
+                                            <td class="text-right align-middle">4800</td>
+                                            <td class="text-right align-middle">???</td>
+                                            <td class="text-right align-middle">???</td>
+                                            <td class="text-right align-middle">1048,000</td>
+
+                                            <td class="text-right align-middle">???</td>
+                                            <td class="text-right align-middle">???</td>
+                                            <td class="text-right align-middle">12458</td>
+
+                                            <td class="text-right align-middle">???</td>
+                                            <td class="text-right align-middle">???</td>
+                                            <td class="text-right align-middle">???</td>
+                                            <td class="text-right align-middle">???</td>
+                                        </tr>
+                                    <!-- </table> -->
+                                <!-- </tr>                             -->
+                            </tbody>
+
                         </table>    
                     </div>
+
+
+
                     <div class="col-md-3">
                         <span  class="col-md-2 mt-4"></span>
                         <table class="table table-sm table-bordered">
@@ -192,6 +239,7 @@
                 formChange:true,
                 year:'',
                 month:'',
+                salaries:[],
             }
         },
         created() {
@@ -340,6 +388,7 @@
                     .get((window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/salaryList/"+this.year+"-"+this.month)                 
                     .then(response => {
                         console.log('salary',response.data);
+                        that.salaries=response.data;
                     })
                     .catch(function (error) {
                         console.log(error.response)

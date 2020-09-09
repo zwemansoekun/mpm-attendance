@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 
+use App\Employee;
 use App\EmployeeDetail;
 use Illuminate\Http\Request;
+use App\Http\Resources\EmployeeDetail as EmployeeDetailResource;
 
 class SalaryController extends Controller
 {
@@ -86,8 +88,11 @@ class SalaryController extends Controller
 
     public function list($yearmonth)
     {
-        // return $yearmonth;
-        $salary=EmployeeDetail::where('pay_month',str_replace("-","/",$yearmonth))->get()->toArray();
-        return $salary;
+           
+        $salary=EmployeeDetail::with('employee')->where('pay_month',str_replace("-","/",$yearmonth))->get();//->toArray();//with('employee')->
+      
+        $res_salary= EmployeeDetailResource::collection($salary);
+        return $res_salary;
+      
     }
 }

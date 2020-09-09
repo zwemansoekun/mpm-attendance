@@ -15,6 +15,7 @@ class CreateEmployeeDetailsTable extends Migration
     {
         Schema::create('employee_details', function (Blueprint $table) {
             $table->id();
+            // $table->increments('id');
             $table->string('pay_month');
             $table->decimal('salary_amount',10, 2);
             $table->integer('trans_money');
@@ -29,8 +30,11 @@ class CreateEmployeeDetailsTable extends Migration
             $table->string('child')->nullable();
             $table->string('emg_ph_no')->nullable();
             $table->string('waste_time')->nullable();
-            $table->integer('emp_id'); //api_emp_id
+            $table->bigInteger('emp_id')->unsigned()->index(); //api_emp_id
             $table->timestamps();
+
+            $table->foreign('emp_id')->references('emp_id')->on('employees')->onDelete('cascade');
+            
         });
     }
 
