@@ -70,8 +70,8 @@
                             <span class="col-md-2 mt-4"> 
                                     支給
                             </span>  
-                       
-                            {{salaries}}
+                            {{emps}}
+                            <!-- {{salaries}} -->
                             <table id="salaryTable" class="table table-sm table-bordered">
                             <tr>
                                 <th  class="border-bottom-0">
@@ -147,8 +147,8 @@
                                 <!-- <tr> -->
                                     <!-- <table class="table table-sm table-bordered"> -->
                                          <tr v-bind:key="key" v-for="(salary,key) in salaries">
-                                            <td rowspan="2"  class="text-center align-middle">0001</td>
-                                            <td rowspan="2" class="text-center align-middle">may wathone htoo</td>
+                                            <td rowspan="2"  class="text-center align-middle">{{emp_arr[salaries[key].emp_id]}}</td>
+                                            <td rowspan="2" class="text-center align-middle">{{name_arr[salaries[key].emp_id]}}</td>
                                             <td style="background-color:#D9D9D9">計算値</td>
                                             <td style="background-color:#D9D9D9" class="text-right align-middle">100,000</td>
                                             <td style="background-color:#D9D9D9" class="text-right align-middle">4800</td>
@@ -240,9 +240,13 @@
                 year:'',
                 month:'',
                 salaries:[],
+                emps:[],
+                emp_arr:[],
+                name_arr:[],
             }
         },
         created() {
+            let that=this;
             this.axios
             .get('http://127.0.0.1:8000/api/setting')
             .then(response => {
@@ -265,6 +269,22 @@
                 .then(response => {
                     this.dates=response.data;
             }); 
+            this.axios
+                .get('http://localhost:5000/employees')
+                .then(response => {
+                
+                    that.emps=response.data;
+                   if(that.emps){
+                  
+                       for(let v in that.emps){
+                            console.log('dddd',that.emps[v].id);
+                           that.emp_arr[that.emps[v].id]=that.emps[v].employeeId;
+                           that.name_arr[that.emps[v].id]=that.emps[v].name;
+                       }
+                     
+                   }
+                  
+            });
            
         },
         methods: {
