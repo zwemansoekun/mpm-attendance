@@ -8,8 +8,14 @@
                         :maximumView="'month'" v-model="customDate" 
                         v-on:selected="selectedDate()" :format="customFormatter"></datepicker>
                       
-                </div>  
-            </div> 
+                </div>
+             
+            </div>
+             <div class="row">
+                 <span v-if="dataError" class="text-danger">
+                        CSV出力ため、データ作成にはデータエラーがあります。
+                    </span>
+            </div>
         </div>   
     </div>
 </template>
@@ -27,7 +33,7 @@ var moment = require('moment');
         },
         data: function () {
             return {
-                customDate: null
+                customDate: null, dataError: false
             }
         },
          template: `<div class="checkbox-wrapper" > </div>`,
@@ -44,12 +50,15 @@ var moment = require('moment');
             returnValue: function(){
                 axios.post('http://127.0.0.1:8000/api/attendManage/csvOutput/'+ moment(this.customDate).format("yyyyMM"))
                     .then((response) => {
-
-                        if(response.data != null){
-                            const link = document.createElement('a')
-                            link.href = 'http://127.0.0.1:8000/attendManage/download/'+ moment(this.customDate).format("yyyyMM")
-                            document.body.appendChild(link)
-                            link.click()
+                        console.log(response.data);
+                        if(response.data == "fail"){
+                            this.dataError = true;
+                        }else{
+                             const link = document.createElement('a')
+                             link.href = 'http://127.0.0.1:8000/attendManage/download/'+ moment(this.customDate).format("yyyyMM")
+                             document.body.appendChild(link)
+                             link.click()
+                            this.dataError = false
                         }
                 });
             },

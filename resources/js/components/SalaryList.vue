@@ -74,7 +74,7 @@
                             <span class="col-md-2 mt-4"> 
                                     支給
                             </span>  
-                            {{emps}}
+                            <!-- {{emps}} -->
                             <!-- {{salaries}} -->
                             <table id="salaryTable" class="table table-sm table-bordered">
                             <tr>
@@ -101,40 +101,40 @@
                                 </th>
                             </tr>
                             <tr>  
-                                 <th   class="align-middle text-center border-bottom-0 border-top-0">
+                                <th   class="align-middle text-center border-bottom-0 border-top-0">
                                     従業員番号
                                 </th>
-                                <th  rowspan="2"  class="text-center align-middle"  style="background-color:#FBE5D6">
+                                <th  rowspan="2"  class="text-center align-middle"  style="background-color:#FBE5D6;width: 80px">
                                     基本給
                                 </th>
-                                <th   rowspan="2" class="text-center align-middle"  style="background-color:#FBE5D6">
+                                <th   rowspan="2" class="text-center align-middle"  style="background-color:#FBE5D6;width: 80px">
                                     通勤交通費
                                 </th>
-                                <th   rowspan="2" class="text-center align-middle"  style="background-color:#FBE5D6">
+                                <th   rowspan="2" class="text-center align-middle"  style="background-color:#FBE5D6;width: 80px">
                                     JLPT
                                 </th>
-                                <th  rowspan="2" class="text-center align-middle"  style="background-color:#FBE5D6">
+                                <th  rowspan="2" class="text-center align-middle"  style="background-color:#FBE5D6;width: 80px">
                                     ボーナス
                                 </th>
-                                <th   rowspan="2" class="text-center align-middle"  style="background-color:#FBE5D6">
+                                <th   rowspan="2" class="text-center align-middle"  style="background-color:#FBE5D6;width: 80px">
                                     合計
                                 </th>
-                                <th   rowspan="2" class="text-center align-middle" style="background-color:#D9D9D9">
+                                <th   rowspan="2" class="text-center align-middle" style="background-color:#D9D9D9;width: 80px">
                                     所得税
                                 </th>
-                                <th   rowspan="2" class="text-center align-middle" style="background-color:#D9D9D9">
+                                <th   rowspan="2" class="text-center align-middle" style="background-color:#D9D9D9;width: 80px">
                                     SSB
                                 </th>
-                                <th   rowspan="2" class="text-center align-middle" style="background-color:#D9D9D9">
+                                <th   rowspan="2" class="text-center align-middle" style="background-color:#D9D9D9;width: 80px">
                                     遅刻欠勤早退
                                 </th> 
-                                <th  rowspan="2" class="text-center" style="background-color:#D9D9D9">
+                                <th  rowspan="2" class="text-center" style="background-color:#D9D9D9;width: 80px">
 
                                 </th>
-                                <th  rowspan="2" class="text-center" style="background-color:#D9D9D9">
+                                <th  rowspan="2" class="text-center" style="background-color:#D9D9D9;width: 80px">
                                     
                                 </th>
-                                <th rowspan="2" class="text-center" style="background-color:#D9D9D9">
+                                <th rowspan="2" class="text-center" style="background-color:#D9D9D9;width: 80px">
                                     
                                 </th>
                                 
@@ -143,51 +143,83 @@
                                 <th  class="border-top-0">
                                 </th>
                                 <th class="align-middle text-right border-top-0" style="background-color:#DAE3F3">
-                                      400000
+                                     <!-- {{totalSalaryAmount}} -->
                                 </th>  
                             </tr>
 
                             <tbody>
+                                <!-- {{salaries}} -->
                                 <!-- <tr> -->
-                                    <!-- <table class="table table-sm table-bordered"> -->
-                                         <tr v-bind:key="key" v-for="(salary,key) in salaries">
-                                            <td rowspan="2"  class="text-center align-middle">{{emp_arr[salaries[key].emp_id]}}</td>
-                                            <td rowspan="2" class="text-center align-middle">{{name_arr[salaries[key].emp_id]}}</td>
-                                            <td style="background-color:#D9D9D9">計算値</td>
-                                            <td style="background-color:#D9D9D9" class="text-right align-middle">100,000</td>
-                                            <td style="background-color:#D9D9D9" class="text-right align-middle">4800</td>
-                                            <td style="background-color:#D9D9D9" class="text-right align-middle">???</td>
-                                            <td style="background-color:#D9D9D9" class="text-right align-middle">???</td>
-                                            <td style="background-color:#D9D9D9" class="text-right align-middle">1048,000</td>
+                                    <!-- v-bind:key="key" v-for="(salary,key) in salaries" -->
+                                    <!-- <table  class="table table-sm table-bordered"  style="position: absolute;"> -->
+                                            <template  v-for="(salary,key) in salaries">
+                                            
+                                                    <!-- {{key}} -->
+                                                    <tr v-bind:key="key">
+                                                        <td rowspan="2"  class="text-center align-middle">{{emp_arr[salaries[key].emp_id]}}</td>
+                                                        <td rowspan="2" class="text-center align-middle">{{name_arr[salaries[key].emp_id]}}<div>({{salaries[key].kana_name}})</div></td>
+                                                        <td style="background-color:#D9D9D9" class="text-center align-middle">計算値</td>
+                                                        <td style="background-color:#D9D9D9" class="text-right align-middle">{{Math.trunc(salaries[key].salary_amount).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")}}</td>
+                                                        <td style="background-color:#D9D9D9" class="text-right align-middle">{{salaries[key].trans_money}}</td>
+                                                        <td style="background-color:#D9D9D9" class="text-right align-middle">{{salaries[key].jlpt}}</td>
+                                                        <td style="background-color:#D9D9D9" class="text-right align-middle"></td>
+                                                        <td style="background-color:#D9D9D9" class="text-right align-middle">{{(parseInt(salaries[key].salary_amount)+parseInt(salaries[key].trans_money)).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")}}</td>
 
-                                            <td style="background-color:#D9D9D9" class="text-right align-middle">???</td>
-                                            <td style="background-color:#D9D9D9" class="text-right align-middle">???</td>
-                                            <td style="background-color:#D9D9D9" class="text-right align-middle">12458</td>
+                                                        <td style="background-color:#D9D9D9" class="text-right align-middle"></td>
+                                                        <td style="background-color:#D9D9D9" class="text-right align-middle"></td>
+                                                        <td style="background-color:#D9D9D9" class="text-right align-middle">12458</td>
 
-                                            <td style="background-color:#D9D9D9" class="text-right align-middle">???</td>
-                                            <td style="background-color:#D9D9D9" class="text-right align-middle">???</td>
-                                            <td style="background-color:#D9D9D9" class="text-right align-middle">???</td>
-                                            <td style="background-color:#D9D9D9" class="text-right align-middle">???</td>
-                                        </tr>
-                                        <tr>
-                                            <td>実際</td>
-                                            <td class="text-right align-middle">100,000</td>
-                                            <td class="text-right align-middle">4800</td>
-                                            <td class="text-right align-middle">???</td>
-                                            <td class="text-right align-middle">???</td>
-                                            <td class="text-right align-middle">1048,000</td>
+                                                        <td style="background-color:#D9D9D9" class="text-right align-middle"></td>
+                                                        <td style="background-color:#D9D9D9" class="text-right align-middle"></td>
+                                                        <td style="background-color:#D9D9D9" class="text-right align-middle"></td>
+                                                        <td style="background-color:#D9D9D9" class="text-right align-middle"></td>
+                                                    </tr>
+                                                    <tr v-bind:key="'A'+key">
+                                                        <td class="text-center align-middle">実際</td>
+                                                        <td class="text-right align-middle" style="padding: 0px;">
+                                                            <input name="pay_month[]" @change="updateInput" class="pay_month" style="text-align:right;" type="number" :value="``">
+                                                        </td>
+                                                        <td class="text-right align-middle" style="padding: 0px;">
+                                                            <input name="trans_money[]" @change="updateInput" class="trans_money" style="text-align:right;" type="number" :value="``">
+                                                        </td>
+                                                        <td class="text-right align-middle" style="padding: 0px;">
+                                                            <input name="jlpt[]"  @change="updateInput" class="jlpt" style="text-align:right;" type="number" :value="``">
+                                                        </td>
+                                                        <td class="text-right align-middle" style="padding: 0px;">
+                                                            <input name="bonus[]" @change="updateInput" class="bonus" style="text-align:right;" type="number" :value="``">
+                                                        </td>
+                                                        <td class="text-right align-middle" style="padding: 0px;">
 
-                                            <td class="text-right align-middle">???</td>
-                                            <td class="text-right align-middle">???</td>
-                                            <td class="text-right align-middle">12458</td>
+                                                            <input name="total_salary[]" @change="updateInput" class="total_salary" style="text-align:right;" type="number" :value="``">
+                                                        </td>
 
-                                            <td class="text-right align-middle">???</td>
-                                            <td class="text-right align-middle">???</td>
-                                            <td class="text-right align-middle">???</td>
-                                            <td class="text-right align-middle">???</td>
-                                        </tr>
-                                    <!-- </table> -->
-                                <!-- </tr>                             -->
+                                                        <!-- 控除額 -->
+                                                        <td class="text-right align-middle" style="padding: 0px;">
+                                                            <input name="income_tax[]" @change="updateInput" class="inc_tax" style="text-align:right;" type="number" :value="``">
+                                                        </td>
+                                                        <td class="text-right align-middle" style="padding: 0px;">
+                                                            <input name="ssb[]" @change="updateInput" class="ssb" style="text-align:right;" type="number" :value="``">
+                                                        </td>
+                                                        <td class="text-right align-middle" style="padding: 0px;">
+                                                            <input name="leave_late[]" @change="updateInput" class="leave_late" style="text-align:right;" type="number" :value="``">
+                                                        </td>
+
+                                                        <td class="text-right align-middle" style="padding: 0px;">
+                                                            <!-- <input name="leave_lateh" class="leave_lateh" style="text-align:right;" type="number" :value="``"> -->
+                                                        </td>
+                                                        <td class="text-right align-middle" style="padding: 0px;">
+                                                            <!-- <input name="pay_month" class="pay_month" style="text-align:right;" type="number" :value="``"> -->
+                                                        </td>
+                                                        <td class="text-right align-middle" style="padding: 0px;">
+                                                            <!-- <input name="pay_month" class="pay_month" style="text-align:right;" type="number" :value="``"> -->
+                                                        </td>
+                                                        <td class="text-right align-middle" style="padding: 0px;">
+                                                            <!-- :value="``" -->
+                                                            <input name="salary_amount[]" class="salary_amount" style="text-align:right;" type="number" >
+                                                        </td>
+                                                    </tr>
+                                            
+                                            </template>
                             </tbody>
 
                         </table>    
@@ -247,8 +279,16 @@
                 emps:[],
                 emp_arr:[],
                 name_arr:[],
+                salary_amount:[],
             }
         },
+        computed: {
+            // totalSalaryAmount:function(){
+            //     let that=this;
+            //     console.log('c',that.salary_amount);
+            //     return true;
+            // }                  
+        },        
         created() {
             let that=this;
             this.axios({
@@ -436,6 +476,7 @@
 
                 // }
             },
+
             
             excelExport(){
                 axios.get('http://127.0.0.1:8000/export')
@@ -447,6 +488,34 @@
                 })
             }
 
+            updateInput:function(event){ 
+                    let that=this;
+                    let b_salary=0,t_m=0,jlpt=0,bnu=0,total=0;  
+                    let inc_tax=0,ssb=0,leave_late=0,salary_amount=0;
+                     
+                    b_salary=$(event.target).parent().parent().find('.pay_month').val()!=''?$(event.target).parent().parent().find('.pay_month').val():0;
+                    t_m=$(event.target).parent().parent().find('.trans_money').val()!=''?$(event.target).parent().parent().find('.trans_money').val():0;
+                    jlpt=$(event.target).parent().parent().find('.jlpt').val()!=''?$(event.target).parent().parent().find('.jlpt').val():0;
+                    bnu=$(event.target).parent().parent().find('.bonus').val()!=''?$(event.target).parent().parent().find('.bonus').val():0;
+
+                    inc_tax=$(event.target).parent().parent().find('.inc_tax').val()!=''?$(event.target).parent().parent().find('.inc_tax').val():0;
+                    ssb=$(event.target).parent().parent().find('.ssb').val()!=''?$(event.target).parent().parent().find('.ssb').val():0;
+                    leave_late=$(event.target).parent().parent().find('.leave_late').val()!=''?$(event.target).parent().parent().find('.leave_late').val():0;
+                    
+                    total=parseInt(b_salary)+parseInt(t_m)+parseInt(jlpt)+parseInt(bnu);
+                    if(total<0){
+                        total=0;
+                    }
+                    salary_amount=total - (parseInt(inc_tax)+parseInt(ssb)+parseInt(leave_late));
+                    if(salary_amount<0){
+                        salary_amount=0;
+                    }
+                    $(event.target).parent().parent().find('.total_salary').val(total.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
+                    $(event.target).parent().parent().find('.salary_amount').val(salary_amount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
+                    that.salary_amount=salary_amount;
+
+
+            }, 
         }
     }
 </script>
