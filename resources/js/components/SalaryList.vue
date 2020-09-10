@@ -57,7 +57,11 @@
             
                 <div class="row justify-content-md-center mt-4"> 
                       <button type="button" style="background-color:#E7E6E6" class="btn  mr-3" onclick="this.blur();">エンジニアコスト一覧表</button>
-                      <button type="button" style="background-color:#E7E6E6" class="btn  mr-3" onclick="this.blur();">給与明細作成</button>
+                      <a type="button"  href="http://127.0.0.1:8000/export/" >
+                            <button @click="excelExport()" class="btn mr-3" style="background-color:#E7E6E6">
+                            給与明細作成
+                            </button>
+                        </a>
                       <button type="button" style="background-color:#E7E6E6" class="btn  mr-3" onclick="this.blur();">編集</button>
                 </div>
              
@@ -247,23 +251,37 @@
         },
         created() {
             let that=this;
-            this.axios
-            .get('http://127.0.0.1:8000/api/setting')
-            .then(response => {
-                this.setting=response.data;
+            this.axios({
+                url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/settings",
+                method: 'get'
+            })
+            .then(function (response) {
+                that.setting=response.data;
+            })
+            .catch(function (error) {
             });
-            this.axios
-                .get('http://127.0.0.1:8000/api/setting/all')
-                .then(response => {
-                    this.settings=response.data;
-                });
-            this.axios
-            .get('http://127.0.0.1:8000/api/delayTimes')
-            .then(response => {
-                this.delays=response.data;
-                this.delayDataCalculate();
-                
+
+            this.axios({
+                url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/setting/all",
+                method: 'get'
+            })
+            .then(function (response) {
+                that.settings=response.data;
+            })
+            .catch(function (error) {
             });
+
+            this.axios({
+                url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/delayTimes",
+                method: 'get'
+            })
+            .then(function (response) {
+                that.delays=response.data;
+                that.delayDataCalculate();
+            })
+            .catch(function (error) {
+            });
+
             this.axios
                 .get('http://localhost:5000/attendances/all/date')
                 .then(response => {
@@ -415,7 +433,17 @@
                     });
 
                 // }
-            }   
+            },
+            
+            excelExport(){
+                axios.get('http://127.0.0.1:8000/export')
+                .then(()=>{
+                    
+                })
+                .catch(()=> {
+                    
+                })
+            }
 
         }
     }

@@ -3,10 +3,14 @@
 namespace App\Http\Controllers;
 
 
+use App\Salary;
 use App\Employee;
 use App\EmployeeDetail;
 use Illuminate\Http\Request;
+use App\Exports\PaySlipExport;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Resources\EmployeeDetail as EmployeeDetailResource;
+
 
 class SalaryController extends Controller
 {
@@ -94,5 +98,14 @@ class SalaryController extends Controller
         $res_salary= EmployeeDetailResource::collection($salary);
         return $res_salary;
       
+    }
+
+    public function csv_export(){
+        // var_dump('aye');
+        $year = '2019/05';
+        $id = 6;
+        $employee = Employee::select('*')->where('emp_id',$id)->first();
+        $salary = Salary::select("*")->where("pay_month",$year)->where('employee_id',$employee->id)->first();
+        return Excel::download(new PaySlipExport($employee,$salary,'001','may wathone'), 'testing.xlsx');
     }
 }

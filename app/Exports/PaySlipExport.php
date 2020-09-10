@@ -97,7 +97,7 @@ class PaySlipExport implements WithEvents
                 ->getStartColor()->setARGB('F4B183');
 
                 $now = Carbon::now();
-                $event->sheet->getDelegate()->setCellValue('D3', 'Date-'. $now->format("yyyy/mm/dd"));
+                $event->sheet->getDelegate()->setCellValue('D3', 'Date-'. $now->format("yy/m/d"));
 
                 //Employee Details
                 $event->sheet->getDelegate()->mergeCells('A4:D4');

@@ -48,6 +48,7 @@ Route::get('/employeeDetail/lastData/{emp_id}', 'EmployeeDetailController@findLa
 Route::get('/employeeDetail/{emp_id}', 'EmployeeDetailController@findByEmployee');
 Route::post('/employeeDetail/updateAll', 'EmployeeDetailController@updateAll');
 
+Route::get('/export', 'SalaryController@csv_export');
 
 Route::get('{any}', function () {
          return view('layouts.app');
