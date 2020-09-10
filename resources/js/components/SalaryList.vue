@@ -39,7 +39,7 @@
                                 <div class="col">
                                     <input type="text" class="form-control" v-model="d.money">
                                 </div>
-                                <div class="col"><button class="btn btn-primary" @click="updateDelayMoney(d.id ,d)" onclick="this.blur();">編集</button></div>
+                                <div class="col"><button type="button" class="btn btn-primary" @click="updateDelayMoney(d.id ,d)" onclick="this.blur();">編集</button></div>
                             </div>
                         </td>
                     </tr>
@@ -58,7 +58,7 @@
                 <div class="row justify-content-md-center mt-4"> 
                       <button type="button" style="background-color:#E7E6E6" class="btn  mr-3" onclick="this.blur();">エンジニアコスト一覧表</button>
                       <a type="button"  href="http://127.0.0.1:8000/export/" >
-                            <button @click="excelExport()" class="btn mr-3" style="background-color:#E7E6E6">
+                            <button @click="excelExport()" class="btn mr-3" style="background-color:#E7E6E6" onclick="this.blur();">
                             給与明細作成
                             </button>
                         </a>
@@ -329,8 +329,8 @@
                 this.axios
                 .post('http://127.0.0.1:8000/api/delayTime/updateMoney/'+id, delayTime)
                 .then((response) => {
-                    let i = this.attendDelays.map(item => item.month).indexOf(delayTime.month); // find index of your object
-                    this.attendDelays[i] = response.data;
+                    this.delays = response.data;
+                    this.delayDataCalculate();
 
                     this.data_check_messg = true;
                     setTimeout(() => {
@@ -339,6 +339,8 @@
                 })
             },
             delayDataCalculate(){
+                this.attendDelays = [];
+                this.temp = [];
                 let results = [];
                 if(this.delays.length == 0){
                     

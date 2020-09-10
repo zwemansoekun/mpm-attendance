@@ -57,7 +57,6 @@ class DelayTimeController extends Controller
             $delayTime = DelayTime::find($id);
             $delayTime->money = $request->money;
             $delayTime->save();
-            return response()->json($delayTime);
         }else {
             $delayTime = new DelayTime([
                 'month' => $request->month,
@@ -66,7 +65,8 @@ class DelayTimeController extends Controller
                 'money' => $request->money
             ]);
             $delayTime->save();
-            return response()->json($delayTime);
         }
+        
+        return response()->json(DelayTime::orderBy('month')->get());
     }
 }
