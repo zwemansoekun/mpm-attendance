@@ -4,12 +4,12 @@
             <div class="col-md-2">
                 <div class="bg-light border-right" id="sidebar-wrapper">         
                     <div class="list-group list-group-flush">
-                    <router-link to="/attendList" class="nav-item nav-link list-group-item list-group-item-action bg-light">出退勤一覧</router-link>
-                    <router-link to="/salaryList" class="nav-item nav-link list-group-item list-group-item-action bg-light">給与手当一覧</router-link>
-                    <router-link to="/holidays" class="nav-item nav-link list-group-item list-group-item-action bg-light">休日一覧</router-link>
-                    <router-link to="/salaryHistory" class="nav-item nav-link list-group-item list-group-item-action bg-light">給与関連個人履歴</router-link>
-                    <router-link to="/attendManage" class="nav-item nav-link list-group-item list-group-item-action bg-light">勤怠管理表</router-link>
-                    <router-link to="/setting" class="nav-item nav-link list-group-item list-group-item-action bg-light">設定</router-link>
+                    <a href="/attendList" class="nav-item nav-link list-group-item list-group-item-action bg-light">出退勤一覧</a>
+                    <a href="/salaryList" class="nav-item nav-link list-group-item list-group-item-action bg-light">給与手当一覧</a>
+                    <a href="/holidays" class="nav-item nav-link list-group-item list-group-item-action bg-light">休日一覧</a>
+                    <a href="/salaryHistory" class="nav-item nav-link list-group-item list-group-item-action bg-light">給与関連個人履歴</a>
+                    <a href="/attendManage" class="nav-item nav-link list-group-item list-group-item-action bg-light">勤怠管理表</a>
+                    <a href="/setting" class="nav-item nav-link list-group-item list-group-item-action bg-light">設定</a>
                     <router-link to="/logout" class="nav-item nav-link list-group-item list-group-item-action bg-light" onclick="event.preventDefault();
                         document.getElementById('logout-form').submit();"
                     >ログアウト

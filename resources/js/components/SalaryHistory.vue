@@ -3,14 +3,13 @@
         <div class="container-fulid">
              
             <div class="row">
-                <div class="col-md-4"> 
+                <div class="col-md-3"> 
                     <select class="form-control" id="selectEmployee" name="employ_selected" required focus v-model="select_employee">
                         <option value="" disabled selected>Please select employee</option>        
                         <option v-bind:key="emp.id" v-for="emp in emps" v-bind:label="employeeCodeAndName(emp)"> {{ emp.id }} {{ emp.employeeId }} {{emp.name }}</option>
                     </select>               
                 </div>
             </div>  
-
 
             <div class="row mt-5"  v-if="form_summary_open">
                 <div class="col-md-4">
@@ -39,7 +38,6 @@
                     </table>
                 </div>
             </div>
-
 
             <div class="row mt-2" v-if="form_summary_open">
                 <div class="col-md-8">
@@ -101,7 +99,6 @@
                 </div>
             </div>
 
-
             <div v-if="form_detail_open" class="mt-5">
                 <button type="button" class="btn btn-primary" @click="newHistoryCreate" v-if="!edit">編集</button>
                 <button type="button" class="btn btn-primary" @click="updateEmpDetail" v-if="edit">編集終了</button>
@@ -115,9 +112,7 @@
                 <div class="alert alert-success mt-3" role="alert" v-if="success_msg">
                     <strong >データは成功しました。</strong> 
                 </div>
-                    
-                <!-- <input type="hidden" name="emp_id"
-                    value="{{ emp_id }}"> -->
+
                 <table class="table table-sm table-bordered mt-2 mb-0" style="width:260px;">
                     <tr>
                         <td style="width:130px;">名前</td>
@@ -149,8 +144,8 @@
                     </tr>
                 </table>
 
-<!-- text-nowrap -->
-                <div class="table-responsive">
+<!--table-responsive text-nowrap -->
+                <div>
                     <table class="table table-sm table-bordered">
                         <tr>
                             <th rowspan="2" style="width:130px;">給与年月</th>
@@ -173,11 +168,11 @@
                         </tr>
                         <tr v-for="detail in empDetails" :key="detail.id">
                             <td v-if="!edit">
-                                <span v-if="!edit">{{ detail.pay_month }}</span>
+                                <span v-if="!edit">{{ yearMonthFormatter(detail.pay_month) }}</span>
                             </td>
                             <td class="align-bottom" v-if="edit">
                                 <label class="text-danger" v-if="detail.payMonthErr">{{ detail.payMonthErr }}</label>
-                                <input type="text" class="form-control form-control-sm" v-model="detail.pay_month" v-if="edit">
+                                <datepicker class="datepicker" :minimumView="'month'" :maximumView="'month'" v-model="detail.pay_month" :format="yearMonthFormatter" :typeable=true></datepicker>
                             </td>  
 
                             <td class="text-right" v-if="!edit && !detail.color">
@@ -296,16 +291,29 @@
         </div>
     </div>
 </template>
-
+<style >
+.datepicker input{
+    height: calc(1.5em + 0.5rem + 2px);
+    padding: 0.25rem 0.5rem;
+    font-size: 0.7875rem;
+    line-height: 1.5;
+    border-radius: 0.2rem;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    font-weight: 400;
+}
+</style>
 
 <script>
-
-var moment = require('moment');
 var numeral = require("numeral");
-
-   
+import Datepicker from 'vuejs-datepicker';
 
     export default {
+        components: {
+            Datepicker
+        },
         data() {
             return {
                 select_employee:'',
@@ -334,6 +342,8 @@ var numeral = require("numeral");
         watch: {
             select_employee:function (val) {
 
+                this.empDetails = [];
+
                 if(val!=''){
                     let split_name=val.split(" ");
                     this.emp_id=split_name[0];
@@ -348,6 +358,7 @@ var numeral = require("numeral");
                     this.edit = false;
                     this.errorFlg =false;
                     this.duplicateErrors = [];
+                    
                     this.findEmployeeData();
                     this.findLastHistory();
                 }
@@ -358,22 +369,38 @@ var numeral = require("numeral");
             customFormatter(date) {
                 return moment(date).format('MM/DD/YYYY');
             },
+            yearMonthFormatter(value){
+                if(value != ''){
+                    var dtObj = new Date(value); 
+                    return moment(dtObj).format('YYYY/MM');
+                }
+            },
             numberFormatter(data){
-                return numeral(data).format('0,0');
+                return numeral(data).format('0,0');   
             },
             findEmployeeData(){
-                this.axios
-                .get('http://127.0.0.1:8000/api/employee/'+this.emp_id)
-                .then((response) => {
-                    this.empData = response.data;
+                let that=this;
+                this.axios({
+                    url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/employee/"+this.emp_id,
+                    method: 'get'
                 })
+                .then(function (response) {
+                    that.empData = response.data;
+                })
+                .catch(function (error) {
+                });
             },
             findLastHistory(){
-                this.axios
-                .get('http://127.0.0.1:8000/api/employeeDetail/lastData/'+this.emp_id)
-                .then((response) => {
-                    this.empDetail = response.data;
+                let that=this;
+                this.axios({
+                    url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/employeeDetail/lastData/"+this.emp_id,
+                    method: 'get'
                 })
+                .then(function (response) {
+                    that.empDetail = response.data;
+                })
+                .catch(function (error) {
+                });
             },
             showHistory(){
                 this.form_detail_open = true;
@@ -381,26 +408,35 @@ var numeral = require("numeral");
                 this.findEmployeeHistory();
             },
             findEmployeeHistory(){
-                this.axios
-                .get('http://127.0.0.1:8000/api/employeeDetail/'+this.emp_id)
-                .then((response) => {
-                    this.empDetails = response.data;
-                    for(let i=0; i < this.empDetails.length; i++)
-                    {
-                        
-                        if(i+1 < this.empDetails.length && this.empDetails[i]['salary_amount'] != this.empDetails[i+1]['salary_amount'])
+                let that=this;
+                this.axios({
+                    url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/employeeDetail/"+this.emp_id,
+                    method: 'get'
+                })
+                .then(function (response) {
+                    that.empDetails = response.data;
+                    for(let i=0; i < that.empDetails.length; i++)
+                    {  
+                        var dtObj = new Date(that.empDetails[i]['pay_month']); 
+
+                        that.empDetails[i]['pay_month'] = dtObj;
+                        if(i+1 < that.empDetails.length && that.empDetails[i]['salary_amount'] != that.empDetails[i+1]['salary_amount'])
                         {
-                            Vue.set(this.empDetails[i+1], 'color', true);
+                            Vue.set(that.empDetails[i+1], 'color', true);
                         }
                     }
-                    
                 })
+                .catch(function (error) {
+                });
             },
             newHistoryCreate(){
                 this.edit = true;
                 let newObj = {};
                 if(this.empDetails.length > 0){
-                    newObj.pay_month = "";
+                   
+                    var payMonth = new Date(this.empDetails[this.empDetails.length-1].pay_month);
+                    newObj.pay_month = payMonth.setMonth(payMonth.getMonth() + 1); //next month add
+
                     newObj.salary_amount = this.empDetails[this.empDetails.length-1].salary_amount;
                     newObj.trans_money = this.empDetails[this.empDetails.length-1].trans_money;
                     newObj.jlpt = this.empDetails[this.empDetails.length-1].jlpt;
@@ -451,6 +487,9 @@ var numeral = require("numeral");
                 if(this.empData.entry_date == undefined || this.empData.entry_date == ''){
                     this.errorFlg = true;
                     Vue.set(this.empData, 'entryErr', '入社日を入力してください。');
+                }else if(!this.validateDateFormat(this.empData.entry_date)){
+                    this.errorFlg = true;
+                    Vue.set(this.empData, 'entryErr', '入社日をフォーマット(MM/DD/YYYY)で入力してください。');
                 }
 
                 if(this.empData.dob == undefined || this.empData.dob == ''){
@@ -475,13 +514,21 @@ var numeral = require("numeral");
                     Vue.set(this.empDetails[i] , 'emgPhErr','');
                     Vue.set(this.empDetails[i] , 'wasteTimeErr','');
                     
-                    if(this.empDetails[i].pay_month == '')
+                    if(this.empDetails[i].pay_month == null)
                     {
                         this.errorFlg = true;
                         Vue.set(this.empDetails[i] , 'payMonthErr','給与年月を入力してください。');
-                    }else if(!this.validatePayMonthFormat(this.empDetails[i].pay_month)){
-                        this.errorFlg = true;
-                        Vue.set(this.empDetails[i] , 'payMonthErr','給与年月をフォーマット(YYYY/MM)で入力してください。');
+                    } else{
+                        var date = new Date(this.empDetails[i].pay_month);
+                        var month = date.getMonth(); //Be careful! January is 0 not 1
+                        var year = date.getFullYear();
+                                
+                        this.empDetails[i].pay_month = year+"/"+((month + 1) <10 ? '0'+(month + 1) : (month + 1));
+
+                        if(!this.validatePayMonthFormat(this.empDetails[i].pay_month)){
+                            this.errorFlg = true;
+                            Vue.set(this.empDetails[i] , 'payMonthErr','給与年月をフォーマット(YYYY/MM)で入力してください。');
+                        }
                     }
 
                     if(this.empDetails[i].salary_amount == 0)
@@ -493,21 +540,6 @@ var numeral = require("numeral");
                         this.errorFlg = true;
                         Vue.set(this.empDetails[i], 'salaryAmountErr', '基本給は数を入れて下さい。' );
                     }
-
-                    // if(this.empDetails[i].trans_money == 0){
-                    //     this.errorFlg = true;
-                    //     Vue.set(this.empDetails[i], 'transMoneyErr', 'Transportaion is required.')
-                    // }
-
-                    // if(this.empDetails[i].jlpt == 0){
-                    //     this.errorFlg = true;
-                    //     Vue.set(this.empDetails[i], 'jlptErr', 'JLPT is required.')
-                    // }
-
-                    // if(this.empDetails[i].ssb == 0){
-                    //     this.errorFlg = true;
-                    //     Vue.set(this.empDetails[i], 'ssbErr', 'SSB is required.')
-                    // }
 
                     if(this.empDetails[i].trans_money == '')
                     {
@@ -559,26 +591,6 @@ var numeral = require("numeral");
                         this.errorFlg = true;
                         Vue.set(this.empDetails[i], 'bankAccErr', '給与振込先銀行口座を入力してください。');
                     }
-
-                    // if(this.empDetails[i].member == ''){
-                    //     this.errorFlg = true;
-                    //     Vue.set(this.empDetails[i], 'memberErr', 'member is required.')
-                    // }
-
-                    // if(this.empDetails[i].child == ''){
-                    //     this.errorFlg = true;
-                    //     Vue.set(this.empDetails[i], 'childErr', 'child is required.')
-                    // }
-
-                    // if(this.empDetails[i].emg_ph_no == ''){
-                    //     this.errorFlg = true;
-                    //     Vue.set(this.empDetails[i], 'emgPhErr', 'Emg phone is required.')
-                    // }
-
-                    // if(this.empDetails[i].waste_time == ''){
-                    //     this.errorFlg = true;
-                    //     Vue.set(this.empDetails[i], 'wasteTimeErr', 'waste_time is required.')
-                    // }
     
                 }
 
@@ -602,24 +614,34 @@ var numeral = require("numeral");
                     return this.duplicateErrors;
                 }
 
-                this.axios
-                .post('http://127.0.0.1:8000/api/employee/save/'+this.emp_id,this.empData)
-                .then((response) => {
-
+                this.axios({
+                    url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/employee/save/"+this.emp_id,
+                    method: 'post',
+                    data: this.empData
                 })
-                
-                this.axios
-                .post('http://127.0.0.1:8000/api/employeeDetail/updateAll',this.empDetails)
-                .then((response) => {
+                .then(function (response) {
+                    
+                })
+                .catch(function (error) {
+                });
 
-                    this.findEmployeeHistory();
-                    this.edit = false;
-                    this.success_msg = true;
+                let that=this;
+                this.axios({
+                    url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/employeeDetail/updateAll",
+                    method: 'post',
+                    data: this.empDetails
+                })
+                .then(function (response) {
+                    that.edit = false;
+                    that.findEmployeeHistory();
+                    
+                    that.success_msg = true;
                     setTimeout(() => {
-                        this.success_msg = false;
+                        that.success_msg = false;
                     },2000)
                 })
-
+                .catch(function (error) {
+                });
                 
             },
             validateNumber: function(value){
@@ -633,6 +655,10 @@ var numeral = require("numeral");
             validatePayMonthFormat: function(value){
                 //var re = /^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/(19|20)\d{2}$/ ;
                 var regex = /^\d{4}\/(0?[1-9]|1[012])$/ ;
+                return regex.test(value);
+            },
+            validateDateFormat: function(value){
+                var regex = /^\d{4}[\/\-](0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])$/ ;
                 return regex.test(value);
             },
             employeeCodeAndName: function(value){

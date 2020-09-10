@@ -107,36 +107,47 @@
                 errorMoney: null,
                 errorAm: null,
                 errorPm: null,
-                successMsg: null,
                 data_check_messg:false
             }
         },
         created() {
-            console.log('created');
-            this.axios
-            .get('http://127.0.0.1:8000/api/setting')
-            .then(response => {
-                this.setting=response.data;
+            let that=this;
+            this.axios({
+                url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/settings",
+                method: 'get'
+            })
+            .then(function (response) {
+                that.setting=response.data;
+            })
+            .catch(function (error) {
             });
-            this.axios
-                .get('http://127.0.0.1:8000/api/setting/all')
-                .then(response => {
-                    this.settings=response.data;
-                });
-            this.axios
-            .get('http://127.0.0.1:8000/api/delayTimes')
-            .then(response => {
-                this.delays=response.data;
-                this.delayDataCalculate();
-                
+
+            this.axios({
+                url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/setting/all",
+                method: 'get'
+            })
+            .then(function (response) {
+                that.settings=response.data;
+            })
+            .catch(function (error) {
             });
+
+            this.axios({
+                url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/delayTimes",
+                method: 'get'
+            })
+            .then(function (response) {
+                that.delays=response.data;
+                that.delayDataCalculate();
+            })
+            .catch(function (error) {
+            });
+
             this.axios
                 .get('http://localhost:5000/attendances/all/date')
                 .then(response => {
                     this.dates=response.data;
             });
-            
-           
            
         },
         methods: {
@@ -147,20 +158,25 @@
                 }else if(!this.validateDecimal(this.setting.money) ){
                     return this.errorMoney = '為替レートデフォルト値を数式で入力してください。';
                 }
-                this.axios
-                .post('http://127.0.0.1:8000/api/setting/updateMoney/'+this.setting.id, this.setting)
-                .then((response) => {
 
-                    this.setting = response.data;
-                    this.errorAm = null;
-                    this.errorPm = null;
+                let that=this;
+                this.axios({
+                    url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/setting/updateMoney/"+this.setting.id,
+                    method: 'post',
+                    data: this.setting
+                })
+                .then(function (response) {
+                    that.setting = response.data;
+                    that.errorAm = null;
+                    that.errorPm = null;
                     
-                    this.data_check_messg = true;
+                    that.data_check_messg = true;
                     setTimeout(() => {
-                        this.data_check_messg = false;
+                        that.data_check_messg = false;
                     },2000)
-
-                }) 
+                })
+                .catch(function (error) {
+                });
            },
             updateAm(){
                 this.errorAm = null;
@@ -169,41 +185,52 @@
                 }else if(!this.validateNumber(this.setting.am) ){
                     return this.errorAm = 'AM遅刻許容時間デフォルト値を数式で入力してください。';
                 }
-                this.axios
-                .post('http://127.0.0.1:8000/api/setting/updateAm/'+this.setting.id, this.setting)
-                .then((response) => {
 
-                    this.setting = response.data;
-                    this.errorMoney = null;
-                    this.errorPm = null;
-                   
-                    this.data_check_messg = true;
+                let that=this;
+                this.axios({
+                    url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/setting/updateAm/"+this.setting.id,
+                    method: 'post',
+                    data: this.setting
+                })
+                .then(function (response) {
+                    that.setting = response.data;
+                    that.errorMoney = null;
+                    that.errorPm = null;
+                    
+                    that.data_check_messg = true;
                     setTimeout(() => {
-                        this.data_check_messg = false;
+                        that.data_check_messg = false;
                     },2000)
                 })
+                .catch(function (error) {
+                });
             },
             updatePm(){
                 this.errorPm = null;
                 if(this.setting.pm == 0){
-                   return this.errorPm = 'PM遅刻許容時間デフォルト値を入力してください。';
+                    return this.errorPm = 'PM遅刻許容時間デフォルト値を入力してください。';
                 }else if(!this.validateNumber(this.setting.pm) ){
                     return this.errorPm = 'PM遅刻許容時間デフォルト値を数式で入力してください。';
                 }
-                this.axios
-                .post('http://127.0.0.1:8000/api/setting/updatePm/'+this.setting.id, this.setting)
-                .then((response) => {
 
-                    this.setting = response.data;
-                    this.errorMoney = null;
-                    this.errorAm = null;
-                   
-                    this.data_check_messg = true;
-                    setTimeout(() => {
-                        this.data_check_messg = false;
-                    },2000)
-
+                let that=this;
+                this.axios({
+                    url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/setting/updatePm/"+this.setting.id,
+                    method: 'post',
+                    data: this.setting
                 })
+                .then(function (response) {
+                    that.setting = response.data;
+                    that.errorMoney = null;
+                    that.errorAm = null;
+                    
+                    that.data_check_messg = true;
+                    setTimeout(() => {
+                        that.data_check_messg = false;
+                    },2000)
+                })
+                .catch(function (error) {
+                });
             },
             updateDelayAm(id , delayTime){
                 if(delayTime.am == 0){
@@ -216,17 +243,23 @@
                     return ;
                 }
 
-                this.axios
-                .post('http://127.0.0.1:8000/api/delayTime/updateAm/'+id, delayTime)
-                .then((response) => {
-                    let i = this.attendDelays.map(item => item.id).indexOf(id); // find index of your object
-                    this.attendDelays[i] = response.data;
+                let that=this;
+                this.axios({
+                    url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/delayTime/updateAm/"+id,
+                    method: 'post',
+                    data: delayTime
+                })
+                .then(function (response) {
+                    let i = that.attendDelays.map(item => item.month).indexOf(delayTime.month); // find index of object
+                    that.attendDelays[i] = response.data;
 
-                    this.data_check_messg = true;
+                    that.data_check_messg = true;
                     setTimeout(() => {
-                        this.data_check_messg = false;
+                        that.data_check_messg = false;
                     },2000)
                 })
+                .catch(function (error) {
+                });
             },
             updateDelayPm(id , delayTime){
                  if(delayTime.pm == 0){
@@ -238,17 +271,24 @@
                     Vue.set(delayTime,"pmDelayError",true);
                    return ;
                 }
-               this.axios
-               .post('http://127.0.0.1:8000/api/delayTime/updatePm/'+id, delayTime)
-               .then((response) => {
-                    let i = this.attendDelays.map(item => item.id).indexOf(id); // find index of your object
-                    this.attendDelays[i] = response.data;
-                   
-                    this.data_check_messg = true;
+
+                let that=this;
+                this.axios({
+                    url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/delayTime/updatePm/"+id,
+                    method: 'post',
+                    data: delayTime
+                })
+                .then(function (response) {
+                    let i = that.attendDelays.map(item => item.month).indexOf(delayTime.month); // find index of object
+                    that.attendDelays[i] = response.data;
+
+                    that.data_check_messg = true;
                     setTimeout(() => {
-                        this.data_check_messg = false;
+                        that.data_check_messg = false;
                     },2000)
-               })
+                })
+                .catch(function (error) {
+                });
             },
             validateNumber: function(number){
                 var re = /^\d*$/;
@@ -260,14 +300,11 @@
             },
 
             delayDataCalculate(){
-                let results = [];
                 if(this.delays.length == 0){
                     
                     this.dates.forEach(d => {
-                        console.log(this.settings);
                         let tempSetting  = this.settings.filter(s => s.create_month < d.recordedDateTime);
                         tempSetting.sort(compareSetting);
-                        console.log(tempSetting[tempSetting.length-1].am);
 
                         if(tempSetting == 0){
                             let data1 ={};
@@ -318,7 +355,6 @@
                         return 1;
                     return 0;
                 }
-
 
                 this.attendDelays.sort(compare);
             }

@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Setting extends Model
 {
-    protected $fillable = ['money', 'am' , 'pm'];
+    protected $fillable = ['money', 'am' , 'pm', 'create_month'];
 }
