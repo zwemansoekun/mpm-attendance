@@ -511,6 +511,7 @@
                     $(event.target).parent().parent().find('.salary_amount').val(salary_amount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
                     that.salary_amount=salary_amount;
 
+
             }, 
         }
     }

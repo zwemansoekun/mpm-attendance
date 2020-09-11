@@ -106,6 +106,7 @@ class SalaryController extends Controller
         $id = 6;
         $employee = Employee::select('*')->where('emp_id',$id)->first();
         $salary = Salary::select("*")->where("pay_month",$year)->where('employee_id',$employee->id)->first();
-        return Excel::download(new PaySlipExport($employee,$salary,'001','may wathone'), 'testing.xlsx');
+        $filename = '給与明細フォーマット_'. now()->format('YmdHis').'.xlsx';
+        return Excel::download(new PaySlipExport($employee,$salary,'001','may wathone'), $filename);
     }
 }
