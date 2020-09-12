@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Ssb;
 use App\Employee;
 use App\EmployeeDetail;
 use Illuminate\Http\Request;
@@ -94,5 +95,10 @@ class SalaryController extends Controller
         $res_salary= EmployeeDetailResource::collection($salary);
         return $res_salary;
       
+    }
+
+    public function ssb(){
+            $ssb=Ssb::get();
+            return $ssb;
     }
 }

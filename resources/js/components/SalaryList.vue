@@ -54,11 +54,11 @@
                         <h4><strong>給与手当一覧　{{this.select_date}}分</strong></h4>      
                     </div>
                 </div>
-            
+                <form id="form" class="" @submit.prevent="SalarySave"  autocomplete="on">
                 <div class="row justify-content-md-center mt-4"> 
                       <button type="button" style="background-color:#E7E6E6" class="btn  mr-3" onclick="this.blur();">エンジニアコスト一覧表</button>
                       <button type="button" style="background-color:#E7E6E6" class="btn  mr-3" onclick="this.blur();">給与明細作成</button>
-                      <button type="button" style="background-color:#E7E6E6" class="btn  mr-3" onclick="this.blur();">編集</button>
+                      <button type="submit" style="background-color:#E7E6E6" class="btn  mr-3" onclick="this.blur();">編集</button>
                 </div>
              
                 <div class="row" >
@@ -70,8 +70,10 @@
                             <span class="col-md-2 mt-4"> 
                                     支給
                             </span>  
+                            <form id="form1" class=""  autocomplete="on" >
                             <!-- {{emps}} -->
                             <!-- {{salaries}} -->
+                            <horizontal-scroll>
                             <table id="salaryTable" class="table table-sm table-bordered">
                             <tr>
                                 <th  class="border-bottom-0">
@@ -100,37 +102,37 @@
                                 <th   class="align-middle text-center border-bottom-0 border-top-0">
                                     従業員番号
                                 </th>
-                                <th  rowspan="2"  class="text-center align-middle"  style="background-color:#FBE5D6;width: 80px">
+                                <th  rowspan="2"  class="text-center align-middle"  style="background-color:#FBE5D6;">
                                     基本給
                                 </th>
-                                <th   rowspan="2" class="text-center align-middle"  style="background-color:#FBE5D6;width: 80px">
+                                <th   rowspan="2" class="text-center align-middle"  style="background-color:#FBE5D6;">
                                     通勤交通費
                                 </th>
-                                <th   rowspan="2" class="text-center align-middle"  style="background-color:#FBE5D6;width: 80px">
+                                <th   rowspan="2" class="text-center align-middle"  style="background-color:#FBE5D6;">
                                     JLPT
                                 </th>
-                                <th  rowspan="2" class="text-center align-middle"  style="background-color:#FBE5D6;width: 80px">
+                                <th  rowspan="2" class="text-center align-middle"  style="background-color:#FBE5D6;">
                                     ボーナス
                                 </th>
-                                <th   rowspan="2" class="text-center align-middle"  style="background-color:#FBE5D6;width: 80px">
+                                <th   rowspan="2" class="text-center align-middle"  style="background-color:#FBE5D6;">
                                     合計
                                 </th>
-                                <th   rowspan="2" class="text-center align-middle" style="background-color:#D9D9D9;width: 80px">
+                                <th   rowspan="2" class="text-center align-middle" style="background-color:#D9D9D9;">
                                     所得税
                                 </th>
-                                <th   rowspan="2" class="text-center align-middle" style="background-color:#D9D9D9;width: 80px">
+                                <th   rowspan="2" class="text-center align-middle" style="background-color:#D9D9D9;">
                                     SSB
                                 </th>
-                                <th   rowspan="2" class="text-center align-middle" style="background-color:#D9D9D9;width: 80px">
+                                <th   rowspan="2" class="text-center align-middle" style="background-color:#D9D9D9;">
                                     遅刻欠勤早退
                                 </th> 
-                                <th  rowspan="2" class="text-center" style="background-color:#D9D9D9;width: 80px">
+                                <th  rowspan="2" class="text-center" style="background-color:#D9D9D9;">
 
                                 </th>
-                                <th  rowspan="2" class="text-center" style="background-color:#D9D9D9;width: 80px">
+                                <th  rowspan="2" class="text-center" style="background-color:#D9D9D9;">
                                     
                                 </th>
-                                <th rowspan="2" class="text-center" style="background-color:#D9D9D9;width: 80px">
+                                <th rowspan="2" class="text-center" style="background-color:#D9D9D9;">
                                     
                                 </th>
                                 
@@ -138,13 +140,13 @@
                             <tr>
                                 <th  class="border-top-0">
                                 </th>
-                                <th class="align-middle text-right border-top-0" style="background-color:#DAE3F3">
-                                     <!-- {{totalSalaryAmount}} -->
+                                <th class="align-middle text-right border-top-0 cal_salaries" style="background-color:#DAE3F3;text-align:right;height: 34px;" >
+                                    <!-- {{cal_salaries}} -->
                                 </th>  
                             </tr>
 
                             <tbody>
-                                <!-- {{salaries}} -->
+                                <!-- {{salaries.length}} -->
                                 <!-- <tr> -->
                                     <!-- v-bind:key="key" v-for="(salary,key) in salaries" -->
                                     <!-- <table  class="table table-sm table-bordered"  style="position: absolute;"> -->
@@ -170,48 +172,48 @@
                                                         <td style="background-color:#D9D9D9" class="text-right align-middle"></td>
                                                         <td style="background-color:#D9D9D9" class="text-right align-middle"></td>
                                                     </tr>
-                                                    <tr v-bind:key="'A'+key">
+                                                    <tr v-bind:key="'A'+key" :class="`index_${key}`">
                                                         <td class="text-center align-middle">実際</td>
                                                         <td class="text-right align-middle" style="padding: 0px;">
-                                                            <input name="pay_month[]" @change="updateInput" class="pay_month" style="text-align:right;" type="number" :value="``">
+                                                            <input name="pay_month[]" @change="updateInput" class="pay_month" style="text-align:right;width:100px;" type="text" :value="``">
                                                         </td>
                                                         <td class="text-right align-middle" style="padding: 0px;">
-                                                            <input name="trans_money[]" @change="updateInput" class="trans_money" style="text-align:right;" type="number" :value="``">
+                                                            <input name="trans_money[]" @change="updateInput" class="trans_money" style="text-align:right;width:100px;" type="text" :value="``">
                                                         </td>
                                                         <td class="text-right align-middle" style="padding: 0px;">
-                                                            <input name="jlpt[]"  @change="updateInput" class="jlpt" style="text-align:right;" type="number" :value="``">
+                                                            <input name="jlpt[]"  @change="updateInput" class="jlpt" style="text-align:right;width:100px;" type="text" :value="``">
                                                         </td>
                                                         <td class="text-right align-middle" style="padding: 0px;">
-                                                            <input name="bonus[]" @change="updateInput" class="bonus" style="text-align:right;" type="number" :value="``">
+                                                            <input name="bonus[]" @change="updateInput" class="bonus" style="text-align:right;width:100px;" type="text" :value="``">
                                                         </td>
                                                         <td class="text-right align-middle" style="padding: 0px;">
 
-                                                            <input name="total_salary[]" @change="updateInput" class="total_salary" style="text-align:right;" type="number" :value="``">
+                                                            <input name="total_salary[]" @change="updateInput" class="total_salary" style="text-align:right;width:150px;" type="text" :value="``">
                                                         </td>
 
                                                         <!-- 控除額 -->
                                                         <td class="text-right align-middle" style="padding: 0px;">
-                                                            <input name="income_tax[]" @change="updateInput" class="inc_tax" style="text-align:right;" type="number" :value="``">
+                                                            <input name="income_tax[]" @change="updateInput" class="inc_tax" style="text-align:right;width:100px;" type="text" :value="``">
                                                         </td>
                                                         <td class="text-right align-middle" style="padding: 0px;">
-                                                            <input name="ssb[]" @change="updateInput" class="ssb" style="text-align:right;" type="number" :value="``">
+                                                            <input name="ssb[]" @change="updateInput" class="ssb" style="text-align:right;width:100px;" type="text" :value="``">
                                                         </td>
                                                         <td class="text-right align-middle" style="padding: 0px;">
-                                                            <input name="leave_late[]" @change="updateInput" class="leave_late" style="text-align:right;" type="number" :value="``">
+                                                            <input name="leave_late[]" @change="updateInput" class="leave_late" style="text-align:right;width:100px;" type="text" :value="``">
                                                         </td>
 
                                                         <td class="text-right align-middle" style="padding: 0px;">
-                                                            <!-- <input name="leave_lateh" class="leave_lateh" style="text-align:right;" type="number" :value="``"> -->
+                                                            <!-- <input name="leave_lateh" class="leave_lateh" style="text-align:right;" type="text" :value="``"> -->
                                                         </td>
                                                         <td class="text-right align-middle" style="padding: 0px;">
-                                                            <!-- <input name="pay_month" class="pay_month" style="text-align:right;" type="number" :value="``"> -->
+                                                            <!-- <input name="pay_month" class="pay_month" style="text-align:right;" type="text" :value="``"> -->
                                                         </td>
                                                         <td class="text-right align-middle" style="padding: 0px;">
-                                                            <!-- <input name="pay_month" class="pay_month" style="text-align:right;" type="number" :value="``"> -->
+                                                            <!-- <input name="pay_month" class="pay_month" style="text-align:right;" type="text" :value="``"> -->
                                                         </td>
                                                         <td class="text-right align-middle" style="padding: 0px;">
                                                             <!-- :value="``" -->
-                                                            <input name="salary_amount[]" class="salary_amount" style="text-align:right;" type="number" >
+                                                            <input name="salary_amount[]" class="salary_amount" style="text-align:right;width:150px;" type="text" >
                                                         </td>
                                                     </tr>
                                             
@@ -219,13 +221,17 @@
                             </tbody>
 
                         </table>    
+                           </horizontal-scroll>
+                        </form>   
                     </div>
 
 
-
+ 
                     <div class="col-md-3">
                         <span  class="col-md-2 mt-4"></span>
-                        <table class="table table-sm table-bordered">
+                        <form id="form2" class=""autocomplete="on" >
+                        <horizontal-scroll>
+                        <table id="ssbtable" class="table table-sm table-bordered">
                             <tr>
                                 <th  colspan="2" class="align-middle text-center">
                                         SSB
@@ -235,7 +241,7 @@
                                 </th>
                             </tr>
                             <tr>
-                                <th rowspan="2" class="align-middle text-center">
+                                <th rowspan="2" class="align-middle text-center" style="text-align: center;">
                                         総額
                                 </th>
                                  <th   class="align-middle text-center border-bottom-0" style="background-color:yellow">
@@ -243,18 +249,47 @@
                                 </th>
                             </tr>
                             <tr>
-                                   <th   class="align-middle text-right border-top-0" style="background-color:yellow">
-                                      300000
+                                   <th   class="align-middle text-right border-top-0 paid-ssb" style="background-color:yellow;height: 31px;">
+                                      <!-- 300000 -->
                                 </th>   
                             </tr>
+                            <tbody>
+                                <!-- {{ssbs[0].id}} -->
+                                   <template  v-for="key in salaries.length">
+                                            
+                                    <tr v-bind:key="key">
+                                       <td style="padding: 0px;width: 30%;text-align: right;background-color:#D9D9D9">{{ssbs.length!=0?Math.trunc(ssbs[0].total_amount).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"):''}}</td>
+                                       <td style="padding: 0px;width: 30%;text-align: right;background-color:#D9D9D9">{{ssbs.length!=0?Math.trunc(ssbs[0].c_paid).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"):''}}</td>
+                                       <td style="padding: 0px;width: 40%;" rowspan="2">
+                                            <textarea name="remark[]" class="remark" style="text-align:left;width:100%;border: none;-webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;"></textarea>
+                                            <!-- <input name="remark[]"  class="remark" style="text-align:left;width:100px;" type="text" :value="``"> -->
+                                       </td>
+                                   </tr>   
+                                   <tr v-bind:key="'A'+key" :class="`index_${key}`">
+                                       <td style="padding: 0px;width: 30%;text-align: right;height: 10%;">
+                                            <input name="ssb_total[]" @change="ssbCalc" class="ssb_total" style="text-align:right;width:100%;" type="text" :value="``">
+                                       </td>
+                                       <td style="padding: 0px;width: 30%;text-align: right;height: 10%;">
+                                            <input name="ssb_c_paid[]" @change="ssbCalc"  class="ssb_c_paid" style="text-align:right;width:100%;" type="text" :value="``">
+                                       </td>
+                                   </tr>     
+
+                                   </template>
+
+                            </tbody>    
                         </table>
+                       </horizontal-scroll>
+                       </form>
                     </div> 
                 </div>
+            </form>    
         </div>
     </div>    
 </template>
 
 <script>   
+import HorizontalScroll from 'vue-horizontal-scroll'
+import 'vue-horizontal-scroll/dist/vue-horizontal-scroll.css'
 
     export default {
         
@@ -275,8 +310,14 @@
                 emps:[],
                 emp_arr:[],
                 name_arr:[],
-                salary_amount:[],
+                salary_amounts:0,
+                focusRecord:'',
+                ssbs:'',
+                // cal_salaries:0
             }
+        },
+        components: {
+            HorizontalScroll
         },
         computed: {
             // totalSalaryAmount:function(){
@@ -284,7 +325,19 @@
             //     console.log('c',that.salary_amount);
             //     return true;
             // }                  
-        },        
+        },  
+        mounted(){
+           
+        },  
+        watch : {
+            //  salary_amounts:function(){
+            //      let values = [];
+            //         $("input[name='salary_amount[]']").each(function() {
+            //              that.salary_amounts+=1;
+            //         });
+
+            // }
+         },    
         created() {
             let that=this;
             this.axios
@@ -317,7 +370,7 @@
                    if(that.emps){
                   
                        for(let v in that.emps){
-                            console.log('dddd',that.emps[v].id);
+                            // console.log('dddd',that.emps[v].id);
                            that.emp_arr[that.emps[v].id]=that.emps[v].employeeId;
                            that.name_arr[that.emps[v].id]=that.emps[v].name;
                        }
@@ -325,9 +378,15 @@
                    }
                   
             });
+            this.axios
+            .get((window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/salaryList/ssb/all")
+            .then(response => {
+                    that.ssbs=response.data;
+            })
+            
            
         },
-        methods: {
+        methods: {           
             paymentDate(month,date_flash=''){
                 var futureMonth = new Date(month);
                 futureMonth.setMonth(futureMonth.getMonth() + 1);
@@ -424,9 +483,139 @@
                 var re = /^-?\d+(?:\.?\d+)?$/;
                 return re.test(number);
             },
+            SalarySave:function(){
+                let that=this;
+
+
+                var validator1 = jQuery('#form1').validate({
+                  
+                    rules: {
+                            "pay_month[]": "required",
+                            // "trans_money[]": "",
+                            // "jlpt[]": "",
+                            // "bonus[]": "",
+                            "total_salary[]":"required",
+                            "income_tax[]":"required",
+                            // "ssb[]":"",
+                            // "leave_late[]":"",
+                            "salary_amount[]":"required",
+                    },  
+                    errorPlacement: function(error,element) {
+                        return true;
+                    },
+                });
+
+                
+                var validator2 = jQuery('#form2').validate({
+                  
+                    rules: {
+                            "ssb_total[]": "required",
+                            "ssb_c_paid[]": "required",
+                            // "remark[]": "",
+                    },  
+                    errorPlacement: function(error,element) {
+                        return true;
+                    },
+                });
+                let temp_salary=[],pay_month=0,trans_money=0,jlpt=0,bonus=0,total_salary=0,inc_tax=0,ssb=0,leave_late=0,salary_amount=0;
+                let temp_ssb=[],ssb_total=0,ssb_c_paid=0,remark=0;
+                if(jQuery('#form1').valid() && jQuery('#form2').valid()){
+                    
+                    $('#salaryTable tr[class^=index_]').each(function (key,value) {
+
+                           $(this).find('td').each(function (index,v2) {
+                                let isLastElement = index == $(this).find('td').length-1;
+                                if(jQuery(this).find('.pay_month').val()){
+                                   pay_month=jQuery(this).find('.pay_month').val();
+                                }
+                                if(jQuery(this).find('.trans_money').val()){
+                                   trans_money=jQuery(this).find('.trans_money').val();
+                                }
+                                if(jQuery(this).find('.jlpt').val()){
+                                    jlpt=jQuery(this).find('.jlpt').val();
+                                }
+                                if(jQuery(this).find('.bonus').val()){
+                                    bonus=jQuery(this).find('.bonus').val();
+                                }
+                                if(jQuery(this).find('.total_salary').val()){
+                                    total_salary=jQuery(this).find('.total_salary').val();
+                                }
+                                if(jQuery(this).find('.inc_tax').val()){
+                                    inc_tax=jQuery(this).find('.inc_tax').val();
+                                }
+                                if(jQuery(this).find('.ssb').val()){
+                                    ssb=jQuery(this).find('.ssb').val();
+                                }
+                                if(jQuery(this).find('.leave_late').val()){
+                                    leave_late=jQuery(this).find('.leave_late').val();
+                                }
+                                if(jQuery(this).find('.salary_amount').val()){
+                                    salary_amount=jQuery(this).find('.salary_amount').val();
+                                }
+                                if (isLastElement) {
+                                    temp_salary.push({"pay_month":pay_month,"trans_money":trans_money,"jlpt":jlpt,"bonus":bonus,"total_salary":total_salary,"inc_tax":inc_tax,"ssb":ssb,"leave_late":leave_late,"salary_amount":salary_amount});
+                                    pay_month=0;trans_money=0;jlpt=0;bonus=0;total_salary=0;inc_tax=0;ssb=0;leave_late=0;salary_amount=0;
+                                    return false;
+                                }
+                           })
+
+                            $('#ssbtable tr[class^=index_]').each(function (key,value) {
+                                let isLastElement = index == $(this).find('td').length-1;
+                                   
+                                if(jQuery(this).find('.ssb_total').val()){
+                                    ssb_total=jQuery(this).find('.ssb_total').val();
+                                }
+                                if(jQuery(this).find('.ssb_c_paid').val()){
+                                    ssb_c_paid=jQuery(this).find('.ssb_c_paid').val();
+                                }
+                                 if(jQuery(this).find('.remark').val()){
+                                    remark=jQuery(this).find('.remark').val();
+                                }
+                                if (isLastElement) {
+                                    temp_ssb.push({"ssb_total":ssb_total,"ssb_c_paid":ssb_c_paid,"remark":remark});
+                                    ssb_total=0;ssb_c_paid=0;remark=0;
+                                    return false;
+                                }
+
+                            });
+                    })
+
+                    
+
+
+                }
+                console.log('temp_salary',temp_salary);
+                console.log('temp_ssb',temp_ssb);
+                // console.log('tres11');
+                //   console.log($("#form1")[0]);
+                // console.log($("#form2")[0]);
+                //    console.log('kh1',jQuery('#form1').serializeArray());
+
+                //       console.log('kh2',jQuery('#form2').serializeArray());
+
+
+
+
+                // $('#form1')[0].submit(function (evt) {
+                //       console.log('hhhh');
+                //        console.log('kh1',jQuery('#form1').serializeArray());
+                //      evt.preventDefault();
+                    
+                //     // window.history.back();
+                // });
+                // $('#form2')[0].submit(function (evt) {
+                //      evt.preventDefault();
+                //        console.log('k2',jQuery('#form2').serializeArray());
+                //     //  window.history.back();
+                // });
+                // document.getElementById("form1").submit();
+                // document.getElementById("form2").submit();
+              
+                // console.log('kh',jQuery('#form').serializeArray());
+            },
             dateChange:function($event){
                 let that=this;let val='';
-             
+                
                 
                 if(event.target.value!=''){
                     that.formChange=false;
@@ -447,8 +636,9 @@
                     this.axios
                     .get((window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/salaryList/"+this.year+"-"+this.month)                 
                     .then(response => {
-                        console.log('salary',response.data);
+                        console.log('salary',response.data.length); 
                         that.salaries=response.data;
+                        // console.log('salary',response.data.length);
                     })
                     .catch(function (error) {
                         console.log(error.response)
@@ -456,11 +646,26 @@
 
                 // }
             },
+            ssbCalc:function(event){
+                    let cal_ssb=0;
+                    $("input[name^='ssb_c_paid']").each(function() {
+                        // console.log('checkpoint',$(this).val());
+                        // console.log('comma remove',$(this).val().replace(/,/g , ''));
+                            if( !isNaN($(this).val()) && $(this).val()!='') {
+                                cal_ssb+=parseInt($(this).val().replace(/,/g , ''));
+                                $("#ssbtable").find('.paid-ssb').text(cal_ssb.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
+                            }
+                        //  that.salary_amounts+=parseInt($(this).val());
+                    });
+            },
             updateInput:function(event){ 
                     let that=this;
                     let b_salary=0,t_m=0,jlpt=0,bnu=0,total=0;  
                     let inc_tax=0,ssb=0,leave_late=0,salary_amount=0;
-                     
+                    
+                 
+
+
                     b_salary=$(event.target).parent().parent().find('.pay_month').val()!=''?$(event.target).parent().parent().find('.pay_month').val():0;
                     t_m=$(event.target).parent().parent().find('.trans_money').val()!=''?$(event.target).parent().parent().find('.trans_money').val():0;
                     jlpt=$(event.target).parent().parent().find('.jlpt').val()!=''?$(event.target).parent().parent().find('.jlpt').val():0;
@@ -478,9 +683,35 @@
                     if(salary_amount<0){
                         salary_amount=0;
                     }
+                    console.log('a',total);
+                    console.log('b',salary_amount);
                     $(event.target).parent().parent().find('.total_salary').val(total.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
                     $(event.target).parent().parent().find('.salary_amount').val(salary_amount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
-                    that.salary_amount=salary_amount;
+                    // that.salary_amounts.push(parseInt(salary_amount));
+                    let cal_salary=0;
+                    $("input[name^='salary_amount']").each(function() {
+                        console.log('checkpoint',$(this).val());
+                        console.log('comma remove',$(this).val().replace(/,/g , ''));
+                            if($(this).val()!='') {
+                                cal_salary+=parseInt($(this).val().replace(/,/g , ''));
+                                $("#salaryTable").find('.cal_salaries').text(cal_salary.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
+                            }
+                        //  that.salary_amounts+=parseInt($(this).val());
+                    });
+                    // if(cal_salary>0){
+                    //      console.log('calculate',cal_salary);
+                    //        console.log('paths',$(event.target).parent().parent().parent().parent());
+                    //        $("#salaryTable").find('.cal_salaries').text(cal_salary.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
+                    //        $(event.target).parent().parent().find('.salary_amount').val('');
+                    //        $(event.target).parent().parent().find('.salary_amount').val(salary_amount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
+                    //        $(event.target).parent().parent().find('.total_salary').val('');
+                    //        $(event.target).parent().parent().find('.total_salary').val(total.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
+                    //     // $(event.target).parent().parent().parent().parent().find('.cal_salaries').text(cal_salary.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
+                    // }
+                    
+                    // that.cal_salaries=cal_salary;
+                    // console.log('cal',that.cal_salary);
+                    //  console.log('calculate',cal_salary);
 
             }, 
         }
