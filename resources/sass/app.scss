@@ -10,6 +10,34 @@
 #salaryTable  > tr > th, #salaryTable tbody >tr >td {
     border-color: black;
  }
+#ssbtable  > tr > th, #ssbtable tbody >tr >td {
+    border-color: black;
+}
 table td input {
     width: 100%;   
 }
+
+#salaryTable,#ssbtable {
+    max-width: 600px;
+    margin: 0 auto;
+}
+    #dtHorizontalExample th, td {
+    white-space: nowrap;
+    }
+    
+    table.dataTable thead .sorting:after,
+    table.dataTable thead .sorting:before,
+    table.dataTable thead .sorting_asc:after,
+    table.dataTable thead .sorting_asc:before,
+    table.dataTable thead .sorting_asc_disabled:after,
+    table.dataTable thead .sorting_asc_disabled:before,
+    table.dataTable thead .sorting_desc:after,
+    table.dataTable thead .sorting_desc:before,
+    table.dataTable thead .sorting_desc_disabled:after,
+    table.dataTable thead .sorting_desc_disabled:before {
+    bottom: .5em;
+    }
+textarea {
+    height: 4.07em;
+    resize: none;
+ }
