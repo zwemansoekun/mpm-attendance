@@ -48,8 +48,9 @@ class PaySlipExport implements WithEvents
     public $employee = null;
     public $empName;
     public $empId;
+    public $trans_money;
 
-    public function __construct(Employee $employee, Salary $salary,$empName , $empId) 
+    public function __construct(Employee $employee, Salary $salary, $empName, $empId, $trans_money) 
     {
         // $this->printY = $printY;
         // $this->type = CAL_GREGORIAN;
@@ -61,6 +62,7 @@ class PaySlipExport implements WithEvents
         $this->salaryData = $salary;
         $this->empName = $empName;
         $this->empId = $empId;
+        $this->trans_money = $trans_money;
     }
 
 
@@ -161,9 +163,11 @@ class PaySlipExport implements WithEvents
                 ->getStartColor()->setARGB('BDD7EE');
 
                 $event->sheet->getDelegate()->setCellValue('A16', 'Basic Salary');
+                $event->sheet->getDelegate()->setCellValue('B16', $this->salaryData->income);
 
                 $event->sheet->getDelegate()->setCellValue('C16', 'Transportation Allowance(per day)');
                 $event->sheet->getStyle('C16')->getAlignment()->setWrapText(true);
+                $event->sheet->getDelegate()->setCellValue('D16', $this->trans_money);
 
                 $event->sheet->getDelegate()->mergeCells('A17:B17');
                 $event->sheet->getDelegate()->setCellValue('A17', 'Earning');
@@ -178,17 +182,24 @@ class PaySlipExport implements WithEvents
                 ]);
                
                 $event->sheet->getDelegate()->setCellValue('A18', 'Salary');
+                $salaryAmt =   $this->salaryData->income - $this->salaryData->leave_late;
+                $event->sheet->getDelegate()->setCellValue('B18', $salaryAmt);
 
                 $event->sheet->getDelegate()->setCellValue('C18', 'Personal Income Tax');
+                $event->sheet->getDelegate()->setCellValue('D18', $this->salaryData->income_tax);
 
                 $event->sheet->getDelegate()->setCellValue('A19', 'Transporation Allowance(Total)');
                 $event->sheet->getStyle('A19')->getAlignment()->setWrapText(true);
+                $event->sheet->getDelegate()->setCellValue('B19', $this->salaryData->trans_money);
 
                 $event->sheet->getDelegate()->setCellValue('C19', 'SSB');
+                $event->sheet->getDelegate()->setCellValue('D19', $this->salaryData->ssb);
 
                 $event->sheet->getDelegate()->setCellValue('A20', 'Japanese Allowance');
+                $event->sheet->getDelegate()->setCellValue('B20', $this->salaryData->jlpt);
 
                 $event->sheet->getDelegate()->setCellValue('A21', 'Yearly Bonus');
+                $event->sheet->getDelegate()->setCellValue('B21', $this->salaryData->bonus);
 
                 $event->sheet->getDelegate()->setCellValue('A22', 'Total');
 
@@ -209,6 +220,7 @@ class PaySlipExport implements WithEvents
                 $event->sheet->getDelegate()->getStyle('C23')->getFill()
                     ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
                     ->getStartColor()->setARGB('BDD7EE');
+                $event->sheet->getDelegate()->setCellValue('C23', $this->salaryData->payment_amount);
 
                 $event->sheet->getDelegate()->setCellValue('A25', 'Employer\'s Signature');
                 $event->sheet->getDelegate()->setCellValue('A27', 'Employees signature');
