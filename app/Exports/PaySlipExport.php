@@ -97,7 +97,7 @@ class PaySlipExport implements WithEvents
                 ->getStartColor()->setARGB('F4B183');
 
                 $now = Carbon::now();
-                $event->sheet->getDelegate()->setCellValue('D3', 'Date-'. $now->format("yyyy/mm/dd"));
+                $event->sheet->getDelegate()->setCellValue('D3', 'Date-'. $now->format("yy/m/d"));
 
                 //Employee Details
                 $event->sheet->getDelegate()->mergeCells('A4:D4');
@@ -107,11 +107,13 @@ class PaySlipExport implements WithEvents
                 ->getStartColor()->setARGB('BDD7EE');
 
                 $event->sheet->getDelegate()->setCellValue('A5', 'Employee Name');
+                $event->sheet->getDelegate()->setCellValue('B5', $this->empName);
 
                 $event->sheet->getDelegate()->setCellValue('C5', 'Starting Date');
-                $event->sheet->getDelegate()->setCellValue('D5', $this->employee->entry_date);
+                $event->sheet->getDelegate()->setCellValue('D5',  Carbon::parse($this->employee->entry_date)->format('Y/m/d'));
 
                 $event->sheet->getDelegate()->setCellValue('A6', 'Employee ID');
+                $event->sheet->getDelegate()->setCellValue('B6', $this->empId);
 
                 $event->sheet->getDelegate()->setCellValue('C6', 'Salary Month');
                 $event->sheet->getDelegate()->setCellValue('D6', $this->salaryData->pay_month);
@@ -125,9 +127,17 @@ class PaySlipExport implements WithEvents
 
                 $event->sheet->getDelegate()->setCellValue('A9', 'Total Working Days');
 
+                $dateMonthArray = explode('/', $this->salaryData->pay_month);
+                $year = $dateMonthArray[0];
+                $month = $dateMonthArray[1];
+                $date = Carbon::createFromDate($year, $month, 1);
+                $event->sheet->getDelegate()->setCellValue('B9', $date->daysInMonth);
+                
+
                 $event->sheet->getDelegate()->setCellValue('C9', 'Present Days');
 
                 $event->sheet->getDelegate()->setCellValue('A10', 'Total Working Hours');
+                $event->sheet->getDelegate()->setCellValue('B10', $date->daysInMonth * 8);
 
                 $event->sheet->getDelegate()->setCellValue('C10', 'Present Hours');
 

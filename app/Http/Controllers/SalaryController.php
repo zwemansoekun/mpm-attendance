@@ -3,14 +3,21 @@
 namespace App\Http\Controllers;
 
 
+
 use App\Ssb;
 use App\Salary;
 use App\Employee;
 use App\EmployeeDetail;
 use Illuminate\Http\Request;
+
+use App\Exports\PaySlipExport;
+use Maatwebsite\Excel\Facades\Excel;
+
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+
 use App\Http\Resources\EmployeeDetail as EmployeeDetailResource;
+
 
 class SalaryController extends Controller
 {
@@ -243,6 +250,18 @@ class SalaryController extends Controller
         return $res_salary;
       
     }
+
+
+    public function csv_export(){
+        // var_dump('aye');
+        $year = '2019/05';
+        $id = 6;
+        $employee = Employee::select('*')->where('emp_id',$id)->first();
+        $salary = Salary::select("*")->where("pay_month",$year)->where('employee_id',$employee->id)->first();
+        $filename = '給与明細フォーマット_'. now()->format('YmdHis').'.xlsx';
+        return Excel::download(new PaySlipExport($employee,$salary,'001','may wathone'), $filename);
+    }
+
     public function getsalary(Request $request)
     {
         $salary='';
@@ -258,4 +277,5 @@ class SalaryController extends Controller
     //         $ssb=Ssb::get();
     //         return $ssb;
     // }
+
 }

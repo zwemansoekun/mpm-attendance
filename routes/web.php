@@ -52,7 +52,12 @@ Route::post('/employee/save/{id}', 'EmployeeController@save');
 Route::get('/employeeDetail/lastData/{emp_id}', 'EmployeeDetailController@findLastDataByEmployee');
 Route::get('/employeeDetail/{emp_id}', 'EmployeeDetailController@findByEmployee');
 Route::post('/employeeDetail/updateAll', 'EmployeeDetailController@updateAll');
+
+
+Route::get('/export', 'SalaryController@csv_export');
+
 });
+
 
 Route::get('{any}', function () {
          return view('layouts.app');

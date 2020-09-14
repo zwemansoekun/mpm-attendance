@@ -39,7 +39,7 @@
                                 <div class="col">
                                     <input type="text" class="form-control" v-model="d.money">
                                 </div>
-                                <div class="col"><button class="btn btn-primary" @click="updateDelayMoney(d.id ,d)" onclick="this.blur();">編集</button></div>
+                                <div class="col"><button type="button" class="btn btn-primary" @click="updateDelayMoney(d.id ,d)" onclick="this.blur();">編集</button></div>
                             </div>
                         </td>
                     </tr>
@@ -57,8 +57,15 @@
                 <form id="form" class="" @submit.prevent="SalarySave"  autocomplete="on">
                 <div class="row justify-content-md-center mt-4"> 
                       <button type="button" style="background-color:#E7E6E6" class="btn  mr-3" onclick="this.blur();">エンジニアコスト一覧表</button>
-                      <button type="button" style="background-color:#E7E6E6" class="btn  mr-3" onclick="this.blur();">給与明細作成</button>
-                      <button type="submit" style="background-color:#E7E6E6" class="btn  mr-3" onclick="this.blur();">編集</button>
+
+                      <a type="button"  href="http://127.0.0.1:8000/export/" >
+                            <button @click="excelExport()" class="btn mr-3" style="background-color:#E7E6E6" onclick="this.blur();">
+                            給与明細作成
+                            </button>
+                        </a>
+                      <button type="button" style="background-color:#E7E6E6" class="btn  mr-3" onclick="this.blur();">編集</button>
+
+                      
                 </div>
 
                 
@@ -71,6 +78,7 @@
                             </p>
                         </div>
                     </div>
+
                 </div>
                 <!-- {{get_salary_data}} -->
                 <div class="row" >
@@ -436,23 +444,37 @@ import 'vue-horizontal-scroll/dist/vue-horizontal-scroll.css'
          },    
         created() {
             let that=this;
-            this.axios
-            .get('http://127.0.0.1:8000/api/setting')
-            .then(response => {
-                this.setting=response.data;
+            this.axios({
+                url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/settings",
+                method: 'get'
+            })
+            .then(function (response) {
+                that.setting=response.data;
+            })
+            .catch(function (error) {
             });
-            this.axios
-                .get('http://127.0.0.1:8000/api/setting/all')
-                .then(response => {
-                    this.settings=response.data;
-                });
-            this.axios
-            .get('http://127.0.0.1:8000/api/delayTimes')
-            .then(response => {
-                this.delays=response.data;
-                this.delayDataCalculate();
-                
+
+            this.axios({
+                url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/setting/all",
+                method: 'get'
+            })
+            .then(function (response) {
+                that.settings=response.data;
+            })
+            .catch(function (error) {
             });
+
+            this.axios({
+                url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/delayTimes",
+                method: 'get'
+            })
+            .then(function (response) {
+                that.delays=response.data;
+                that.delayDataCalculate();
+            })
+            .catch(function (error) {
+            });
+
             this.axios
                 .get('http://localhost:5000/attendances/all/date')
                 .then(response => {
@@ -506,8 +528,8 @@ import 'vue-horizontal-scroll/dist/vue-horizontal-scroll.css'
                 this.axios
                 .post('http://127.0.0.1:8000/api/delayTime/updateMoney/'+id, delayTime)
                 .then((response) => {
-                    let i = this.attendDelays.map(item => item.month).indexOf(delayTime.month); // find index of your object
-                    this.attendDelays[i] = response.data;
+                    this.delays = response.data;
+                    this.delayDataCalculate();
 
                     this.data_check_messg = true;
                     setTimeout(() => {
@@ -516,6 +538,8 @@ import 'vue-horizontal-scroll/dist/vue-horizontal-scroll.css'
                 })
             },
             delayDataCalculate(){
+                this.attendDelays = [];
+                this.temp = [];
                 let results = [];
                 if(this.delays.length == 0){
                     
@@ -872,6 +896,15 @@ import 'vue-horizontal-scroll/dist/vue-horizontal-scroll.css'
                         //  that.salary_amounts+=parseInt($(this).val());
                     });
             },
+            excelExport(){
+                axios.get('http://127.0.0.1:8000/export')
+                .then(()=>{
+                    
+                })
+                .catch(()=> {
+                    
+                })
+            },
             updateInput:function(event){ 
                     let that=this;
                     let b_salary=0,t_m=0,jlpt=0,bnu=0,total=0;  
@@ -926,6 +959,7 @@ import 'vue-horizontal-scroll/dist/vue-horizontal-scroll.css'
                     // that.cal_salaries=cal_salary;
                     // console.log('cal',that.cal_salary);
                     //  console.log('calculate',cal_salary);
+
 
             }, 
         }
