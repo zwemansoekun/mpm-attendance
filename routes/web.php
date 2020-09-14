@@ -32,6 +32,8 @@ Route::post('/attendList/getmonth','AttendController@getmonth');
 
 Route::get('/salaryList/{yearmonth}', 'SalaryController@list');
 Route::get('/salaryList/ssb/all', 'SalaryController@ssb');
+Route::post('/salaryList', 'SalaryController@store');
+Route::post('/salaryList/getsalary','SalaryController@getsalary');
 
 Route::get('/settings',  'SettingController@index');
 Route::get('/setting/all', 'SettingController@all');
