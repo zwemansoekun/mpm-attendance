@@ -254,12 +254,15 @@ class SalaryController extends Controller
 
     public function csv_export(){
         // var_dump('aye');
-        $year = '2019/05';
+        $yearMonth = '2019/05';
         $id = 6;
         $employee = Employee::select('*')->where('emp_id',$id)->first();
-        $salary = Salary::select("*")->where("pay_month",$year)->where('employee_id',$employee->id)->first();
+        $salary = Salary::select("*")->where("pay_month",$yearMonth)->where('employee_id',$employee->id)->first();
+        $trans_money = EmployeeDetail::where("pay_month",$yearMonth)->where('emp_id',$id)->first()->trans_money;
+        
+
         $filename = '給与明細フォーマット_'. now()->format('YmdHis').'.xlsx';
-        return Excel::download(new PaySlipExport($employee,$salary,'001','may wathone'), $filename);
+        return Excel::download(new PaySlipExport($employee,$salary,'may wathone','001',$trans_money), $filename);
     }
 
     public function getsalary(Request $request)
