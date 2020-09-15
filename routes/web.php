@@ -35,6 +35,8 @@ Route::get('/salaryList/ssb/all', 'SalaryController@ssb');
 Route::post('/salaryList', 'SalaryController@store');
 Route::post('/salaryList/getsalary','SalaryController@getsalary');
 
+Route::get('/dsettings','DefaultSettingController@index');
+
 Route::get('/settings',  'SettingController@index');
 Route::get('/setting/all', 'SettingController@all');
 Route::post('/setting/updateMoney/{id}',  'SettingController@updateMoney');

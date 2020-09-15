@@ -25,6 +25,35 @@ Vue.use(VueRouter);
 Vue.use(VueAxios, axios);
 Vue.use(VueSimpleAlert);
 
+Vue.mixin({
+    data: function() {
+      return {
+        GlobalVar:'',
+        SsbMax:'',
+        SsbPaid:'',
+      }
+    },
+    created() {
+        let that=this;
+        this.axios({
+            url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/dsettings",
+            method: 'get'
+        })
+        .then(function (response) {
+            let global='';
+            console.log('global',response.data);
+            global=response.data;
+            for(let i=0;i<global.length;i++){
+              that.SsbMax=global[i]['ssb_max'];
+              that.SsbPaid=global[i]['ssb_paid'];
+            }
+        })
+        .catch(function (error) {
+        });
+    }
+  })
+
+
 const router = new VueRouter({
     mode: 'history',
     routes: routes
