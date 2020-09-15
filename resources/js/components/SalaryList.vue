@@ -236,7 +236,7 @@
                                                             <td class="text-right align-middle" style="padding: 0px;">
                                                                 <input name="ssb[]" @change="updateInput" class="ssb" style="text-align:right;width:100px;padding-right: 3px;" type="text" 
                                                                 :value="
-                                                                `${salaries[key].ssb}`!=(undefined || 0)? (300000*(salaries[key].ssb/100) ) :'' 
+                                                                `${salaries[key].ssb}`!=(undefined || 0)? ( SsbMax*(salaries[key].ssb/100) ) :'' 
                                                                 ">
                                                             </td>
                                                             <td class="text-right align-middle" style="padding: 0px;">
@@ -313,7 +313,7 @@
                            </horizontal-scroll>
                         </form>   
                     </div>
-                    {{SsbMax}}    {{SsbPaid}}
+                  
                     <div class="col-md-3">
                         <span  class="col-md-2 mt-4"></span>
                         <form id="form2" class="" autocomplete="on" >
@@ -346,9 +346,9 @@
                                             
                                     <tr v-bind:key="key">
                                         <!-- {{ssbs.length!=0?Math.trunc(ssbs[0].total_amount).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"):'15,000'}} -->
-                                       <td style="padding: 0px;width: 30%;text-align: right;background-color:#D9D9D9">15,000</td>
+                                       <td style="padding: 0px;width: 30%;text-align: right;background-color:#D9D9D9">{{SsbPaid}}</td>
                                         <!-- {{ssbs.length!=0?Math.trunc(ssbs[0].c_paid).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"):'15,000'}} -->
-                                       <td style="padding: 0px;width: 30%;text-align: right;background-color:#D9D9D9">15,000</td>
+                                       <td style="padding: 0px;width: 30%;text-align: right;background-color:#D9D9D9">{{SsbPaid}}</td>
                                        <td style="padding: 0px;width: 40%;" rowspan="2">
                                             <template v-if="get_salary_data.length==0"> 
                                                 <textarea name="remark[]" class="remark" style="text-align:left;width:100%;border: none;-webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;" @value="`${old(remark)}`"></textarea>
@@ -922,7 +922,6 @@ window.APP ="{{config('global')}}";//"{config('global')}" ;//JSON.parse($globals
                     this.axios
                     .get((window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/salaryList/"+this.year+"-"+this.month )                 
                     .then(response => {
-                        console.log('salary',response.data.length); 
                         // that.salaries=response.data;
                         tem_salary=response.data;
                         console.log('salary1',tem_salary.length); 
@@ -930,10 +929,10 @@ window.APP ="{{config('global')}}";//"{config('global')}" ;//JSON.parse($globals
                             for(let i=0;i<tem_salary.length;i++){
                                console.log('salary12',tem_salary[i]); 
                                 tem_salary[i]['total']=(parseInt(tem_salary[i].salary_amount)+parseInt(tem_salary[i].trans_money)+parseInt(tem_salary[i].jlpt))
-                                tem_salary[i]['payment']=parseInt(tem_salary[i]['total'])-(300000*(parseInt(tem_salary[i].ssb)/100));
+                                tem_salary[i]['payment']=parseInt(tem_salary[i]['total'])-(that.SsbMax*(parseInt(tem_salary[i].ssb)/100));
                                 total_payment+=tem_salary[i]['payment'];
-                                total_c_paid+=(300000*(3/100));
-                                tem_salary[i]['c_paid']=(300000*(3/100));
+                                total_c_paid+=(that.SsbMax*(3/100));
+                                tem_salary[i]['c_paid']=(that.SsbMax*(3/100));
                                 console.log('salary33',tem_salary); 
                             }
                         }else{
