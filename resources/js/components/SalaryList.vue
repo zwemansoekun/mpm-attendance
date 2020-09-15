@@ -54,7 +54,7 @@
                         <h4><strong>給与手当一覧　{{this.select_date}}分</strong></h4>      
                     </div>
                 </div>
-                <form id="form" class="" @submit.prevent="SalarySave"  autocomplete="on">
+                <!-- <form id="form" class="" @submit.prevent="SalarySave"  autocomplete="on"> -->
                 <div class="row justify-content-md-center mt-4"> 
                       <button type="button" style="background-color:#E7E6E6" class="btn  mr-3" onclick="this.blur();">エンジニアコスト一覧表</button>
 
@@ -63,11 +63,11 @@
                             給与明細作成
                             </button>
                         </a>
-                      <button type="submit" style="background-color:#E7E6E6" class="btn  mr-3" onclick="this.blur();">編集</button>
+                        
+                      <button type="submit" form="form" style="background-color:#E7E6E6" class="btn  mr-3" onclick="this.blur();">編集</button>
 
-                      
                 </div>
-
+                 <form id="form" class="" @submit.prevent="SalarySave"  autocomplete="on">
                 
                 <div v-if="errors"  style="text-align: center">
                     <div v-for="(v,k) in errorsFun" :key="k"> 
@@ -186,7 +186,7 @@
                                                         <td style="background-color:#D9D9D9" class="text-right align-middle">{{(parseInt(salaries[key].salary_amount)+parseInt(salaries[key].trans_money)+parseInt(salaries[key].jlpt)).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")}}</td>
 
                                                         <td style="background-color:#D9D9D9" class="text-right align-middle">{{salaries[key].income_tax}}</td>
-                                                        <td style="background-color:#D9D9D9" class="text-right align-middle">{{salaries[key].ssb!=(undefined || 0)?salaries[key].ssb:''}}</td>
+                                                        <td style="background-color:#D9D9D9" class="text-right align-middle">{{salaries[key].ssb!=(undefined || 0)?salaries[key].ssb+"%":''}}</td>
                                                         <td style="background-color:#D9D9D9" class="text-right align-middle">
                                                           
                                                         </td>
@@ -196,12 +196,12 @@
                                                         <td style="background-color:#D9D9D9" class="text-right align-middle"></td>
                                                         <td style="background-color:#D9D9D9" class="text-right align-middle">
 
-                                                                {{
+                                                                <!-- {{
                                                                    ( (parseInt(salaries[key].salary_amount)+parseInt(salaries[key].trans_money)+parseInt(salaries[key].jlpt))
                                                                     -
                                                                     (parseInt(salaries[key].ssb))
                                                                    ).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")
-                                                                }}
+                                                                }} -->
 
                                                         </td>
                                                     </tr>
@@ -234,7 +234,10 @@
                                                                 <input name="income_tax[]" @change="updateInput"  class="inc_tax" style="text-align:right;width:100px;padding-right: 3px;" type="text"  @value="`${old(income_tax)}`">
                                                             </td>
                                                             <td class="text-right align-middle" style="padding: 0px;">
-                                                                <input name="ssb[]" @change="updateInput" class="ssb" style="text-align:right;width:100px;padding-right: 3px;" type="text" :value="`${salaries[key].ssb}`!=(undefined || 0)?salaries[key].ssb:'' ">
+                                                                <input name="ssb[]" @change="updateInput" class="ssb" style="text-align:right;width:100px;padding-right: 3px;" type="text" 
+                                                                :value="
+                                                                `${salaries[key].ssb}`!=(undefined || 0)? (300000*(salaries[key].ssb/100) ) :'' 
+                                                                ">
                                                             </td>
                                                             <td class="text-right align-middle" style="padding: 0px;">
                                                                 <input name="leave_late[]" @change="updateInput" class="leave_late" style="text-align:right;width:100px;padding-right: 3px;" type="text" @value="`${old(leave_late)}`">
@@ -252,7 +255,8 @@
                                                             <td class="text-right align-middle" style="padding: 0px;">
                                                                 <!-- :value="``" -->
                                                                 <input name="payment_amount[]" readonly class="payment_amount" style="text-align:right;width:150px;padding-right: 3px;" type="text" 
-                                                                :value="`${(parseInt(salaries[key].salary_amount)+parseInt(salaries[key].trans_money)+parseInt(salaries[key].jlpt))-(parseInt(salaries[key].ssb))}`.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,')">
+                                                                :value="`${salaries[key].payment}`.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,')">
+                                                                 <!-- :value="`${(parseInt(salaries[key].salary_amount)+parseInt(salaries[key].trans_money)+parseInt(salaries[key].jlpt))-(parseInt(salaries[key].ssb))}`.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,')"> -->
                                                             </td>
                                                         </template>
                                                         <template v-else>                                              
@@ -309,9 +313,7 @@
                            </horizontal-scroll>
                         </form>   
                     </div>
-
-
- 
+                    {{SsbMax}}    {{SsbPaid}}
                     <div class="col-md-3">
                         <span  class="col-md-2 mt-4"></span>
                         <form id="form2" class="" autocomplete="on" >
@@ -363,7 +365,7 @@
                                                     <input name="ssb_total[]" @change="ssbCalc" class="ssb_total" style="text-align:right;width:100%;" type="text" :value="`15,000`">
                                             </td>
                                             <td style="padding: 0px;width: 30%;text-align: right;height: 10%;">
-                                                    <input name="ssb_c_paid[]" @change="ssbCalc"  class="ssb_c_paid" style="text-align:right;width:100%;" type="text" :value="`15,000`">
+                                                    <input name="ssb_c_paid[]" @change="ssbCalc"  class="ssb_c_paid" style="text-align:right;width:100%;" type="text" :value="`${salaries[key-1].c_paid}`">
                                             </td>
                                         </tr>     
                                     </template>
@@ -394,11 +396,14 @@
 <script>   
 import HorizontalScroll from 'vue-horizontal-scroll'
 import 'vue-horizontal-scroll/dist/vue-horizontal-scroll.css'
+console.log(process.env.MIX_CLIENT_SECRET);
+window.APP ="{{config('global')}}";//"{config('global')}" ;//JSON.parse($globals);    //;
 
     export default {
         
         data() {
             return {
+               appx:window.APP,
                 select_date:'',
                 dates:[],
                 setting:{},
@@ -925,9 +930,10 @@ import 'vue-horizontal-scroll/dist/vue-horizontal-scroll.css'
                             for(let i=0;i<tem_salary.length;i++){
                                console.log('salary12',tem_salary[i]); 
                                 tem_salary[i]['total']=(parseInt(tem_salary[i].salary_amount)+parseInt(tem_salary[i].trans_money)+parseInt(tem_salary[i].jlpt))
-                                tem_salary[i]['payemnt']=parseInt(tem_salary[i]['total'])-(parseInt(tem_salary[i].ssb));
-                                total_payment+=tem_salary[i]['payemnt'];
-                                total_c_paid+=15000;
+                                tem_salary[i]['payment']=parseInt(tem_salary[i]['total'])-(300000*(parseInt(tem_salary[i].ssb)/100));
+                                total_payment+=tem_salary[i]['payment'];
+                                total_c_paid+=(300000*(3/100));
+                                tem_salary[i]['c_paid']=(300000*(3/100));
                                 console.log('salary33',tem_salary); 
                             }
                         }else{
@@ -1003,7 +1009,7 @@ import 'vue-horizontal-scroll/dist/vue-horizontal-scroll.css'
                     if(total<0){
                         total=0;
                     }
-                    payment_amount=total - (parseInt(inc_tax.toString().replace(/,/g , ''))+parseInt(ssb.toString().replace(/,/g , ''))+parseInt(leave_late.toString().replace(/,/g , ''))) -  (parseInt(adju1.toString().replace(/,/g , ''))+parseInt(adju2.toString().replace(/,/g , ''))+parseInt(adju3.toString().replace(/,/g , ''))) ;
+                    payment_amount=total - ( (parseInt(inc_tax.toString().replace(/,/g , ''))+parseInt(ssb.toString().replace(/,/g , ''))+parseInt(leave_late.toString().replace(/,/g , ''))) +  (parseInt(adju1.toString().replace(/,/g , ''))+parseInt(adju2.toString().replace(/,/g , ''))+parseInt(adju3.toString().replace(/,/g , ''))) ) ;
                     if(payment_amount<0){
                         payment_amount=0;
                     }
