@@ -241,13 +241,13 @@
                                                             </td>
 
                                                             <td class="text-right align-middle" style="padding: 0px;">
-                                                                <!-- <input name="leave_lateh" class="leave_lateh" style="text-align:right;" type="text" :value="``"> -->
+                                                                <input name="adju1[]" @change="updateInput" class="adju1" style="text-align:right;width:100px;" type="text" @value="`${old(adju1)}`">
                                                             </td>
                                                             <td class="text-right align-middle" style="padding: 0px;">
-                                                                <!-- <input name="pay_month" class="pay_month" style="text-align:right;" type="text" :value="``"> -->
+                                                                <input name="adju2[]" @change="updateInput" class="adju2" style="text-align:right;width:100px;" type="text" @value="`${old(adju2)}`">
                                                             </td>
                                                             <td class="text-right align-middle" style="padding: 0px;">
-                                                                <!-- <input name="pay_month" class="pay_month" style="text-align:right;" type="text" :value="``"> -->
+                                                                <input name="adju3[]" @change="updateInput" class="adju3" style="text-align:right;width:100px;" type="text" @value="`${old(adju3)}`">
                                                             </td>
                                                             <td class="text-right align-middle" style="padding: 0px;">
                                                                 <!-- :value="``" -->
@@ -287,13 +287,13 @@
                                                             </td>
 
                                                             <td class="text-right align-middle" style="padding: 0px;">
-                                                                <!-- <input name="leave_lateh" class="leave_lateh" style="text-align:right;" type="text" :value="``"> -->
+                                                                <input name="adju1[]" @change="updateInput" class="adju1" style="text-align:right;width:100px;" type="text" :value="`${get_salary_data[key]}`!=undefined?Math.trunc(get_salary_data[key].adju1).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,'):'' ">
                                                             </td>
                                                             <td class="text-right align-middle" style="padding: 0px;">
-                                                                <!-- <input name="pay_month" class="pay_month" style="text-align:right;" type="text" :value="``"> -->
+                                                                <input name="adju2[]" @change="updateInput" class="adju2" style="text-align:right;width:100px;" type="text" :value="`${get_salary_data[key]}`!=undefined?Math.trunc(get_salary_data[key].adju2).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,'):'' ">
                                                             </td>
                                                             <td class="text-right align-middle" style="padding: 0px;">
-                                                                <!-- <input name="pay_month" class="pay_month" style="text-align:right;" type="text" :value="``"> -->
+                                                               <input name="adju3[]" @change="updateInput" class="adju3" style="text-align:right;width:100px;" type="text" :value="`${get_salary_data[key]}`!=undefined?Math.trunc(get_salary_data[key].adju3).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,'):'' ">
                                                             </td>
                                                             <td class="text-right align-middle" style="padding: 0px;">
                                                                 <!-- :value="``" -->
@@ -661,7 +661,7 @@ import 'vue-horizontal-scroll/dist/vue-horizontal-scroll.css'
                         return true;
                     },
                 });
-                let temp_salary=[],pay_month=0,employee_id=0,income=0,trans_money=0,jlpt=0,bonus=0,inc_tax=0,ssb=0,leave_late=0,payment_amount=0,total_salary=0;//,
+                let temp_salary=[],pay_month=0,employee_id=0,income=0,trans_money=0,jlpt=0,bonus=0,inc_tax=0,ssb=0,leave_late=0,payment_amount=0,total_salary=0,adju1='',adju2='',adju3='';//,
                 let temp_ssb=[],ssb_total=0,ssb_c_paid=0,remark='',id1='',id2='';
                 if(jQuery('#form1').valid() && jQuery('#form2').valid()){
                     
@@ -705,6 +705,15 @@ import 'vue-horizontal-scroll/dist/vue-horizontal-scroll.css'
                                     if(jQuery(this).find('.leave_late').val()){
                                         leave_late=jQuery(this).find('.leave_late').val().toString().replace(/,/g , '');
                                     }
+                                    if(jQuery(this).find('.adju1').val()){
+                                        adju1=jQuery(this).find('.adju1').val().toString().replace(/,/g , '');
+                                    }
+                                      if(jQuery(this).find('.adju2').val()){
+                                        adju2=jQuery(this).find('.adju2').val().toString().replace(/,/g , '');
+                                    }
+                                    if(jQuery(this).find('.adju3').val()){
+                                        adju3=jQuery(this).find('.adju3').val().toString().replace(/,/g , '');
+                                    }
                                     if(jQuery(this).find('.payment_amount').val()){
                                         payment_amount=jQuery(this).find('.payment_amount').val().toString().replace(/,/g , '');
                                         console.log('bbbbb',payment_amount);
@@ -715,12 +724,12 @@ import 'vue-horizontal-scroll/dist/vue-horizontal-scroll.css'
                                     if (isLastElement) {
                                           console.log('final',isLastElement);
                                         if(id1!=''){
-                                              temp_salary.push({"id":id1,"pay_month":pay_month,"employee_id":employee_id,"income":income,"trans_money":trans_money,"jlpt":jlpt,"bonus":bonus,"income_tax":inc_tax,"ssb":ssb,"leave_late":leave_late,"payment_amount":payment_amount,"total_salary":total_salary});//
+                                              temp_salary.push({"id":id1,"pay_month":pay_month,"employee_id":employee_id,"income":income,"trans_money":trans_money,"jlpt":jlpt,"bonus":bonus,"income_tax":inc_tax,"ssb":ssb,"leave_late":leave_late,"payment_amount":payment_amount,"total_salary":total_salary,"adju1":adju1,"adju2":adju2,"adju3":adju3});//
                                         }else{
-                                              temp_salary.push({"pay_month":pay_month,"employee_id":employee_id,"income":income,"trans_money":trans_money,"jlpt":jlpt,"bonus":bonus,"income_tax":inc_tax,"ssb":ssb,"leave_late":leave_late,"payment_amount":payment_amount,"total_salary":total_salary});//
+                                              temp_salary.push({"pay_month":pay_month,"employee_id":employee_id,"income":income,"trans_money":trans_money,"jlpt":jlpt,"bonus":bonus,"income_tax":inc_tax,"ssb":ssb,"leave_late":leave_late,"payment_amount":payment_amount,"total_salary":total_salary,"adju1":adju1,"adju2":adju2,"adju3":adju3});//
                                         }
                                       
-                                        id1='';pay_month=0;employee_id=0;income=0;trans_money=0;jlpt=0;bonus=0;inc_tax=0;ssb=0;leave_late=0;payment_amount=0;total_salary=0;
+                                        id1='';pay_month=0;employee_id=0;income=0;trans_money=0;jlpt=0;bonus=0;inc_tax=0;ssb=0;leave_late=0;payment_amount=0;total_salary=0;adju1='';adju2='';adju3='';
                                         return false;
                                     }
                             })                          
@@ -972,7 +981,7 @@ import 'vue-horizontal-scroll/dist/vue-horizontal-scroll.css'
             updateInput:function(event){ 
                     let that=this;
                     let b_salary=0,t_m=0,jlpt=0,bnu=0,total=0;  
-                    let inc_tax=0,ssb=0,leave_late=0,payment_amount=0;
+                    let inc_tax=0,ssb=0,leave_late=0,payment_amount=0,adju1=0,adju2=0,adju3=0;
                     
                  
 
@@ -985,12 +994,16 @@ import 'vue-horizontal-scroll/dist/vue-horizontal-scroll.css'
                     inc_tax=$(event.target).parent().parent().find('.inc_tax').val()!=''?$(event.target).parent().parent().find('.inc_tax').val():0;
                     ssb=$(event.target).parent().parent().find('.ssb').val()!=''?$(event.target).parent().parent().find('.ssb').val():0;
                     leave_late=$(event.target).parent().parent().find('.leave_late').val()!=''?$(event.target).parent().parent().find('.leave_late').val():0;
+
+                    adju1=$(event.target).parent().parent().find('.adju1').val()!=''?$(event.target).parent().parent().find('.adju1').val():0;
+                    adju2=$(event.target).parent().parent().find('.adju2').val()!=''?$(event.target).parent().parent().find('.adju2').val():0;
+                    adju3=$(event.target).parent().parent().find('.adju3').val()!=''?$(event.target).parent().parent().find('.adju3').val():0;
                     
                     total=parseInt(b_salary.toString().replace(/,/g , ''))+parseInt(t_m.toString().replace(/,/g , ''))+parseInt(jlpt.toString().replace(/,/g , ''))+parseInt(bnu.toString().replace(/,/g , ''));
                     if(total<0){
                         total=0;
                     }
-                    payment_amount=total - (parseInt(inc_tax.toString().replace(/,/g , ''))+parseInt(ssb.toString().replace(/,/g , ''))+parseInt(leave_late.toString().replace(/,/g , '')));
+                    payment_amount=total - (parseInt(inc_tax.toString().replace(/,/g , ''))+parseInt(ssb.toString().replace(/,/g , ''))+parseInt(leave_late.toString().replace(/,/g , ''))) -  (parseInt(adju1.toString().replace(/,/g , ''))+parseInt(adju2.toString().replace(/,/g , ''))+parseInt(adju3.toString().replace(/,/g , ''))) ;
                     if(payment_amount<0){
                         payment_amount=0;
                     }

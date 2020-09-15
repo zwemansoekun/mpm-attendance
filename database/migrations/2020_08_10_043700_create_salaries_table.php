@@ -31,6 +31,9 @@ class CreateSalariesTable extends Migration
             // $table->decimal('payment_amount',10, 2);
             $table->integer('employee_id'); // f_key
             $table->integer('ssb_id'); //f_key //check pay pr
+            $table->integer('adju1')->nullable(); //adjustments (in case of deduction-)
+            $table->integer('adju2')->nullable(); 
+            $table->integer('adju3')->nullable(); 
             $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
             // $table->timestamps();
