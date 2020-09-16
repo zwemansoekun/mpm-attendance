@@ -69,7 +69,7 @@
                     <div class="row">
                         <div class="col-md-4"> Name: {{emp_name}}</div>                          
                     </div> 
-                    {{formchange}}
+                  
                     <table id="attendTable" class="table table-bordered">
                         <thead>
                             <tr>
@@ -210,7 +210,9 @@
                                                     <template v-else>
                                                          <input name="total_hours[]" class="form-control input-sm thour" style="text-align: center;" type="text" @value="`${date.total_hours}`!=undefined?date.total_hours:`${old(total_hours)}`">
                                                     </template>    
-                                                    <input name="date[]" class="form-control input-sm date" style="text-align: center;" type="hidden" :value="`${year}-${month}-${parseInt(dayindex+1).toString().length==1?'0'+(parseInt(dayindex)+1):(parseInt(dayindex)+1)}`">
+                                                     <input name="late_coming[]" class="form-control input-sm late_coming" style="text-align: center;" type="hidden" :value="`${date.late_coming}`!=undefined?date.late_coming:`${old(late_coming)}`">
+                                                     <input name="leaving_early[]" class="form-control input-sm leaving_early" style="text-align: center;" type="hidden" :value="`${date.leaving_early}`!=undefined?date.leaving_early:`${old(leaving_early)}`">
+                                                     <input name="date[]" class="form-control input-sm date" style="text-align: center;" type="hidden" :value="`${year}-${month}-${parseInt(dayindex+1).toString().length==1?'0'+(parseInt(dayindex)+1):(parseInt(dayindex)+1)}`">
                                                 </td>           
                                                 <td  style="width: 200px;padding:0px;" >
                                                     <!-- <template v-if="day[1].length!=0 && key==1"> -->
@@ -245,6 +247,8 @@
                                                     <td style="width: 182px;padding:0px">  
                                                         <input v-if="['Sat','Sun'].includes(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])==false" name="total_hours[]" class="form-control input-sm thour" style="text-align: center;" type="text">
                                                         <input name="date[]" class="form-control input-sm date" style="text-align: center;" type="hidden" :value="`${year}-${month}-${(parseInt(dayindex)+1).toString().length==1?'0'+(parseInt(dayindex)+1):(parseInt(dayindex)+1)}`">
+                                                        <input name="late_coming[]" class="form-control input-sm late_coming" style="text-align: center;" type="hidden" :value="``">
+                                                        <input name="leaving_early[]" class="form-control input-sm leaving_early" style="text-align: center;" type="hidden" :value="``">
                                                     </td> 
                                                     <td style="width: 200px;padding:0px" >  
                                                         <!-- <input name="id[]" class="form-control input-sm idx" style="text-align: center;" type="hidden" :value="`${date.id?date.id:''}`">    -->
@@ -404,7 +408,7 @@ import Dakokurow2 from './layouts/Dakokurow2.vue';
                     },
                 });
                 let temp_arr=[];let am1,am2,pm1,pm2,thour,date;let am_leave=null,pm_leave=null;
-                let id='';
+                let id='',late_coming=0,leaving_early=0;
                 if(jQuery('#form').valid()){
                      
                      $('#attendTable tr[class^=index_]').each(function (key,value) {
@@ -428,6 +432,12 @@ import Dakokurow2 from './layouts/Dakokurow2.vue';
                             if(jQuery(this).find('.thour').val()){
                                 thour=jQuery(this).find('.thour').val();
                             }
+                            if(jQuery(this).find('.late_coming').val()){
+                                late_coming=jQuery(this).find('.late_coming').val();
+                            }
+                            if(jQuery(this).find('.leaving_early').val()){
+                                leaving_early=jQuery(this).find('.leaving_early').val();
+                            }
                             if(jQuery(this).find('.date').val()){
                                 date=jQuery(this).find('.date').val();
                             }
@@ -450,11 +460,11 @@ import Dakokurow2 from './layouts/Dakokurow2.vue';
                                    pm_leave=0;
                                }
                                if(id!=''){
-                                  temp_arr.push({"id":id,"date": date,"emp_no":those.emp_no,"total_hours":thour,"am1": am1 ,"am2":am2,"pm1":pm1,"pm2":pm2,"am_leave":am_leave,"pm_leave":pm_leave}); 
+                                  temp_arr.push({"id":id,"date": date,"emp_no":those.emp_no,"total_hours":thour,"am1": am1 ,"am2":am2,"pm1":pm1,"pm2":pm2,"am_leave":am_leave,"pm_leave":pm_leave,"leaving_early":leaving_early,"late_coming":late_coming}); 
                                }else
-                                  temp_arr.push({"date": date,"emp_no":those.emp_no,"total_hours":thour,"am1": am1 ,"am2":am2,"pm1":pm1,"pm2":pm2,"am_leave":am_leave,"pm_leave":pm_leave}); 
+                                  temp_arr.push({"date": date,"emp_no":those.emp_no,"total_hours":thour,"am1": am1 ,"am2":am2,"pm1":pm1,"pm2":pm2,"am_leave":am_leave,"pm_leave":pm_leave,"leaving_early":leaving_early,"late_coming":late_coming}); 
                              
-                                date='';am1='';am2='';pm1='';pm2='';thour='',am_leave=null;id='';pm_leave=null;
+                                date='';am1='';am2='';pm1='';pm2='';thour='',am_leave=null;id='';pm_leave=null;leaving_early=0;late_coming=0;
                                 return false;
                             }
                          });    
@@ -527,10 +537,15 @@ import Dakokurow2 from './layouts/Dakokurow2.vue';
                    pm1=$(event.target).parent().parent().parent().find('.pm1').val()!=undefined?$(event.target).parent().parent().parent().find('.pm1').val().split(":"):'';
                    pm2=$(event.target).parent().parent().parent().find('.pm2').val()!=undefined?$(event.target).parent().parent().parent().find('.pm2').val().split(":"):'';
                 
-                  const {t_hr, t_min}=this.totalHourCal(am1,am2,pm1,pm2,total_am,total_pm,'',''); 
+                  const {t_hr, t_min,late_coming,leaving_early}=this.totalHourCal(am1,am2,pm1,pm2,total_am,total_pm,'',''); 
+                  console.log('up_leaving_early',leaving_early);
+                  console.log('up_late_coming',late_coming);
                   let res=isNaN((parseFloat(t_hr)+parseFloat(t_min)).toFixed(2))?'':(parseFloat(t_hr)+parseFloat(t_min)).toFixed(2);
 
-                  jQuery(event.target).parent().parent().parent().find(".thour").val(Math.abs(res).toFixed(2));
+                jQuery(event.target).parent().parent().parent().find(".thour").val(Math.abs(res).toFixed(2));
+
+                jQuery(event.target).parent().parent().parent().find(".late_coming").val(Math.abs(late_coming).toFixed(2));
+                jQuery(event.target).parent().parent().parent().find(".leaving_early").val(Math.abs(leaving_early).toFixed(2));
 
             }, 
             allButtonClick:function(){ 
@@ -677,7 +692,7 @@ import Dakokurow2 from './layouts/Dakokurow2.vue';
                         that.data_combine=[];
                         that.check_attend_data=false;                        
                         that.get_attend_data=response.data;
-                        console.log('nores',that.get_attend_data);   
+                        // console.log('nores',that.get_attend_data);   
                         that.ampm_calling(that.get_attend_data);                  
                     })
                     .catch(function (error) {
@@ -713,7 +728,7 @@ import Dakokurow2 from './layouts/Dakokurow2.vue';
                         }else{
                             this.form_open=true;
                         }             
-                        console.log('api return',response.data);
+                        // console.log('api return',response.data);
                         let memory_record={};let push_record=[];
                         response.data.forEach(function(res, index) {
                                 if (res.recordedDateTime === that.memory && that.memory !== "") {
@@ -746,7 +761,7 @@ import Dakokurow2 from './layouts/Dakokurow2.vue';
                                     that.ampm_arr.push(that.ampm_inner_arr);//.slice(0,4)
                                 }
                         });
-                        console.log('second filter',that.ampm_arr);
+                        // console.log('second filter',that.ampm_arr);
                         that.memory=''; 
 
                         for(let i=1;i<=this.dayCount;i++){
@@ -796,7 +811,7 @@ import Dakokurow2 from './layouts/Dakokurow2.vue';
                                             } 
                                            
                                             tem_store.push({"0":pre_store,"1":[]});
-                                              console.log('fourth filter',tem_store);       
+                                            //   console.log('fourth filter',tem_store);       
                                             pre_store={};//tar=[];
                                           
                                             that.status=1; 
@@ -999,11 +1014,14 @@ import Dakokurow2 from './layouts/Dakokurow2.vue';
                 }
                              
                 let total_am=0;let total_pm=0; 
-                const {t_hr, t_min}=this.totalHourCal(auto_am1,auto_am2,auto_pm1,auto_pm2,total_am,total_pm,t_am,p_am);               
-
+                const {t_hr, t_min,late_coming,leaving_early}=this.totalHourCal(auto_am1,auto_am2,auto_pm1,auto_pm2,total_am,total_pm,t_am,p_am);               
+                console.log('a_leaving_early',leaving_early);
+                console.log('a_late_coming',late_coming);
                 let res=isNaN((parseFloat(t_hr)+parseFloat(t_min)).toFixed(2))?'':(parseFloat(t_hr)+parseFloat(t_min)).toFixed(2);   
                    
                 jQuery("."+sec_index).find(".thour").val(res==0?"0.00":Math.abs(res).toFixed(2));
+                jQuery("."+sec_index).find(".late_coming").val(Math.abs(late_coming).toFixed(2));
+                jQuery("."+sec_index).find(".leaving_early").val(Math.abs(leaving_early).toFixed(2));
 
             } 
             if(  ( (am_leave==1 || am_leave==2 )&& (am1!='' || am2!='') ) || ( (pm_leave==1 || pm_leave==2 )&& (pm1!='' || pm2!='') )  ){
@@ -1012,6 +1030,25 @@ import Dakokurow2 from './layouts/Dakokurow2.vue';
         },
                 
             totalHourCal(auto_am1,auto_am2,auto_pm1,auto_pm2,total_am,total_pm,t_am,p_am){
+                console.log('auto_am2',auto_am2);
+                console.log('auto_am1',auto_am1);
+                let late_coming=0,leaving_early=0;
+                if(auto_am1!='' && (  ( parseInt(auto_am1[0])==8 && 5<parseInt(auto_am1[1]) || 9<=parseInt(auto_am1[0])   )   ) ){
+                    late_coming+=(+auto_am1[0] + (+auto_am1[1] / 60))-(8);  
+                     
+                }  
+                if(auto_pm1!='' &&  (  ( parseInt(auto_pm1[0])==13 && 15<parseInt(auto_pm1[1]) || 14<=parseInt(auto_pm1[0])   )   ) ){
+                    late_coming+=(+auto_pm1[0] + (+auto_pm1[1] / 60))-(13);  
+                     
+                }
+                if(auto_am2!='' && parseInt(auto_am2[0])<12){
+                    leaving_early+=12-(+auto_am2[0] + (+auto_am2[1] / 60));
+                     
+                }
+                if(auto_pm2!='' && parseInt(auto_pm2[0])<17){
+                    leaving_early+=17-(+auto_pm2[0] + (+auto_pm2[1] / 60));
+                      
+                }
                 if(t_am!=''){
                     total_am=4;
                 }else if(auto_am1!='' && auto_am2!='' && auto_am1!=undefined && auto_am2!=undefined){
@@ -1031,6 +1068,8 @@ import Dakokurow2 from './layouts/Dakokurow2.vue';
                 return {
                     t_hr: total_am==''?0:total_am,
                     t_min: total_pm==''?0:total_pm,
+                    late_coming:late_coming,
+                    leaving_early:leaving_early,
                 };            
             }, 
             ampm_time_check(ap_split,name,sec_index){
