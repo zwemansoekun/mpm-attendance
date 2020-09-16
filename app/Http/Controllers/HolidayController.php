@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Holiday;
 use Barryvdh\Debugbar\Facade as Debugbar;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class HolidayController extends Controller
 {
@@ -71,6 +72,21 @@ class HolidayController extends Controller
     public function findYear($year)
     {
        $holidays = Holiday::select('id','date','description')->whereYear('date',$year)->get();
+        return response()->json($holidays);
+    }
+
+    /**
+     * 選択したテーブルの行を削除する
+     *
+     */
+    public function deleteRow($id,$year)
+    {
+   
+        $each_id = explode(',' , $id);
+        foreach($each_id as $id) {
+            DB::table('holidays')->where('id', '=', $id)->delete();
+        }
+        $holidays = Holiday::select('id','date','description')->whereYear('date',$year)->get();
         return response()->json($holidays);
     }
 

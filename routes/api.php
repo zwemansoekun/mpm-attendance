@@ -36,6 +36,7 @@ Route::get('/holidays', 'HolidayController@index');
 Route::post('/holidays', 'HolidayController@add');
 Route::get('/holidays/copy', 'HolidayController@copy');
 Route::get('/holidays/findYear/{year}', 'HolidayController@findYear');
+Route::post('/holidays/deleteRow/{id}/{year}', 'HolidayController@deleteRow');
 
 // Route::get('/employee/{emp_id}', 'EmployeeController@findByEmployee');
 // Route::post('/employee/save/{id}', 'EmployeeController@save');
@@ -46,6 +47,8 @@ Route::get('/holidays/findYear/{year}', 'HolidayController@findYear');
 
 Route::get('/attendManage', 'AttendManageController@index');
 Route::post('/attendManage/csvOutput/{year}', 'AttendManageController@csvOutput');
+
+
 
 
 
