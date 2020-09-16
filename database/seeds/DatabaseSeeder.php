@@ -12,7 +12,7 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         factory(App\Setting::class , 1)->create();
-        $this->call(AttendDetailTableSeeder::class);    
+        // $this->call(AttendDetailTableSeeder::class);    
         $this->call(DefaultSettingSeeder::class);      
     }
 }

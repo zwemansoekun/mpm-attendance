@@ -56,6 +56,8 @@ class AttendController extends Controller
                             'pm2'=>'date_format:H:i|nullable',
                             'am_leave'=>'numeric|nullable',
                             'pm_leave'=>'numeric|nullable',
+                            // 'late_coming' => 'numeric|nullable',
+                            // 'leaving_early' => 'numeric|nullable',
                     ],[
                         'date.required'=> '日付は必要です。', // custom message
                         'date.date_format'=> '日付の形式をチェックして下さい！', // custom message
@@ -89,7 +91,9 @@ class AttendController extends Controller
                                             'pm1' =>$val['pm1'], 
                                             'pm2' =>$val['pm2'], 
                                             'am_leave' =>$val['am_leave'], 
-                                            'pm_leave' =>$val['pm_leave'] 
+                                            'pm_leave' =>$val['pm_leave'],
+                                            'late_coming' =>$val['late_coming'],
+                                            'leaving_early' => $val['leaving_early'],
                                         ]);                              
                             
 

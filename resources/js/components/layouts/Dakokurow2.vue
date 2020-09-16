@@ -27,6 +27,8 @@
             <template v-else>
                  <input v-if="['Sat','Sun'].includes(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])==false" name="total_hours[]" class="form-control input-sm thour" style="text-align: center;" type="text" @value="`${old(total_hours)}`">
             </template> 
+            <input name="late_coming[]" class="form-control input-sm late_coming" style="text-align: center;" type="hidden" :value="child_date.late_coming">
+            <input name="leaving_early[]" class="form-control input-sm leaving_early" style="text-align: center;" type="hidden" :value="child_date.leaving_early">
             <input name="date[]" class="form-control input-sm date" style="text-align: center;" type="hidden" :value="`${year}-${month}-${(parseInt(dayindex)+1).toString().length==1?'0'+(parseInt(dayindex)+1):(parseInt(dayindex)+1)}`">
         </td> 
         <td style="width: 200px;padding:0px" >  
