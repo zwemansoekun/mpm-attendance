@@ -11,6 +11,7 @@ window.moment = require('moment');
 window.$_=require('lodash');
 jQuery.noConflict(); 
 
+import VueSweetalert2 from 'vue-sweetalert2';
 import App from './App.vue';
 import VueRouter from 'vue-router';
 import VueAxios from 'vue-axios';
@@ -24,6 +25,7 @@ import VueSimpleAlert from "vue-simple-alert";
 Vue.use(VueRouter);
 Vue.use(VueAxios, axios);
 Vue.use(VueSimpleAlert);
+Vue.use(VueSweetalert2);
 
 Vue.mixin({
     data: function() {
