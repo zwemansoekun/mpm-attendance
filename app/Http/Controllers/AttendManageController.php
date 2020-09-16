@@ -50,10 +50,6 @@ class AttendManageController extends Controller
              array_push($empnoArray, $empno[$i]['emp_id']);
          }
 
-         //$result =  empty(array_intersect( $attendTimeArray , $empnoArray ));
-
-       
-    
         $found = array();
          foreach($attendTimeArray as $num) {
             if (in_array($num,$empnoArray)) {
@@ -81,10 +77,6 @@ class AttendManageController extends Controller
      */
     public function download($year)
     { 
-        return Excel::download(new AttendDetailsExport($year), 'users.xlsx');
+        return Excel::download(new AttendDetailsExport($year), '勤怠管理表'.$year.'.xlsx');
     }
-
-
-    
-
 }

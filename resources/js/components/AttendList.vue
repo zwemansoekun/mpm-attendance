@@ -41,7 +41,7 @@
                 <!-- //form -->                      
             <div class="row">
                 <div class="col-md-4">
-                    <button type="button" class="btn" style="background-color:#E7E6E6" onclick="this.blur();">出勤簿生成</button>
+                    <button type="button" class="btn" style="background-color:#E7E6E6" onclick="this.blur();" @click="csvOutput(select_employee,select_date)">出勤簿生成</button>
                 </div>
                 <div class="col-md-4 offset-md-2">
                     <button type="button" class="btn" style="width: 220px;background-color:#E7E6E6;" onclick="this.blur();" @click="allButtonClick()">全て自動計算</button>
@@ -1060,7 +1060,18 @@ import Dakokurow2 from './layouts/Dakokurow2.vue';
                 } 
                     jQuery("."+sec_index).find(name).val((ap_split[0].toString().length==1?"0"+ap_split[0]:ap_split[0])+":"+ap_split[1]);
                     return ap_split!=''?ap_split:'';
-            },           
+            },
+            csvOutput(employee,select_date){
+                
+                let split_string =[]; let date;
+                split_string = select_date.split("/");
+                date = split_string[0] + split_string[1];
+                const link = document.createElement('a');
+                link.href = 'http://127.0.0.1:8000/attendList/csvOutput/'+employee+'/'+ date;
+                document.body.appendChild(link);
+                link.click();
+
+            },          
         }, 
     }
 </script>
