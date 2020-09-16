@@ -25,6 +25,8 @@ class CreateAttendDetailsTable extends Migration
             $table->time('pm2')->nullable();
             $table->smallInteger('am_leave')->nullable();
             $table->smallInteger('pm_leave')->nullable();
+            $table->decimal('late_coming',8,2)->nullable();
+            $table->decimal('leaving_early',8,2)->nullable();
             $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
             // $table->timestamps();
