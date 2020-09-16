@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\AttendDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Barryvdh\Debugbar\Facade as Debugbar;
+use App\Exports\AttendForMonthExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AttendController extends Controller
 {
@@ -167,5 +170,18 @@ class AttendController extends Controller
         }
       
        return $attend;
+    }
+
+    /**
+     * 
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+
+    public function csvOutput($employee,$date)
+    {
+        return Excel::download(new AttendForMonthExport($employee,$date), '出勤簿生成.xlsx');
     }
 }
