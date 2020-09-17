@@ -261,9 +261,10 @@ class SalaryController extends Controller
         $trans_money = EmployeeDetail::where("pay_month",$yearMonth)->where('emp_id',$id)->first()->trans_money;
         
         $leaveData = DB::select('select (amPaidCount+pmPaidCount)/2 as paidLeave,amAbsentCount , pmAbsentCount ,
-            (amAbsentCount+pmAbsentCount)/2 as absent
+            (amAbsentCount+pmAbsentCount)/2 as absent ,late_coming,leaving_early
             FROM
-            (select distinct emp_no from attend_details where emp_no = 6 and EXTRACT(YEAR_MONTH FROM date) = ?) attend left join
+            (select sum(late_coming) late_coming, sum(leaving_early) leaving_early,emp_no from attend_details where emp_no = 6 
+            and EXTRACT(YEAR_MONTH FROM date) = ? group by emp_no) attend left join
             (select count(emp_no) amPaidCount ,emp_no from attend_details where emp_no = 6 and EXTRACT(YEAR_MONTH FROM date) = ?
             and am_leave = 1 group by emp_no) amPaid on amPaid.emp_no = attend.emp_no left join
             (select count(emp_no) pmPaidCount, emp_no   from attend_details where emp_no = 6 and EXTRACT(YEAR_MONTH FROM date) = ?
