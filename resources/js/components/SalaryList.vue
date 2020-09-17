@@ -931,6 +931,7 @@ window.APP ="{{config('global')}}";//"{config('global')}" ;//JSON.parse($globals
                         that.salaryList(that.get_salary_data);                  
                     })
                     .catch(function (error) {
+                        that.$swal.close();
                         console.log('nopar byar',that.get_salary_data); 
                         console.log('geterror',error.response);
                     }); 
@@ -982,6 +983,7 @@ window.APP ="{{config('global')}}";//"{config('global')}" ;//JSON.parse($globals
                         that.$swal.close();
                     })
                     .catch(function (error) {
+                        that.$swal.close();
                         console.log(error.response)
                     });
             },

@@ -2,13 +2,9 @@
     <div class="col-md-10"> 
         <div class="container">
             <div class="row">
-                <div class="col-md-4"> 
-                         <!-- <a href="/export" class="btn btn-primary">Export to .xls</a>
-                        <router-link to="/export">export example</router-link> -->
-                    
+                <div class="col-md-4">                     
                     <select class="form-control" id="selectEmployee" @change="empChange($event)"  name="employ_selected" required focus v-model="select_employee">
                         <option value="" disabled selected>Please select employee</option>
-                        <!-- <option v-bind:key="emp.id" v-for="emp in emps"> {{emp.id }} {{emp.name }}</option> -->
                         <option v-bind:key="emp.id" v-for="emp in emps" v-bind:label="employeeCodeAndName(emp)"> {{ emp.id }} {{ emp.employeeId }} {{emp.name }}</option>
                     </select>                      
                 </div>         
@@ -37,8 +33,9 @@
                 <button type="button" class="close" data-dismiss="alert">x</button>
                 <strong >データはありませんでした。</strong> 
         </div>
+
         <div class="container mt-5" v-if="form_open">
-                <!-- //form -->                      
+                            
             <div class="row">
                 <div class="col-md-4">
                     <button type="button" class="btn" style="background-color:#E7E6E6" onclick="this.blur();" @click="csvOutput(select_employee,select_date)">出勤簿生成</button>
@@ -57,9 +54,7 @@
                             <button type="button" class="btn" onclick="this.blur();" @click="filterInput()" style="width: 220px;color: red;background-color:#E7E6E6">空のところだけ自動計算</button>
                         </div>
                     </div>
-                    <!-- v-on:submit.prevent="attendSave" -->
-                     <!-- {{data_combine}} -->
-
+             
                     <div class="row mt-5">
                         <div class="col-md-4"> {{this.select_date}}</div>                          
                     </div>  
@@ -69,196 +64,303 @@
                     <div class="row">
                         <div class="col-md-4"> Name: {{emp_name}}</div>                          
                     </div> 
-                  
+               
                     <table id="attendTable" class="table table-bordered">
                         <thead>
                             <tr>
-                                <td style="text-align: center;width: 8.3%;"></td>                          
-                                <td style="text-align: center;width: 30.14%;" >AM</td>   
-                                <td style="text-align: center;width: 30%;">PM</td>
+                                <td style="text-align: center;width: 10%;"></td>                          
+                                <td colspan="2" style="text-align: center;width: 30%;" >AM</td>   
+                                <td colspan="2" style="text-align: center;width: 30%;">PM</td>
                                 <td style="text-align: center;width: 15%;">Total Hours</td>
-                                <td style="text-align: center;width: 30.1%;"></td>
+                                <td style="text-align: center;width: 15%;"></td>
                             </tr>
                         </thead>
-                        <tbody> 
-                            <tr v-bind:key="dayindex" v-for="(day,dayindex) in data_combine" v-bind:class="day_name(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])">                                
-                                <th style="width: 100px;" scope="row">{{dayindex+1}} {{ days[new Date(year+"/"+month+"/"+(dayindex+1)).getDay()]}}</th>
-                                <td colspan="4"    style="text-align: center;padding:0px">
-                                         <!-- {{day}} -->
-                                    <div v-if="day!==null">
-                                        <tr :class="key==0?`mainIndex_${dayindex}`:`index_${dayindex}`" v-bind:key="key"  v-for="(date,key) in day"  >                                                    
-                                                     <!-- {{day[key].length==0}} -->
-                                            <template v-if="day[0].length==0 && key==0"> 
-                                                <dakokurow  :year="`${year}`" :month="`${month}`" :dayindex="`${dayindex}`" :days="`${days}`" :childdate="date" :formchange="formchange"></dakokurow>
-                                            </template>   
-                                            <template v-else-if="day[0].length==0 && key==1">
-                                                <dakokurow2  :year="`${year}`" :month="`${month}`" :dayindex="`${dayindex}`" :days="`${days}`" :childdate="date" :formchange="formchange"></dakokurow2>
-                                            </template>        
-                                            <template  v-else-if="key==0">                                                         
-                                                <td style="width: 16.4%;" v-bind:class="`bg-${checkColor(date.am1,key)}`"  :style="`background-color:${checkBgColor(year,month,dayindex+1,date.am1==null)};`">
-                                                    <div v-if="date.am1!== null"  :class="ampm_index(0)"> 
-                                                        {{date.am1}}  
-                                                    </div>
-                                                </td>
-                                                <td style="width: 16.4%;"   v-bind:class="`bg-${checkColor(date.am2,key)}`"  :style="`background-color:${checkBgColor(year,month,dayindex+1,date.am2==null)};`">
-                                                    <div v-if="date.am2!== null"  :class="ampm_index(1)"> 
-                                                        {{date.am2}}  
-                                                    </div>
-                                                </td>
-                                                <td style="width: 16.4%;"  v-bind:class="`bg-${checkColor(date.pm1,key)}`"  :style="`background-color:${checkBgColor(year,month,dayindex+1,date.pm1==null)};`">
-                                                    <div v-if="date.pm1!== null"  :class="ampm_index(2)"> 
-                                                        {{date.pm1}}  
-                                                    </div>
-                                                </td>
-                                                <td style="width: 16.4%;"  v-bind:class="`bg-${checkColor(date.pm2,key)}`"  :style="`background-color:${checkBgColor(year,month,dayindex+1,date.pm2==null)};`">
-                                                    <div v-if="date.pm2!== null"  :class="ampm_index(3)"> 
-                                                        {{date.pm2}}   
-                                                    </div>
-                                                </td>
-                                                <td style="width: 16.4%;" >  
-                                                </td>  
-                                                <td style="width: 20.4%;" >
-                                                </td>
-                                            </template>    
-                                            <template v-else-if="day[0].length!=0"> 
+                        <tbody>
+                            <template v-for="(day,dayindex) in data_combine" >
+                                <template v-if="day!==null">  
+                                    <tr v-bind:key="dayindex"  v-bind:style="`height:${day_name(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])=='table-secondary'?'3.3em':''}`" v-bind:class="`mainIndex_${dayindex} ${day_name(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])}`">
+                                        
+                                            <template v-if="day_name(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])=='table-secondary'">
+                                                <td  rowspan="2"><div style="text-align: center;">{{dayindex+1}} {{ days[new Date(year+"/"+month+"/"+(dayindex+1)).getDay()]}}</div></td>
+                                                <td  rowspan="2" colspan="2"> </td>
+                                                <td  rowspan="2" colspan="2"> </td> 
+                                                <td  rowspan="2"> </td>
+                                                <td  rowspan="2"> </td>
+                                            </template>
 
-                                                <template v-if=" date!='' && date.am_leave!=0 && date.am_leave!=null">   
-                                                        <template v-if="date.am_leave==1">
-                                                                <td class="paid-leave1" colspan="2" style="width: 371.05px; padding: 0px; text-align: center;">〇<input type="hidden" name="am_leave[]" value="1" class="amleave"></td>
+                                            <template v-else v-for="(date,key) in day"> 
+                                             
+                                                <template  v-if="key==0">
+                                                
+                                                    <td v-bind:key="'A'+key" style="text-align: center;" rowspan="2"><div style="text-align: center;">{{dayindex+1}} {{ days[new Date(year+"/"+month+"/"+(dayindex+1)).getDay()]}}</div></td>
+                                                   <template v-if="day[0].length==0">
+                                                        <td  v-bind:key="'B'+key" colspan="2"  :style="`background-color:${checkBgColor(year,month,dayindex+1,date.am1==null)};height: 3.3em;`" ></td>
+                                                        <td  v-bind:key="'D'+key" colspan="2"  :style="`background-color:${checkBgColor(year,month,dayindex+1,date.am1==null)};height: 3.3em;`" ></td>
+                                                        <td  v-bind:key="'F'+key" ></td>
+                                                        <td  v-bind:key="'G'+key"></td>
+                                                   </template>
+                                                   <template v-else>
+                                                          <td v-bind:key="'B'+key" style="text-align: center;" v-bind:class="`bg-${checkColor(date.am1,key)}`"  :style="`background-color:${checkBgColor(year,month,dayindex+1,date.am1==null)};height: 3.3em;`" >
+                                                        <div class="am1_0"> 
+                                                            {{date.am1}}
+                                                        </div>
+                                                    </td>
+                                                    <td v-bind:key="'C'+key" style="text-align: center;"  v-bind:class="`bg-${checkColor(date.am2,key)}`"  :style="`background-color:${checkBgColor(year,month,dayindex+1,date.am2==null)};height: 3.3em;`">
+                                                        <div class="am2_1"> 
+                                                            {{date.am2}}
+                                                        </div>    
+                                                    </td>
+                                                    <td v-bind:key="'D'+key" style="text-align: center;" v-bind:class="`bg-${checkColor(date.pm1,key)}`"  :style="`background-color:${checkBgColor(year,month,dayindex+1,date.pm1==null)};height: 3.3em;`">
+                                                        <div class="pm1_2"> 
+                                                            {{date.pm1}}
+                                                        </div>
+                                                    </td>
+                                                    <td v-bind:key="'E'+key" style="text-align: center;" v-bind:class="`bg-${checkColor(date.pm2,key)}`"  :style="`background-color:${checkBgColor(year,month,dayindex+1,date.pm2==null)};height: 3.3em;`">
+                                                        <div class="pm2_3"> 
+                                                            {{date.pm2}}
+                                                        </div>    
+                                                    </td>
+                                                    <td v-bind:key="'F'+key" style="text-align: center;"></td>
+                                                    <td v-bind:key="'G'+key" style="text-align: center;"></td>
+                                                   </template>       
+                                                  
+                                                
+                                                </template>   
+                                                
+                                            </template>
+                                    </tr>
+                                    <tr v-bind:key="'A'+dayindex" v-bind:style="`height:${day_name(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])=='table-secondary'?'2.6em':''}`" v-bind:class="`index_${dayindex} ${day_name(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])}`">
+                                            <template v-if="day_name(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])=='table-secondary'">
+                                                  
+                                            </template>    
+                                        
+                                            <template v-else v-for="(date,key) in day"> 
+                                        
+                                                <template  v-if="key==1">
+
+                                                    <template v-if="day[0].length==0"> 
+                                                        <!-- 2.6em -->
+                                                         <template v-if="date.am_leave==1">
+                                                                <td  v-bind:key="'B'+key"  class="paid-leave1 align-middle text-center"  colspan="2" style="height:2.6em;padding:0px;">〇<input type="hidden" name="am_leave[]" value="1" class="amleave"></td>
                                                         </template>     
                                                         <template v-else-if="date.am_leave==2">
-                                                                <td class="paid-leave1" colspan="2" style="width: 371.05px; padding: 0px; text-align: center;">-<input type="hidden" name="am_leave[]" value="2" class="amleave"></td>
+                                                                <td  v-bind:key="'B'+key"  class="paid-leave1 align-middle text-center"  colspan="2" style="height:2.6em;padding:0px;">-<input type="hidden" name="am_leave[]" value="2" class="amleave"></td>
                                                         </template>
-                                                </template>   
-                                                <template v-else>
-                                                          <!-- {{old("am1[]")}}   :value="`${date.am1}`!=undefined?date.am1:''"-->
-                                                    <td style="width: 16.4%;padding:0px" v-bind:class="day[0].am1==null?([0,1].includes(0)==true?'paid-leave1':'paid-leave2'):''">
-                                                            <!-- {{date.am1!=undefined?date.am1:23}} -->
-                                                        <div v-if="day[0].am1!== null">   
-                                                            <template v-if="formchange=='edit'">                                     
-                                                                <input :name="`am1[]`"  @change="updateInput"  :class="`form-control input-sm am1`"  style="text-align: center;" type="text" :value="`${date.am1}`!=undefined?date.am1:''">
-                                                            </template>   
-                                                            <template v-else>
-                                                                <input :name="`am1[]`"  @change="updateInput"  :class="`form-control input-sm am1`"  style="text-align: center;" type="text" @value="`${old(am1)}`">      
-                                                            </template> 
-                                                        </div>
-                                                        <div v-else>
-                                                            <input   class="form-control input-sm"  style="text-align: center;" type="text" readonly :value="`${date.am1}`!=undefined?date.am1:null"> 
-                                                        </div>
-                                                    </td>   
-                                                    <td style="width: 16.4%;padding:0px"   v-bind:class="day[0].am2==null?([0,1].includes(1)==true?'paid-leave1':'paid-leave2'):''">
-                                                        
-                                                        <div v-if="day[0].am2!== null">  
-                                                            <template v-if="formchange=='edit'">   
-                                                                <input :name="`am2[]`"  @change="updateInput" :class="`form-control input-sm am2`"  style="text-align: center;" type="text" :value="`${date.am2}`!=undefined?date.am2:`${old(am2)}`">  
-                                                            </template>
-                                                            <template v-else>
-                                                                <input :name="`am2[]`"  @change="updateInput" :class="`form-control input-sm am2`"  style="text-align: center;" type="text" @value="`${date.am2}`!=undefined?date.am2:`${old(am2)}`"> 
-                                                            </template>        
-                                                        </div>   
-                                                        <div v-else>
-                                                            <input  class="form-control input-sm"  style="text-align: center;" type="text" readonly :value="`${date.am2}`!=undefined?date.am2:''"> 
-                                                        </div>
-                                                    </td>
-                                                </template>   
-                                                
-                                                <!-- pm leave -->
-                                                 <template v-if=" date!='' && date.pm_leave!=0 && date.pm_leave!=null"> 
+                                                        <template v-else>
+                                                                <td v-bind:key="'B'+key" class="paid-leave1 align-middle text-center" colspan="2" style="height:2.6em;padding:0px;"></td>
+                                                        </template>
+
                                                         <template v-if="date.pm_leave==1">
-                                                                <td class="paid-leave2" colspan="2" style="width: 368.05px; padding: 0px; text-align: center;">〇<input type="hidden" name="pm_leave[]" value="1" class="pmleave"></td>
+                                                                <td  v-bind:key="'D'+key"  class="paid-leave2 align-middle text-center"  colspan="2" style="height:2.6em;padding:0px;">〇<input type="hidden" name="pm_leave[]" value="1" class="pmleave"></td>
                                                         </template>     
                                                         <template v-else-if="date.pm_leave==2">
-                                                                <td class="paid-leave2" colspan="2" style="width: 368.05px; padding: 0px; text-align: center;">-<input type="hidden" name="pm_leave[]" value="2" class="pmleave"></td>
-                                                        </template>       
-                                                 </template>
-                                                <template v-else>
-                                                    <td style="width: 16.4%;padding:0px"  v-bind:class="day[0].pm1==null?([0,1].includes(2)==true?'paid-leave1':'paid-leave2'):''">
-                                                        <div v-if="day[0].pm1!== null">  
-                                                            <template v-if="formchange=='edit'">   
-                                                                <input :name="`pm1[]`"  @change="updateInput"  :class="`form-control input-sm pm1`"  style="text-align: center;" type="text" :value="`${date.pm1}`!=undefined?date.pm1:`${old(pm1)}`"> 
-                                                            </template>
-                                                            <template v-else>
-                                                                  <input :name="`pm1[]`"  @change="updateInput"  :class="`form-control input-sm pm1`"  style="text-align: center;" type="text" @value="`${date.pm1}`!=undefined?date.pm1:`${old(pm1)}`">    
-                                                             </template>   
-                                                        </div>
-                                                        <div v-else>
-                                                           <input    class="form-control input-sm"  style="text-align: center;" type="text" readonly :value="`${date.pm1}`!=undefined?date.pm1:null"> 
-                                                         </div>
-                                                    </td>
-                                                    <td style="width: 16.4%;padding:0px"  v-bind:class="day[0].pm2==null?([0,1].includes(3)==true?'paid-leave1':'paid-leave2'):''">
-                                                        <div v-if="day[0].pm2!== null">
-                                                            <template v-if="formchange=='edit'">  
-                                                              <input :name="`pm2[]`"  @change="updateInput"  :class="`form-control input-sm pm2`"  style="text-align: center;" type="text" :value="`${date.pm2}`!=undefined?date.pm2:`${old(pm2)}`"> 
-                                                            </template>
-                                                            <template v-else>
-                                                                  <input :name="`pm2[]`"  @change="updateInput"  :class="`form-control input-sm pm2`"  style="text-align: center;" type="text" @value="`${date.pm2}`!=undefined?date.pm2:`${old(pm2)}`"> 
-                                                            </template>    
-                                                        </div>
-                                                        <div v-else>
-                                                            <input   class="form-control input-sm"  style="text-align: center;" type="text" readonly  :value="`${date.pm2}`!=undefined?date.pm2:null">   
-                                                        </div>
-                                                    </td>
-                                                </template>      
-                                              
-
-
-
-                                                <td  style="width: 200px;padding:0px" >
-                                                    <template v-if="formchange=='edit'">  
-                                                      <input name="total_hours[]" class="form-control input-sm thour" style="text-align: center;" type="text" :value="`${date.total_hours}`!=undefined?date.total_hours:`${old(total_hours)}`">
+                                                                <td  v-bind:key="'D'+key"  class="paid-leave2 align-middle text-center"  colspan="2" style="height:2.6em;padding:0px;">-<input type="hidden" name="pm_leave[]" value="2" class="pmleave"></td>
+                                                        </template>
+                                                        <template v-else>
+                                                                <td v-bind:key="'D'+key" class="paid-leave2 align-middle text-center" colspan="2" style="height:2.6em;padding:0px;"></td>
+                                                        </template>
+                                                     
+                                                       
+                                                        <td v-bind:key="'F'+key"  style="padding: 0px;">
+                                                            <input name="total_hours[]" class="form-control input-sm thour" style="text-align: center;" type="text" :value="`${date.total_hours}`!=undefined?date.total_hours:''">
+                                                            <input name="late_coming[]" class="form-control input-sm late_coming" style="text-align: center;" type="hidden" :value="`${date.late_coming}`!=undefined?date.late_coming:''">
+                                                            <input name="leaving_early[]" class="form-control input-sm leaving_early" style="text-align: center;" type="hidden" :value="`${date.leaving_early}`!=undefined?date.leaving_early:''">
+                                                            <input name="date[]" class="form-control input-sm date" style="text-align: center;" type="hidden" :value="`${year}-${month}-${parseInt(dayindex+1).toString().length==1?'0'+(parseInt(dayindex)+1):(parseInt(dayindex)+1)}`">
+                                                        </td>
+                                                        <td v-bind:key="'G'+key"  style="padding: 0px;text-align: center;" >
+                                                            <input name="id[]" class="form-control input-sm idx" style="text-align: center;" type="hidden" :value="`${date.id?date.id:''}`">
+                                                            <button type="button" onclick="this.blur();" :id="`autobut${dayindex}`" class="btn" style="background-color:#E7E6E6"  @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">自動計算</button>
+                                                        </td>
                                                     </template>
                                                     <template v-else>
-                                                         <input name="total_hours[]" class="form-control input-sm thour" style="text-align: center;" type="text" @value="`${date.total_hours}`!=undefined?date.total_hours:`${old(total_hours)}`">
-                                                    </template>    
-                                                     <input name="late_coming[]" class="form-control input-sm late_coming" style="text-align: center;" type="hidden" :value="`${date.late_coming}`!=undefined?date.late_coming:`${old(late_coming)}`">
-                                                     <input name="leaving_early[]" class="form-control input-sm leaving_early" style="text-align: center;" type="hidden" :value="`${date.leaving_early}`!=undefined?date.leaving_early:`${old(leaving_early)}`">
-                                                     <input name="date[]" class="form-control input-sm date" style="text-align: center;" type="hidden" :value="`${year}-${month}-${parseInt(dayindex+1).toString().length==1?'0'+(parseInt(dayindex)+1):(parseInt(dayindex)+1)}`">
-                                                </td>           
-                                                <td  style="width: 200px;padding:0px;" >
-                                                    <!-- <template v-if="day[1].length!=0 && key==1"> -->
-                                                        <input name="id[]" class="form-control input-sm idx" style="text-align: center;" type="hidden" :value="`${date.id?date.id:''}`">   
-                                                    <!-- </template>     -->
-                                                        <button type="button" onclick="this.blur();" :id="`autobut${dayindex}`" class="btn" style="background-color:#E7E6E6"  @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">自動計算</button>
-                                                </td>     
-                                              
-                                            </template>                                                                                         
-                                        </tr>
-                                        </div>  
-                                        <div v-else> 
-                                            <tr :class="`mainIndex_${dayindex}`">                                           
-                                                <td :style="`width: 371.05px;height:50px;background-color:${checkBgColor(year,month,dayindex+1,1)};`"  > 
-                                                </td>   
-                                            
-                                                <td :style="`width: 368.05px;height:50px;background-color:${checkBgColor(year,month,dayindex+1,1)};`" > 
-                                                </td>
+                                                                
+                                                            <template v-if="formchange=='edit'">   
+                                                                
+                                                                <template v-if="day[0].am1==null && day[0].am2== null ">
+                                                                        <template v-if="date.am_leave==1">
+                                                                            <td  v-bind:key="'B'+key"  class="paid-leave1 align-middle text-center"  colspan="2" style="height:2.6em;padding:0px;">〇<input type="hidden" name="am_leave[]" value="1" class="amleave"></td>
+                                                                        </template>     
+                                                                        <template v-else-if="date.am_leave==2">
+                                                                                <td  v-bind:key="'B'+key"  class="paid-leave1 align-middle text-center"  colspan="2" style="height:2.6em;padding:0px;">-<input type="hidden" name="am_leave[]" value="2" class="amleave"></td>
+                                                                        </template>
+                                                                        <template v-else>
+                                                                                <td v-bind:key="'B'+key" class="paid-leave1 align-middle text-center" colspan="2" style="height:2.6em;padding:0px;"></td>
+                                                                        </template>                                                                                   
+                                                                </template>
+                                                                <template v-else>
+                                                                        <td v-bind:key="'B'+key"  style="padding: 0px;">
+                                                                            <template v-if="day[0].am1!== null">   
+                                                                                <input :name="`am1[]`"  @change="updateInput"  :class="`form-control input-sm am1`"  style="text-align: center;" type="text" :value="`${date.am1}`!=undefined?date.am1:''"> 
+                                                                            </template>
+                                                                            <template v-else>
+                                                                                <input   class="form-control input-sm"  style="text-align: center;" type="text" readonly :value="`${date.am1}`!=undefined?date.am1:null"> 
+                                                                            </template> 
+                                                                        </td>
+                                                                        <td v-bind:key="'C'+key"  style="padding: 0px;">
+                                                                            <template v-if="day[0].am2!== null">   
+                                                                                <input :name="`am2[]`"  @change="updateInput" :class="`form-control input-sm am2`"  style="text-align: center;" type="text" :value="`${date.am2}`!=undefined?date.am2:''"> 
+                                                                            </template>
+                                                                            <template v-else>
+                                                                                <input   class="form-control input-sm"  style="text-align: center;" type="text" readonly :value="`${date.am2}`!=undefined?date.am2:null"> 
+                                                                            </template> 
+                                                                        </td>
+                                                                </template>        
+                                                                
+                                                                
+
+                                                                 <template v-if="day[0].pm1==null && day[0].pm2==null ">
+                                                                       <template v-if="date.pm_leave==1">
+                                                                                <td  v-bind:key="'D'+key"  class="paid-leave2 align-middle text-center"  colspan="2" style="height:2.6em;padding:0px;">〇<input type="hidden" name="pm_leave[]" value="1" class="pmleave"></td>
+                                                                        </template>     
+                                                                        <template v-else-if="date.pm_leave==2">
+                                                                                <td  v-bind:key="'D'+key"  class="paid-leave2 align-middle text-center"  colspan="2" style="height:2.6em;padding:0px;">-<input type="hidden" name="pm_leave[]" value="2" class="pmleave"></td>
+                                                                        </template>
+                                                                        <template v-else>
+                                                                                <td v-bind:key="'D'+key" class="paid-leave2 align-middle text-center" colspan="2" style="height:2.6em;padding:0px;"></td>
+                                                                        </template>           
+                                                                </template>
+                                                                <template v-else>
+                                                                <td v-bind:key="'D'+key"  style="padding: 0px;">
+                                                                     <template v-if="day[0].pm1!== null"> 
+                                                                        <input :name="`pm1[]`"  @change="updateInput"  :class="`form-control input-sm pm1`"  style="text-align: center;" type="text" :value="`${date.pm1}`!=undefined?date.pm1:''">  
+                                                                     </template>
+                                                                     <template v-else>
+                                                                            <input   class="form-control input-sm"  style="text-align: center;" type="text" readonly :value="`${date.pm1}`!=undefined?date.pm1:null"> 
+                                                                    </template>    
+                                                                </td>
+                                                                <td v-bind:key="'E'+key"  style="padding: 0px;">
+                                                                    <template v-if="day[0].pm2!== null"> 
+                                                                        <input :name="`pm2[]`"  @change="updateInput"  :class="`form-control input-sm pm2`"  style="text-align: center;" type="text" :value="`${date.pm2}`!=undefined?date.pm2:''"> 
+                                                                    </template>
+                                                                     <template v-else>
+                                                                            <input   class="form-control input-sm"  style="text-align: center;" type="text" readonly :value="`${date.pm2}`!=undefined?date.pm2:null"> 
+                                                                    </template>    
+                                                                </td>
+                                                                </template>
+                                                                <td v-bind:key="'F'+key"  style="padding: 0px;">
+                                                                    <input name="total_hours[]" class="form-control input-sm thour" style="text-align: center;" type="text" :value="`${date.total_hours}`!=undefined?date.total_hours:''">
+                                                                    <input name="late_coming[]" class="form-control input-sm late_coming" style="text-align: center;" type="hidden" :value="`${date.late_coming}`!=undefined?date.late_coming:''">
+                                                                    <input name="leaving_early[]" class="form-control input-sm leaving_early" style="text-align: center;" type="hidden" :value="`${date.leaving_early}`!=undefined?date.leaving_early:''">
+                                                                    <input name="date[]" class="form-control input-sm date" style="text-align: center;" type="hidden" :value="`${year}-${month}-${parseInt(dayindex+1).toString().length==1?'0'+(parseInt(dayindex)+1):(parseInt(dayindex)+1)}`">
+                                                                </td>
+                                                                <td v-bind:key="'G'+key"  style="padding: 0px;text-align: center;">
+                                                                    <input name="id[]" class="form-control input-sm idx" style="text-align: center;" type="hidden" :value="`${date.id?date.id:''}`">
+                                                                    <button type="button" onclick="this.blur();" :id="`autobut${dayindex}`" class="btn" style="background-color:#E7E6E6"  @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">自動計算</button>
+                                                                </td>
+                                                            
+                                                            </template>
+                                                                    <template v-else>
+                                                                        <template v-if="day[0].am1==null && day[0].am2== null ">
+                                                                            <!-- <template v-if="date.am_leave==1">
+                                                                                <td  v-bind:key="'B'+key"  class="paid-leave1 align-middle text-center"  colspan="2" style="height:2.6em;padding:0px;">〇<input type="hidden" name="am_leave[]" value="1" class="amleave"></td>
+                                                                            </template>     
+                                                                            <template v-else-if="date.am_leave==2">
+                                                                                    <td  v-bind:key="'B'+key"  class="paid-leave1 align-middle text-center"  colspan="2" style="height:2.6em;padding:0px;">-<input type="hidden" name="am_leave[]" value="2" class="amleave"></td>
+                                                                            </template>
+                                                                            <template v-else> -->
+                                                                                    <td v-bind:key="'B'+key" class="paid-leave1 align-middle text-center" colspan="2" style="height:2.6em;padding:0px;"></td>
+                                                                            <!-- </template>                                                                                    -->
+                                                                        </template>
+                                                                        <template v-else>
+                                                                            <td v-bind:key="'B'+key"  style="padding: 0px;">
+                                                                                <template v-if="day[0].am1!==null">   
+                                                                                <input :name="`am1[]`"  @change="updateInput"  :class="`form-control input-sm am1`"  style="text-align: center;" type="text" @value="`${old(am1)}`"> 
+                                                                                </template>
+                                                                                <template v-else>
+                                                                                    <input   class="form-control input-sm"  style="text-align: center;" type="text" readonly :value="`${date.am1}`!=undefined?date.am1:null"> 
+                                                                                </template> 
+                                                                            </td>
+                                                                            <td v-bind:key="'C'+key"  style="padding: 0px;">
+                                                                                <template v-if="day[0].am2!==null">   
+                                                                                <input :name="`am2[]`"  @change="updateInput" :class="`form-control input-sm am2`"  style="text-align: center;" type="text" @value="`${old(am2)}`"> 
+                                                                                </template>
+                                                                                <template v-else>
+                                                                                    <input   class="form-control input-sm"  style="text-align: center;" type="text" readonly :value="`${date.am2}`!=undefined?date.am2:null"> 
+                                                                                </template> 
+                                                                            
+                                                                            </td>
+                                                                        </template>
+
+                                                                        <template v-if="day[0].pm1==null && day[0].pm2== null ">
+                                                                             <td v-bind:key="'D'+key" class="paid-leave2 align-middle text-center" colspan="2" style="height:2.6em;padding:0px;"></td>
+                                                                        </template>
+                                                                         <template v-else>
+                                                                            <td v-bind:key="'D'+key"  style="padding: 0px;">
+                                                                                <template v-if="day[0].pm1!==null">   
+                                                                                <input :name="`pm1[]`"  @change="updateInput"  :class="`form-control input-sm pm1`"  style="text-align: center;" type="text" @value="`${old(pm1)}`">  
+                                                                                </template>
+                                                                                <template v-else>
+                                                                                    <input   class="form-control input-sm"  style="text-align: center;" type="text" readonly :value="`${date.pm1}`!=undefined?date.pm1:null"> 
+                                                                                </template> 
+                                                                            </td>
+                                                                            <td v-bind:key="'E'+key"  style="padding: 0px;">
+                                                                            
+                                                                                <template v-if="day[0].pm2!==null">   
+                                                                                    <input :name="`pm2[]`"  @change="updateInput"  :class="`form-control input-sm pm2`"  style="text-align: center;" type="text" @value="`${old(pm2)}`"> 
+                                                                                </template>
+                                                                                <template v-else>
+                                                                                    <input   class="form-control input-sm"  style="text-align: center;" type="text" readonly :value="`${date.pm2}`!=undefined?date.pm2:null"> 
+                                                                                </template>                                                                            
+                                                                            </td>
+                                                                         </template>
+
+                                                                        <td v-bind:key="'F'+key"  style="padding: 0px;">
+                                                                            <input name="total_hours[]" class="form-control input-sm thour" style="text-align: center;" type="text" @value="`${old(total_hours)}`">
+                                                                            <input name="late_coming[]" class="form-control input-sm late_coming" style="text-align: center;" type="hidden" :value="`${date.late_coming}`!=undefined?date.late_coming:''">
+                                                                            <input name="leaving_early[]" class="form-control input-sm leaving_early" style="text-align: center;" type="hidden" :value="`${date.leaving_early}`!=undefined?date.leaving_early:''">
+                                                                            <input name="date[]" class="form-control input-sm date" style="text-align: center;" type="hidden" :value="`${year}-${month}-${parseInt(dayindex+1).toString().length==1?'0'+(parseInt(dayindex)+1):(parseInt(dayindex)+1)}`">
+                                                                        </td>
+                                                                        <td v-bind:key="'G'+key"  style="padding: 0px;text-align: center;">
+                                                                            <!-- <input name="id[]" class="form-control input-sm idx" style="text-align: center;" type="hidden" :value="`${date.id?date.id:''}`"> -->
+                                                                            <button type="button" onclick="this.blur();" :id="`autobut${dayindex}`" class="btn" style="background-color:#E7E6E6"  @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">自動計算</button>
+                                                                        </td>
+                                                                    </template> 
+                                                    </template>                                                
+                                                </template> 
+                                            </template>
+                                    </tr>   
+                                </template>
+                                <template v-else>
+                                    <tr v-bind:key="dayindex"  v-bind:style="`height:${day_name(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])=='table-secondary'?'3.3em':''}`" v-bind:class="`mainIndex_${dayindex} ${day_name(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])}`">
+                                        <td  style="text-align: center;" rowspan="2"><div style="text-align: center;">{{dayindex+1}} {{ days[new Date(year+"/"+month+"/"+(dayindex+1)).getDay()]}}</div></td>     
+                                       
+                                        <template v-if="`${day_name(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])}`!=''">
+                                            <td rowspan="2" colspan="2"></td>
+                                            <td rowspan="2" colspan="2"></td>
+                                            <td rowspan="2" ></td>
+                                            <td rowspan="2" ></td>
+                                        </template>
+                                        <template v-else>
+                                                <td  colspan="2"  :style="`background-color:${checkBgColor(year,month,dayindex+1,1)};height: 3.3em;`" ></td>
+                                                <td   colspan="2"  :style="`background-color:${checkBgColor(year,month,dayindex+1,1)};height: 3.3em;`" ></td>
+                                                <td ></td>
+                                                 <td ></td>  
+                                        </template>    
+
+                                      
+                                           
                                                 
-                                                <td style="width: 182px;height:50px;"> 
-                                                </td>  
-                                                <td style="width: 200px;height:50px;" > 
-                                                </td>                                                                      
-                                            </tr>  
-                                            <tr :class="['Sat','Sun'].includes(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])==false?`index_${dayindex}`:'' "> 
-                                                <!-- <div> -->
-                                                    <td style="width: 371.05px;padding:0px" :class="['Sat','Sun'].includes(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])==false?'paid-leave1':''" > 
-                                                
-                                                    </td> 
-                                                    <td style="width: 368.05px;padding:0px" :class="['Sat','Sun'].includes(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])==false?'paid-leave2':''" > 
-                                                    </td> 
-                                                    <td style="width: 182px;padding:0px">  
-                                                        <input v-if="['Sat','Sun'].includes(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])==false" name="total_hours[]" class="form-control input-sm thour" style="text-align: center;" type="text">
-                                                        <input name="date[]" class="form-control input-sm date" style="text-align: center;" type="hidden" :value="`${year}-${month}-${(parseInt(dayindex)+1).toString().length==1?'0'+(parseInt(dayindex)+1):(parseInt(dayindex)+1)}`">
-                                                        <input name="late_coming[]" class="form-control input-sm late_coming" style="text-align: center;" type="hidden" :value="``">
-                                                        <input name="leaving_early[]" class="form-control input-sm leaving_early" style="text-align: center;" type="hidden" :value="``">
-                                                    </td> 
-                                                    <td style="width: 200px;padding:0px" >  
-                                                        <!-- <input name="id[]" class="form-control input-sm idx" style="text-align: center;" type="hidden" :value="`${date.id?date.id:''}`">    -->
-                                                        <button :id="`autobut${dayindex}`" v-if="['Sat','Sun'].includes(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])==false" onclick="this.blur();" type="button" class="btn btn-secondary" @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">自動計算</button>  
-                                                    </td>   
-                                                <!-- </div>                                                                        -->
-                                            </tr>   
-                                        </div> 
-                                </td> 
-                            </tr>
+                                    </tr>
+                                    <tr v-bind:key="'A'+dayindex" v-bind:style="`height:${day_name(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])=='table-secondary'?'2.6em':''}`" v-bind:class="`index_${dayindex} ${day_name(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])}`">
+                                               
+                                               
+                                               <template v-if="`${day_name(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])}`==''">
+                                                       <td class="paid-leave1 align-middle text-center" colspan="2" style="height:2.6em;padding:0px;"></td> 
+                                                        <td class="paid-leave2 align-middle text-center" colspan="2" style="height:2.6em;padding:0px;"></td>
+                                                        <td  style="padding: 0px;">
+                                                                    <input name="total_hours[]" class="form-control input-sm thour" style="text-align: center;" type="text" @value="`${old(total_hours)}`">
+                                                                    <input name="late_coming[]" class="form-control input-sm late_coming" style="text-align: center;" type="hidden" >
+                                                                    <input name="leaving_early[]" class="form-control input-sm leaving_early" style="text-align: center;" type="hidden" >
+                                                                    <input name="date[]" class="form-control input-sm date" style="text-align: center;" type="hidden" :value="`${year}-${month}-${parseInt(dayindex+1).toString().length==1?'0'+(parseInt(dayindex)+1):(parseInt(dayindex)+1)}`">
+                                                        </td>
+                                                        <td style="padding: 0px;text-align: center;">
+                                                                    <input name="id[]" class="form-control input-sm idx" style="text-align: center;" type="hidden" >
+                                                                    <button type="button" onclick="this.blur();" :id="`autobut${dayindex}`" class="btn" style="background-color:#E7E6E6"  @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">自動計算</button>
+                                                        </td>  
+                                               </template>                                   
+                                    </tr>  
+                                </template> 
+                           </template>   
                         </tbody>
                     </table>
                 </form>
@@ -266,8 +368,8 @@
     </div>    
 </template>
 <script>
-import Dakokurow from './layouts/Dakokurow.vue';
-import Dakokurow2 from './layouts/Dakokurow2.vue';
+// import Dakokurow from './layouts/Dakokurow.vue';
+// import Dakokurow2 from './layouts/Dakokurow2.vue';
     export default {
         data() {
             return {
@@ -300,8 +402,8 @@ import Dakokurow2 from './layouts/Dakokurow2.vue';
             }
         },
         components:{
-            Dakokurow,
-            Dakokurow2
+            // Dakokurow,
+            // Dakokurow2
         },
         created() {
             this.axios
@@ -323,14 +425,6 @@ import Dakokurow2 from './layouts/Dakokurow2.vue';
         },
         computed: {
             errorsFun:function(){              
-                // console.log('sdfsdf',this.errors);
-                // let result = {};
-                // for ( let k in this.errors) {
-                    
-                //     // if (!['0.total_hours','0.pm2'].includes(k))
-                //     //     continue;
-                //     result[k] = this.errors[k];
-                // }
                 this.error_check_messg = true 
                 return this.errors;
             },           
@@ -354,6 +448,23 @@ import Dakokurow2 from './layouts/Dakokurow2.vue';
               this.mouse_rclick();
         },      
         methods: {  
+            loadingAlert:function(){
+                  let that=this;
+                   that.$swal({
+                        title: 'お待ちください!',
+                        // add a custom html tags by defining a html method.
+                        html: 'Loading......',
+                        // timer: 3000,
+                        showCloseButton: false,
+                        showCancelButton: false,
+                        showConfirmButton: false,
+                        focusConfirm: false,
+                        allowOutsideClick: false,
+                         onBeforeOpen: () => {
+                            that.$swal.showLoading();
+                            },
+                        })   
+            },  
             employeeCodeAndName: function(value){
                 return value.employeeId+' '+value.name;
             },
@@ -371,6 +482,7 @@ import Dakokurow2 from './layouts/Dakokurow2.vue';
                 }  
                 
                 if(val!='' && this.select_date!=''){   
+                    this.loadingAlert();
                     this.update_call();          
                 }
             },
@@ -386,12 +498,12 @@ import Dakokurow2 from './layouts/Dakokurow2.vue';
                    
                 }  
                  if(val!='' && this.select_employee!=''){
+                      this.loadingAlert();
                       this.update_call();
                 }
             },
             attendSave:function(){
-                 let those=this;
-               
+                let those=this;             
                 var validator = jQuery('#form').validate({
                   
                     rules: {
@@ -469,23 +581,22 @@ import Dakokurow2 from './layouts/Dakokurow2.vue';
                             }
                          });    
                    });
+                    
+                    those.loadingAlert();
                     this.axios({
                       url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/attendList",
                       method: 'post',
                       data: temp_arr
                     })
                     .then(function (response) {
-                        console.log('sdfsdaf',response);
-                        //  those.formchange="edit";
-                        //  those.data_combine=[];
-                        //  those.update_call();  
+                      
 
                         // your action after success                      
                         if(response.data){
                             if(response.data.message==true){
                                   those.data_combine=[];
                                   those.update_call();  
-                                those.$fire({
+                                    those.$fire({
                                     title: "成功しました",
                                     text: "データの登録は成功しました。",
                                     type: "success",
@@ -497,6 +608,7 @@ import Dakokurow2 from './layouts/Dakokurow2.vue';
                                     //    console.log(r.value);
                                 });
                             }else{
+                                those.$swal.close();
                                 those.$fire({
                                 title: "失敗！！",
                                 text: "データの登録は出来ません。",
@@ -513,8 +625,10 @@ import Dakokurow2 from './layouts/Dakokurow2.vue';
                         }
                     })
                     .catch(function (error) {
+                       
                     });
                 }else{
+                  
                      those.$fire({
                         title: "失敗！！",
                         text: "データを記入してください。",
@@ -528,24 +642,25 @@ import Dakokurow2 from './layouts/Dakokurow2.vue';
                         }); 
                     return false;
                 }
+               
             },
             updateInput:function(event){ 
 
                    let am1,am2,pm1,pm2='';let total_am,total_pm=0;
-                   am1=$(event.target).parent().parent().parent().find('.am1').val()!=undefined?$(event.target).parent().parent().parent().find('.am1').val().split(":"):'';
-                   am2=$(event.target).parent().parent().parent().find('.am2').val()!=undefined?$(event.target).parent().parent().parent().find('.am2').val().split(":"):'';
-                   pm1=$(event.target).parent().parent().parent().find('.pm1').val()!=undefined?$(event.target).parent().parent().parent().find('.pm1').val().split(":"):'';
-                   pm2=$(event.target).parent().parent().parent().find('.pm2').val()!=undefined?$(event.target).parent().parent().parent().find('.pm2').val().split(":"):'';
+                   am1=$(event.target).parent().parent().find('.am1').val()!=undefined?$(event.target).parent().parent().find('.am1').val().split(":"):'';
+                   am2=$(event.target).parent().parent().find('.am2').val()!=undefined?$(event.target).parent().parent().find('.am2').val().split(":"):'';
+                   pm1=$(event.target).parent().parent().find('.pm1').val()!=undefined?$(event.target).parent().parent().find('.pm1').val().split(":"):'';
+                   pm2=$(event.target).parent().parent().find('.pm2').val()!=undefined?$(event.target).parent().parent().find('.pm2').val().split(":"):'';
                 
                   const {t_hr, t_min,late_coming,leaving_early}=this.totalHourCal(am1,am2,pm1,pm2,total_am,total_pm,'',''); 
                   console.log('up_leaving_early',leaving_early);
                   console.log('up_late_coming',late_coming);
                   let res=isNaN((parseFloat(t_hr)+parseFloat(t_min)).toFixed(2))?'':(parseFloat(t_hr)+parseFloat(t_min)).toFixed(2);
 
-                jQuery(event.target).parent().parent().parent().find(".thour").val(Math.abs(res).toFixed(2));
+                jQuery(event.target).parent().parent().find(".thour").val(Math.abs(res).toFixed(2));
 
-                jQuery(event.target).parent().parent().parent().find(".late_coming").val(Math.abs(late_coming).toFixed(2));
-                jQuery(event.target).parent().parent().parent().find(".leaving_early").val(Math.abs(leaving_early).toFixed(2));
+                jQuery(event.target).parent().parent().find(".late_coming").val(Math.abs(late_coming).toFixed(2));
+                jQuery(event.target).parent().parent().find(".leaving_early").val(Math.abs(leaving_early).toFixed(2));
 
             }, 
             allButtonClick:function(){ 
@@ -565,11 +680,12 @@ import Dakokurow2 from './layouts/Dakokurow2.vue';
                 $(function() {
 
                     jQuery(document).on("contextmenu","[class^=paid-leave1],[class^=paid-leave2]", function(e){
-                            parent_class_name=jQuery(this).parent().parent().attr('class');
-                            if(parent_class_name==undefined){
-                                 parent_class_name=jQuery(this).parent().parent().find('[class^=index_]').attr('class');
-                            }
-                            class_name=jQuery(this).attr('class');
+                            parent_class_name=jQuery(this).parent().attr('class');
+                            
+                            // if(parent_class_name==undefined){
+                            //      parent_class_name=jQuery(this).parent().find('[class^=index_]').attr('class');
+                            // }
+                            class_name=jQuery(this).attr('class').split(' ')[0];
                             console.log('p',parent_class_name);
                             console.log('c',class_name);
                     });
@@ -579,12 +695,14 @@ import Dakokurow2 from './layouts/Dakokurow2.vue';
                         callback: function(key, options) {
                            
                             if(jQuery(this).text().trim()!=""){
-                                        jQuery(this).text('');
+                                jQuery(this).text('');
                             } 
                             if(key=='o'){
                                    
                                 let dakoku=that.showTimer(parent_class_name,class_name,'circle');
                                 console.log('hc',jQuery("."+parent_class_name).find('.paid-leave1'));
+                                   console.log('checkdakoku',dakoku);
+                                     console.log('class_name',class_name);
                                 if(class_name=='paid-leave1'){
                                     jQuery("."+parent_class_name).find('.amleave').remove();
                                     if(dakoku!='dakoku')
@@ -600,6 +718,7 @@ import Dakokurow2 from './layouts/Dakokurow2.vue';
 
                             }else{
                                 let dakoku=that.showTimer(parent_class_name,class_name,'dash');
+                                console.log('checkdakoku',dakoku);
                                 if(class_name=='paid-leave1'){
                                     jQuery("."+parent_class_name).find('.amleave').remove();
                                     if(dakoku!='dakoku')
@@ -649,8 +768,7 @@ import Dakokurow2 from './layouts/Dakokurow2.vue';
                 } 
             },            
            day_name(res){
-                {     
-                  
+                {   
                      return (res==="Sat" || res==="Sun")? 'table-secondary' : '';
                 }  
            },
@@ -696,6 +814,7 @@ import Dakokurow2 from './layouts/Dakokurow2.vue';
                         that.ampm_calling(that.get_attend_data);                  
                     })
                     .catch(function (error) {
+                         that.$swal.close();
                          console.log('nopar byar',that.get_attend_data); 
                         console.log('geterror',error.response);
                     }); 
@@ -857,7 +976,9 @@ import Dakokurow2 from './layouts/Dakokurow2.vue';
                                 }
                                  that.formchange="edit";
                         }else{
+                          
                             that.data_combine=tem_store;
+                              
                         }
                     });
 
@@ -869,32 +990,71 @@ import Dakokurow2 from './layouts/Dakokurow2.vue';
                     });
 
                 }
+                that.$swal.close();
             },
          
         showTimer(index,sec_index,day_leave=''){  
               let am_leave='';let pm_leave=''; 
               let am1,am2,pm1,pm2;
               let t_am='';let p_am=''; 
-              if(jQuery("."+sec_index).find('.amleave').val()){
-                  am_leave=jQuery("."+sec_index).find('.amleave').val();      
-              }
-              if(jQuery("."+sec_index).find('.pmleave').val()){
-                  pm_leave=jQuery("."+sec_index).find('.pmleave').val()
-              } 
 
-            
-               am1=jQuery("."+index).parent().find('[class^="mainIndex_"]').find('.am1_0').text().trim();
-               am2=jQuery("."+index).parent().find('[class^="mainIndex_"]').find('.am2_1').text().trim();
+             
 
-               pm1=jQuery("."+index).parent().find('[class^="mainIndex_"]').find('.pm1_2').text().trim();
-               pm2=jQuery("."+index).parent().find('[class^="mainIndex_"]').find('.pm2_3').text().trim();
+              if(day_leave==''){
+                if(jQuery("."+sec_index).find('td .amleave').val()){
+                    am_leave=jQuery("."+sec_index).find('td .amleave').val();      
+                }
+                if(jQuery("."+sec_index).find('td .pmleave').val()){
+                    pm_leave=jQuery("."+sec_index).find('td .pmleave').val()
+                }  
+                am1=jQuery("."+index).find('.am1_0').text().trim();
+                am2=jQuery("."+index).find('.am2_1').text().trim();
+
+                pm1=jQuery("."+index).find('.pm1_2').text().trim();
+                pm2=jQuery("."+index).find('.pm2_3').text().trim();
+                    console.log('m0',sec_index);
+                      console.log('m09',index);
+                         console.log('m0100',jQuery("."+index).find('[class^="mainIndex_"]'));
+                             console.log('m0110',jQuery("."+index).find('.am1_0').text().trim());
+                   console.log('m',am_leave);
+                   console.log('m1',pm_leave);
+                      console.log('m2',am1);
+                         console.log('m3',am2);
+                            console.log('m4',pm1);
+                               console.log('m5',pm2);
+              }else{
+                if(jQuery("."+index).find('td .amleave').val()){
+                  am_leave=jQuery("."+index).find('td .amleave').val();      
+                }
+                if(jQuery("."+index).find('td .pmleave').val()){
+                  pm_leave=jQuery("."+index).find('td .pmleave').val()
+                } 
+                am1=jQuery("."+index).prev('tr').find('[class^="mainIndex_"]').find('.am1_0').text().trim();
+                am2=jQuery("."+index).prev('tr').find('[class^="mainIndex_"]').find('.am2_1').text().trim();
+
+                pm1=jQuery("."+index).prev('tr').find('[class^="mainIndex_"]').find('.pm1_2').text().trim();
+                pm2=jQuery("."+index).prev('tr').find('[class^="mainIndex_"]').find('.pm2_3').text().trim();
+                   console.log('i',am_leave);
+                   console.log('i1',pm_leave);
+                      console.log('i2',am1);
+                         console.log('i3',am2);
+                            console.log('i4',pm1);
+                               console.log('i5',pm2);
+              }         
+
 
               if(am1=='' && am2=='' && pm1=='' && pm2=='' && am_leave==1 && pm_leave==1 ){
-                    jQuery("."+sec_index).find(".thour").val('8.00');
-                    return false;
+                    if(day_leave==''){
+                        jQuery("."+sec_index).find(".thour").val('8.00');
+                        return false;
+                    }                   
+
               }else if(am1=='' && am2=='' && pm1=='' && pm2=='' && am_leave==2 && pm_leave==2){
-                    jQuery("."+sec_index).find(".thour").val('0.00');
-                    return false;
+                   if(day_leave==''){
+                        jQuery("."+sec_index).find(".thour").val('0.00');
+                        return false;
+                    }
+                  
               }else if( ( (am_leave==1 && am1=='' && am2=='' ) && pm_leave=='') || ( (am_leave==1 && am1=='' && am2=='' ) && pm_leave==2) ){
                     t_am=4;
               }else if( (am_leave=='' && (pm_leave==1 && pm1=='' && pm2=='' ) ) || (am_leave==2 && (pm_leave==1 && pm1=='' && pm2=='' ) ) ){
@@ -910,18 +1070,18 @@ import Dakokurow2 from './layouts/Dakokurow2.vue';
                         if(jQuery("."+index).children('td').length==6){
                             jQuery("."+index).find("td:first").attr('colspan','2').find("td:first").remove();
                             jQuery("."+index).find("td:nth-child(2)").remove();
-                            jQuery("."+index).find('td:first').css({'text-align':'center','width':'220px'});                       
+                            jQuery("."+index).find('td:first').css({'text-align':'center'});                       
                         }
-                         jQuery("."+index).find("[class^=paid-leave1]").text(leave_sign);
+                         jQuery("."+index).find("[class^=paid-leave1]").text(leave_sign).css({'height':'2.6em','padding':'0px'});
                          
                     }else if(pm1== '' && pm2=='' && sec_index=='paid-leave2'){
  
                         if(jQuery("."+index).children('td').length==6){
                             jQuery("."+index).find("td:nth-child(3)").attr('colspan','2').find("td:nth-child(3)").remove();
                             jQuery("."+index).find("td:nth-child(4)").remove();
-                            jQuery("."+index).find('td:nth-child(3)').css({'text-align':'center','width':'220px'});                       
+                            jQuery("."+index).find('td:nth-child(3)').css({'text-align':'center'});                       
                         }  
-                         jQuery("."+index).find("[class^=paid-leave2]").text(leave_sign);                        
+                         jQuery("."+index).find("[class^=paid-leave2]").text(leave_sign).css({'height':'2.6em','padding':'0px'});                       
                     }
             }
           
@@ -935,97 +1095,103 @@ import Dakokurow2 from './layouts/Dakokurow2.vue';
            
               let auto_am1,auto_am2,auto_pm1,auto_pm2='';
 
-                 if(!jQuery("."+sec_index).find(".am1").hasClass('checkColumn') && !jQuery("."+sec_index).find(".am2").hasClass('checkColumn')
-                && !jQuery("."+sec_index).find(".pm1").hasClass('checkColumn') && !jQuery("."+sec_index).find(".pm2").hasClass('checkColumn')){   
+                if(day_leave==''){
+                        if(!jQuery("."+sec_index).find(".am1").hasClass('checkColumn') && !jQuery("."+sec_index).find(".am2").hasClass('checkColumn')
+                        && !jQuery("."+sec_index).find(".pm1").hasClass('checkColumn') && !jQuery("."+sec_index).find(".pm2").hasClass('checkColumn')){   
                          auto_am1=this.ampm_time_check(ap_split1,".am1",sec_index);     
                          auto_am2=this.ampm_time_check(ap_split2,".am2",sec_index);   
                          auto_pm1=this.ampm_time_check(ap_split3,".pm1",sec_index);   
                          auto_pm2=this.ampm_time_check(ap_split4,".pm2",sec_index); 
-                }
-                   
-                if(jQuery("."+sec_index).find(".am1").hasClass('checkColumn')){
-                     auto_am1=this.ampm_time_check(ap_split1,".am1",sec_index);   
-                   
-                }
-                 if(jQuery("."+sec_index).find(".am2").hasClass('checkColumn')){
-                      auto_am2=this.ampm_time_check(ap_split2,".am2",sec_index);   
-                   
-                }
-                if(jQuery("."+sec_index).find(".pm1").hasClass('checkColumn')){
-                       auto_pm1=this.ampm_time_check(ap_split3,".pm1",sec_index);   
-                   
-                }
-                if(jQuery("."+sec_index).find(".pm2").hasClass('checkColumn') ){
-                       auto_pm2=this.ampm_time_check(ap_split4,".pm2",sec_index); 
-                   
-                }
-                // karanotokoro
-                if( auto_am1==undefined || auto_am2==undefined || auto_pm1==undefined || auto_pm2==undefined ){
-                          
-                             if(auto_am1==undefined ){
-                                name=".am1";
-                           
-                             }else if(auto_am2==undefined ){
-                                name=".am2";
-                           
-                             }else if(auto_pm1==undefined ){
-                                name=".pm1";
-                            
-                             }else if(auto_pm2==undefined ){
-                                name=".pm2";
-                             
-                             }
-                        
-                            let split_ap=jQuery("."+sec_index).find(name).val()!=undefined?jQuery("."+sec_index).find(name).val().split(":"):'';
-                            if(split_ap!=''){
-                                let h1,m1='';
-                             
-                                h1=split_ap[0]<10?"0"+parseInt(split_ap[0]):split_ap[0];
-                                m1=split_ap[1]<10?"0"+parseInt(split_ap[1]):split_ap[1];
-                          
-                             
-                                if( ((h1+":"+m1).search(/^\d{2}:\d{2}$/) != -1) &&
-                                    ((h1+":"+m1).substr(0,2) >= 0 && (h1+":"+m1).substr(0,2) <= 24) &&
-                                    ((h1+":"+m1).substr(3,2) >= 0 && (h1+":"+m1).substr(3,2) <= 59) ){
-                                        // auto_am1=[];auto_am2=[];auto_pm1=[];auto_pm2=[];
-                                     if(name==".am1"){
-                                          auto_am1=[];
-                                        
-                                           auto_am1[0]=h1;      //this.ampm_time_check(split_ap,"am1",sec_index);   
-                                           auto_am1[1]=m1;
-                                     }else if(name==".am2"){
-                                           auto_am2=[];
-                                      
-                                           auto_am2[0]=h1;           //this.ampm_time_check(split_ap,"am2",sec_index);   
-                                           auto_am2[1]=m1;  
-                                     }else if(name==".pm1"){
-                                            auto_pm1=[];
-                                      
-                                            auto_pm1[0]=h1;            //this.ampm_time_check(split_ap,"pm1",sec_index);  
-                                            auto_pm1[1]=m1;  
-                                     }else if(name==".pm2"){
-                                           auto_pm2=[];
-                                       
-                                            auto_pm2[0]=h1;            //this.ampm_time_check(split_ap,"pm2",sec_index);  
-                                            auto_pm2[1]=m1;  
-                                     }       
-                                }
-                            }                 
-                }
-                             
-                let total_am=0;let total_pm=0; 
-                const {t_hr, t_min,late_coming,leaving_early}=this.totalHourCal(auto_am1,auto_am2,auto_pm1,auto_pm2,total_am,total_pm,t_am,p_am);               
-                console.log('a_leaving_early',leaving_early);
-                console.log('a_late_coming',late_coming);
-                let res=isNaN((parseFloat(t_hr)+parseFloat(t_min)).toFixed(2))?'':(parseFloat(t_hr)+parseFloat(t_min)).toFixed(2);   
-                   
-                jQuery("."+sec_index).find(".thour").val(res==0?"0.00":Math.abs(res).toFixed(2));
-                jQuery("."+sec_index).find(".late_coming").val(Math.abs(late_coming).toFixed(2));
-                jQuery("."+sec_index).find(".leaving_early").val(Math.abs(leaving_early).toFixed(2));
+                       }
 
-            } 
-            if(  ( (am_leave==1 || am_leave==2 )&& (am1!='' || am2!='') ) || ( (pm_leave==1 || pm_leave==2 )&& (pm1!='' || pm2!='') )  ){
-                    return 'dakoku';
+                        if(jQuery("."+sec_index).find(".am1").hasClass('checkColumn')){
+                                auto_am1=this.ampm_time_check(ap_split1,".am1",sec_index);   
+                            
+                            }
+                            if(jQuery("."+sec_index).find(".am2").hasClass('checkColumn')){
+                                auto_am2=this.ampm_time_check(ap_split2,".am2",sec_index);   
+                            
+                            }
+                            if(jQuery("."+sec_index).find(".pm1").hasClass('checkColumn')){
+                                auto_pm1=this.ampm_time_check(ap_split3,".pm1",sec_index);   
+                            
+                            }
+                            if(jQuery("."+sec_index).find(".pm2").hasClass('checkColumn') ){
+                                auto_pm2=this.ampm_time_check(ap_split4,".pm2",sec_index); 
+                            
+                            }
+
+                }
+               
+                if(day_leave==''){
+                // karanotokoro
+                    if( auto_am1==undefined || auto_am2==undefined || auto_pm1==undefined || auto_pm2==undefined ){
+                            
+                                if(auto_am1==undefined ){
+                                    name=".am1";
+                            
+                                }else if(auto_am2==undefined ){
+                                    name=".am2";
+                            
+                                }else if(auto_pm1==undefined ){
+                                    name=".pm1";
+                                
+                                }else if(auto_pm2==undefined ){
+                                    name=".pm2";
+                                
+                                }
+                            
+                                let split_ap=jQuery("."+sec_index).find(name).val()!=undefined?jQuery("."+sec_index).find(name).val().split(":"):'';
+                                if(split_ap!=''){
+                                    let h1,m1='';
+                                
+                                    h1=split_ap[0]<10?"0"+parseInt(split_ap[0]):split_ap[0];
+                                    m1=split_ap[1]<10?"0"+parseInt(split_ap[1]):split_ap[1];
+                            
+                                
+                                    if( ((h1+":"+m1).search(/^\d{2}:\d{2}$/) != -1) &&
+                                        ((h1+":"+m1).substr(0,2) >= 0 && (h1+":"+m1).substr(0,2) <= 24) &&
+                                        ((h1+":"+m1).substr(3,2) >= 0 && (h1+":"+m1).substr(3,2) <= 59) ){
+                                            // auto_am1=[];auto_am2=[];auto_pm1=[];auto_pm2=[];
+                                        if(name==".am1"){
+                                            auto_am1=[];
+                                            
+                                            auto_am1[0]=h1;      //this.ampm_time_check(split_ap,"am1",sec_index);   
+                                            auto_am1[1]=m1;
+                                        }else if(name==".am2"){
+                                            auto_am2=[];
+                                        
+                                            auto_am2[0]=h1;           //this.ampm_time_check(split_ap,"am2",sec_index);   
+                                            auto_am2[1]=m1;  
+                                        }else if(name==".pm1"){
+                                                auto_pm1=[];
+                                        
+                                                auto_pm1[0]=h1;            //this.ampm_time_check(split_ap,"pm1",sec_index);  
+                                                auto_pm1[1]=m1;  
+                                        }else if(name==".pm2"){
+                                            auto_pm2=[];
+                                        
+                                                auto_pm2[0]=h1;            //this.ampm_time_check(split_ap,"pm2",sec_index);  
+                                                auto_pm2[1]=m1;  
+                                        }       
+                                    }
+                                }                 
+                    }
+                             
+                    let total_am=0;let total_pm=0; 
+                    const {t_hr, t_min,late_coming,leaving_early}=this.totalHourCal(auto_am1,auto_am2,auto_pm1,auto_pm2,total_am,total_pm,t_am,p_am);               
+                    console.log('a_leaving_early',leaving_early);
+                    console.log('a_late_coming',late_coming);
+                    let res=isNaN((parseFloat(t_hr)+parseFloat(t_min)).toFixed(2))?'':(parseFloat(t_hr)+parseFloat(t_min)).toFixed(2);   
+                    
+                    jQuery("."+sec_index).find(".thour").val(res==0?"0.00":Math.abs(res).toFixed(2));
+                    jQuery("."+sec_index).find(".late_coming").val(Math.abs(late_coming).toFixed(2));
+                    jQuery("."+sec_index).find(".leaving_early").val(Math.abs(leaving_early).toFixed(2));
+
+               } 
+                if(  ( (am_leave==1 || am_leave==2 )&& (am1!='' || am2!='') ) || ( (pm_leave==1 || pm_leave==2 )&& (pm1!='' || pm2!='') )  ){
+                        return 'dakoku';
+                }
             }
         },
                 
@@ -1033,19 +1199,19 @@ import Dakokurow2 from './layouts/Dakokurow2.vue';
                 console.log('auto_am2',auto_am2);
                 console.log('auto_am1',auto_am1);
                 let late_coming=0,leaving_early=0;
-                if(auto_am1!='' && (  ( parseInt(auto_am1[0])==8 && 5<parseInt(auto_am1[1]) || 9<=parseInt(auto_am1[0])   )   ) ){
+                if(auto_am1!='' && auto_am1!=undefined && (  ( parseInt(auto_am1[0])==8 && 5<parseInt(auto_am1[1]) || 9<=parseInt(auto_am1[0])   )   ) ){
                     late_coming+=(+auto_am1[0] + (+auto_am1[1] / 60))-(8);  
                      
                 }  
-                if(auto_pm1!='' &&  (  ( parseInt(auto_pm1[0])==13 && 15<parseInt(auto_pm1[1]) || 14<=parseInt(auto_pm1[0])   )   ) ){
+                if(auto_pm1!='' && auto_pm1!=undefined &&  (  ( parseInt(auto_pm1[0])==13 && 15<parseInt(auto_pm1[1]) || 14<=parseInt(auto_pm1[0])   )   ) ){
                     late_coming+=(+auto_pm1[0] + (+auto_pm1[1] / 60))-(13);  
                      
                 }
-                if(auto_am2!='' && parseInt(auto_am2[0])<12){
+                if(auto_am2!='' && auto_am2!=undefined && parseInt(auto_am2[0])<12){
                     leaving_early+=12-(+auto_am2[0] + (+auto_am2[1] / 60));
                      
                 }
-                if(auto_pm2!='' && parseInt(auto_pm2[0])<17){
+                if(auto_pm2!='' && auto_pm2!=undefined && parseInt(auto_pm2[0])<17){
                     leaving_early+=17-(+auto_pm2[0] + (+auto_pm2[1] / 60));
                       
                 }
