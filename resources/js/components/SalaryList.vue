@@ -142,17 +142,18 @@
                 <div class="row" >
                     <div class="col-md-9">
                       
-                            <span class="col-md-2 mt-4" style="background-color:#DEEBF7"> 
-                                    {{this.paymentDate(this.select_date,1)}}     
-                            </span>
-                            <span class="col-md-2 mt-4"> 
-                                    支給
-                            </span>  
+                     
                             <form id="form1" class=""  autocomplete="on" >
                             <!-- {{emps}} -->
                             <!-- {{salaries}} -->
-                            <horizontal-scroll>
-                            <table id="salaryTable" class="table table-sm table-bordered">
+                            <div class="scrolling-wrapper  flex-row flex-nowrap">                         
+                            <table id="salaryTable" class="table table-sm table-md table-bordered">
+                                <span class="col-md-2 mt-4 table-borderless" style="background-color:#DEEBF7"> 
+                                        {{this.paymentDate(this.select_date,1)}}     
+                                </span>
+                                <span class="col-md-2 mt-4 table-borderless"> 
+                                        支給
+                                </span>  
                             <tr>
                                 <th  class="border-bottom-0">
                                    
@@ -368,14 +369,15 @@
                             </tbody>
 
                         </table>    
-                           </horizontal-scroll>
+                        </div>                        
                         </form>   
                     </div>
                   
                     <div class="col-md-3">
                         <span  class="col-md-2 mt-4"></span>
                         <form id="form2" class="" autocomplete="on" >
-                        <horizontal-scroll>
+                        <div class="scrolling-wrapper  flex-row flex-nowrap">
+                    
                         <table id="ssbtable" class="table table-sm table-bordered" style="width: 300px;">
                             <tr>
                                 <th  colspan="2" class="align-middle text-center">
@@ -442,7 +444,8 @@
 
                             </tbody>    
                         </table>
-                       </horizontal-scroll>
+                        </div>
+                 
                        </form>
                     </div> 
                 </div>
@@ -452,9 +455,7 @@
 </template>
 
 <script>   
-import HorizontalScroll from 'vue-horizontal-scroll'
-import 'vue-horizontal-scroll/dist/vue-horizontal-scroll.css'
- 
+
     export default {
         
         data() {
@@ -489,7 +490,7 @@ import 'vue-horizontal-scroll/dist/vue-horizontal-scroll.css'
             }
         },
         components: {
-            HorizontalScroll
+          
         },
         computed: {
            errorsFun:function(){

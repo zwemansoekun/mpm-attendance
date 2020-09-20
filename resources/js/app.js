@@ -8,7 +8,6 @@ require('./bootstrap');
 window.$=window.JQuery= require('jquery')//window.JQuery
 window.Vue = require('vue');
 window.moment = require('moment');
-window.$_=require('lodash');
 jQuery.noConflict(); 
 
 import VueSweetalert2 from 'vue-sweetalert2';
