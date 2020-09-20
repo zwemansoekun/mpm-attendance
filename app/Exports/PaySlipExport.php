@@ -151,8 +151,10 @@ class PaySlipExport implements WithEvents
                 $event->sheet->getDelegate()->setCellValue('D10', $presentHours);
 
                 $event->sheet->getDelegate()->setCellValue('A12', 'Late Coming (Hours)');
+                $event->sheet->getDelegate()->setCellValue('B12', $this->leaveData['late_coming']);
 
                 $event->sheet->getDelegate()->setCellValue('C12', 'Leaving Early (Hours)');
+                $event->sheet->getDelegate()->setCellValue('B12', $this->leaveData['leaving_early']);
 
                 $event->sheet->getDelegate()->setCellValue('A13', 'Half Day (AM)');
                 $event->sheet->getDelegate()->setCellValue('B13', $this->leaveData['amAbsentCount']);
