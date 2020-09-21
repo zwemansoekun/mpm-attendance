@@ -65,6 +65,7 @@ class AttendDetailsExport implements FromCollection,WithEvents, WithCustomStartC
         from attend_details 
         where EXTRACT(YEAR_MONTH FROM date) = :date order by emp_no,date asc', ['date' => $this->printY]);
         $this->attendTime = json_decode(json_encode($this->attendTime),true);
+        //print_r($this->attendTime);
 
         // attend_detailsテーブルから取得したデータを配列する
         $totalArray1 = array();
@@ -131,6 +132,8 @@ class AttendDetailsExport implements FromCollection,WithEvents, WithCustomStartC
                 ['date' => $this->printY]);
 
         $attendSumTime = json_decode(json_encode( $attendSumTime),true);
+        
+        //print_r($attendSumTime);return;
 
         // まとめ
         $j = 0; $paidHoliday = 0;  $unpaidHoliday = 0; $leaveArray = array();
@@ -166,6 +169,90 @@ class AttendDetailsExport implements FromCollection,WithEvents, WithCustomStartC
         array_push($leaveSubArray,$paidHoliday);
         array_push($leaveSubArray,$unpaidHoliday);
         array_push($leaveArray,$leaveSubArray);
+
+
+        //print_r(date_create((string)$this->printY.'01')); 
+         //有休計算
+         $yuukyuu = DB::select('select entry_date,emp_id, DATE_ADD(entry_date, INTERVAL 3 MONTH) as paid_start_date, 
+         TIMESTAMPDIFF(year, DATE_ADD(entry_date, INTERVAL 3 MONTH), now() ) as working_year, 
+         case when TIMESTAMPDIFF(year, DATE_ADD(entry_date, INTERVAL 3 MONTH), now() ) >=1 then 16 
+              when TIMESTAMPDIFF(year, DATE_ADD(entry_date, INTERVAL 3 MONTH), now() ) = 0 then 6 
+              else 0 end as holiday,
+              case when TIMESTAMPDIFF(year, DATE_ADD(entry_date, INTERVAL 3 MONTH), now() ) >=1 then 
+              DATE_ADD(DATE_ADD(entry_date, INTERVAL 3 MONTH),INTERVAL TIMESTAMPDIFF(year, DATE_ADD(entry_date, INTERVAL 3 MONTH), now()) YEAR) 
+              when TIMESTAMPDIFF(year, DATE_ADD(entry_date, INTERVAL 3 MONTH), now() ) = 0 then 0 
+              else 0 end as paid_start_year
+             from employees
+             order by emp_id');
+         
+         $yuukyuu = json_decode(json_encode($yuukyuu),true);
+ 
+         $yuukyuuArray = array();
+         for($i = 0; $i < count($yuukyuu) ; $i++)
+         {
+             $yuukyuuSubArray = array();
+             $yuukyuuSubArray["emp_no"] =$yuukyuu[$i]["emp_id"];
+             $yuukyuuSubArray["holiday"] =$yuukyuu[$i]["holiday"];
+             $yuukyuuSubArray["paid_start_date"] =$yuukyuu[$i]["paid_start_date"];
+             $yuukyuuSubArray["paid_start_year"] =$yuukyuu[$i]["paid_start_year"];
+             array_push($yuukyuuArray,$yuukyuuSubArray);
+         }
+ 
+         //print_r($yuukyuuArray);return;
+         $monthArray = array();
+         for($i = 0; $i < count($yuukyuuArray) ; $i++)
+         {
+             
+             $start_date = null;
+             
+             if($yuukyuuArray[$i]['paid_start_year'] == 0)
+             {
+                 $start_date = $yuukyuuArray[$i]['paid_start_date'];
+             }
+             else
+             {
+                 $start_date = $yuukyuuArray[$i]['paid_start_year'];
+             }
+             
+             $month_difference = date_diff(date_create((string)$this->printY.'01'), date_create($start_date))->format('%m');
+              //print_r($month_difference);return;
+ 
+             
+             $start_date = (int)str_replace('-','',substr($start_date, 0, strrpos($start_date, '-')));
+           
+            
+             $sumHolidayForEach = 0;
+            for($j = 0; $j <= $month_difference; $j++)
+             {
+                 
+                $holidayByMonth = DB::select('SELECT SUM(am_leave)+SUM(pm_leave)as yuukyuu, emp_no, EXTRACT(YEAR_MONTH FROM date) as month 
+                                     FROM attend_details 
+                                     where EXTRACT(YEAR_MONTH FROM date) = :date 
+                                     AND ((am_leave = 1 AND pm_leave = 0) OR (am_leave = 1 AND pm_leave = 1) OR (am_leave = 0 AND pm_leave = 1)) AND emp_no = :emp_no
+                                     group by month,emp_no', 
+                                     ['date' => $start_date,'emp_no'=>$yuukyuuArray[$i]['emp_no']]);
+                 $z= 0;
+                 
+                 $holidayByMonth = json_decode(json_encode($holidayByMonth),true);
+                 
+          
+                
+                 if(count($holidayByMonth) == 0)
+                 {
+                    
+                     $sumHolidayForEach += 0;
+                     
+                 }
+                 else
+                 {
+                   $sumHolidayForEach += $holidayByMonth[$z]["yuukyuu"];
+                 }
+                 $start_date += 1; 
+                }
+                $sumHolidayForEach = $yuukyuuArray[$i]['holiday'] - ($sumHolidayForEach * 0.5);
+                //print_r($sumHolidayForEach );
+             array_push($monthArray,$sumHolidayForEach);
+         }
        
         // CSV出力ため配列作成する
         for ($i = 0; $i < count($totalArray2); $i++) 
@@ -197,9 +284,11 @@ class AttendDetailsExport implements FromCollection,WithEvents, WithCustomStartC
             {
                 array_push($empSubArray,  $leaveArray[$i][1]);
             }
+            array_push($empSubArray,  $monthArray[$i]);
             array_push($this->csvArray, $empSubArray);
         }
-        return collect($this->csvArray);
+
+       return collect($this->csvArray);
     }
 
     /**
