@@ -49,8 +49,9 @@ class PaySlipExport implements WithEvents
     public $empName;
     public $empId;
     public $trans_money;
+    public $leaveData;
 
-    public function __construct(Employee $employee, Salary $salary, $empName, $empId, $trans_money) 
+    public function __construct(Employee $employee, Salary $salary, $empName, $empId, $trans_money, $leaveData) 
     {
         // $this->printY = $printY;
         // $this->type = CAL_GREGORIAN;
@@ -63,6 +64,7 @@ class PaySlipExport implements WithEvents
         $this->empName = $empName;
         $this->empId = $empId;
         $this->trans_money = $trans_money;
+        $this->leaveData = $leaveData;
     }
 
 
@@ -137,23 +139,34 @@ class PaySlipExport implements WithEvents
                 
 
                 $event->sheet->getDelegate()->setCellValue('C9', 'Present Days');
+                $presentDays = $date->daysInMonth - $this->leaveData['paidLeave'] - $this->leaveData['absent'];
+                $event->sheet->getDelegate()->setCellValue('D9', $presentDays);
 
                 $event->sheet->getDelegate()->setCellValue('A10', 'Total Working Hours');
-                $event->sheet->getDelegate()->setCellValue('B10', $date->daysInMonth * 8);
+                $totalWorkingHours = $date->daysInMonth * 8;
+                $event->sheet->getDelegate()->setCellValue('B10', $totalWorkingHours);
 
                 $event->sheet->getDelegate()->setCellValue('C10', 'Present Hours');
+                $presentHours = $totalWorkingHours - ($this->leaveData['paidLeave'] * 8) - ($this->leaveData['absent'] * 8);
+                $event->sheet->getDelegate()->setCellValue('D10', $presentHours);
 
                 $event->sheet->getDelegate()->setCellValue('A12', 'Late Coming (Hours)');
+                $event->sheet->getDelegate()->setCellValue('B12', $this->leaveData['late_coming']);
 
                 $event->sheet->getDelegate()->setCellValue('C12', 'Leaving Early (Hours)');
+                $event->sheet->getDelegate()->setCellValue('B12', $this->leaveData['leaving_early']);
 
                 $event->sheet->getDelegate()->setCellValue('A13', 'Half Day (AM)');
+                $event->sheet->getDelegate()->setCellValue('B13', $this->leaveData['amAbsentCount']);
 
                 $event->sheet->getDelegate()->setCellValue('C13', 'Half Day (PM)');
+                $event->sheet->getDelegate()->setCellValue('D13', $this->leaveData['pmAbsentCount']);
 
                 $event->sheet->getDelegate()->setCellValue('A14', 'Paid Leave (Days)');
+                $event->sheet->getDelegate()->setCellValue('B14', $this->leaveData['paidLeave']);
 
                 $event->sheet->getDelegate()->setCellValue('C14', 'Paid Leave (Hours)');
+                $event->sheet->getDelegate()->setCellValue('D14', $this->leaveData['paidLeave'] * 8);
 
                 //Salary Details
                 $event->sheet->getDelegate()->mergeCells('A15:D15');
@@ -202,8 +215,13 @@ class PaySlipExport implements WithEvents
                 $event->sheet->getDelegate()->setCellValue('B21', $this->salaryData->bonus);
 
                 $event->sheet->getDelegate()->setCellValue('A22', 'Total');
+                $earningTotal = $salaryAmt + $this->salaryData->trans_money +$this->salaryData->ssb + $this->salaryData->jlpt
+                + $this->salaryData->bonus;
+                $event->sheet->getDelegate()->setCellValue('B22', $earningTotal);
 
                 $event->sheet->getDelegate()->setCellValue('C22', 'Total');
+                $deductionTotal = $this->salaryData->income_tax + $this->salaryData->ssb ;
+                $event->sheet->getDelegate()->setCellValue('D22', $deductionTotal);
 
                 //Net Salary
                 $event->sheet->getDelegate()->mergeCells('A23:B23');

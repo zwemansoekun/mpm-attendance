@@ -58,11 +58,16 @@
                 <div class="row justify-content-md-center mt-4"> 
                       <button type="button" style="background-color:#E7E6E6" class="btn  mr-3" onclick="this.blur();">エンジニアコスト一覧表</button>
 
-                      <a type="button"  href="http://127.0.0.1:8000/export/" >
+                      <!-- <a type="button"  href="http://127.0.0.1:8000/export/" >
                             <button @click="excelExport()" class="btn mr-3" style="background-color:#E7E6E6" onclick="this.blur();">
                             給与明細作成
                             </button>
-                        </a>
+                        </a> -->
+                      
+                        <button data-toggle="modal" data-target="#payslip"  class="btn mr-3" style="background-color:#E7E6E6" onclick="this.blur();">
+                            給与明細作成
+                        </button>
+                       
                         
                       <button type="submit" form="form" style="background-color:#E7E6E6" class="btn  mr-3" onclick="this.blur();">編集</button>
 
@@ -79,22 +84,76 @@
                         </div>
                     </div>
 
-                </div>                
+                </div>     
+
+                <div class="alert alert-danger" role="alert" v-if="data_check_messg1"  id="check-alert"   style="text-align: center">
+                     <button type="button" class="close" data-dismiss="alert">x</button>
+                    <strong >データはありませんでした。</strong> 
+                </div>
+            
+                <!-- Modal -->
+                <div class="modal fade" data-backdrop="false" id="payslip" tabindex="-1" role="dialog" aria-labelledby="payslipTitle" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">    
+                             <div class="modal-body">
+                                <div class="container-fluid">                           
+                                    <table class="table table-sm table-bordered">
+                                        <thead>                      
+                                            <th class="align-middle text-center">
+                                                <input class="align-middle text-center check-all" style="width:1.5em;height:1.5em;" type='checkbox' @click='checkAll()' v-model='isCheckAll'> 
+                                            </th>
+                                            <th class="align-middle text-center">
+                                                社員番号
+                                            </th>
+                                            <th class="align-middle text-center">
+                                                名前
+                                            </th>                        
+                                        </thead>    
+                                        <tbody>             
+                                            <tr v-bind:key="key" v-for='(salary,key) in salaries'>
+                                                <td class="align-middle text-center">
+                                                           <input type='checkbox' name="checks[]" class="align-middle text-center" style="width:1.5em;height:1.5em;" v-bind:value='salary' v-model='salarymodal' @change='updateCheckall()'>
+                                                            <input type='hidden' name="pay_empid[]" class="align-middle text-center pay_empid" style="width:1.5em;height:1.5em;" v-bind:value='salary.emp_id'>
+                                                </td>
+                                                <td class="align-middle text-center">
+                                                            {{salary.emp_code}}
+                                                </td>    
+                                                <td class="align-middle text-center">
+                                                            {{salary.emp_name}}
+                                                        <div>({{salary.kana_name}})</div>
+                                                </td>    
+                                            </tr>    
+                                        </tbody>   
+                                    </table>   
+
+                                    <footer class="col-sm-9 offset-sm-2 text-center mt-5">
+                                        <button type="button" @click="payslipSubmit" class="btn btn-primary">生成</button>
+                                        <button type="button" class="btn btn-secondary"  style="margin-left: 1em;margin-right: -5em;" data-dismiss="modal">キャンセル</button>
+                                        <!-- <button @click="dialogClose()" type="button" class="btn btn-secondary" style="margin-left: 2em;margin-right: -4em;">キャンセル</button> -->
+                                    </footer>
+                                 </div> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                    
                 
                 <div class="row" >
                     <div class="col-md-9">
                       
-                            <span class="col-md-2 mt-4" style="background-color:#DEEBF7"> 
-                                    {{this.paymentDate(this.select_date,1)}}     
-                            </span>
-                            <span class="col-md-2 mt-4"> 
-                                    支給
-                            </span>  
+                     
                             <form id="form1" class=""  autocomplete="on" >
                             <!-- {{emps}} -->
                             <!-- {{salaries}} -->
-                            <horizontal-scroll>
-                            <table id="salaryTable" class="table table-sm table-bordered">
+                            <div class="scrolling-wrapper  flex-row flex-nowrap">                         
+                            <table id="salaryTable" class="table table-sm table-md table-bordered">
+                                <span class="col-md-2 mt-4 table-borderless" style="background-color:#DEEBF7"> 
+                                        {{this.paymentDate(this.select_date,1)}}     
+                                </span>
+                                <span class="col-md-2 mt-4 table-borderless"> 
+                                        支給
+                                </span>  
                             <tr>
                                 <th  class="border-bottom-0">
                                    
@@ -310,14 +369,15 @@
                             </tbody>
 
                         </table>    
-                           </horizontal-scroll>
+                        </div>                        
                         </form>   
                     </div>
                   
                     <div class="col-md-3">
                         <span  class="col-md-2 mt-4"></span>
                         <form id="form2" class="" autocomplete="on" >
-                        <horizontal-scroll>
+                        <div class="scrolling-wrapper  flex-row flex-nowrap">
+                    
                         <table id="ssbtable" class="table table-sm table-bordered" style="width: 300px;">
                             <tr>
                                 <th  colspan="2" class="align-middle text-center">
@@ -365,7 +425,7 @@
                                                     <input name="ssb_total[]" @change="ssbCalc" class="ssb_total" style="text-align:right;width:100%;" type="text" :value="`${SsbPaid.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,')}`">
                                             </td>
                                             <td style="padding: 0px;width: 30%;text-align: right;height: 10%;">
-                                                    <input name="ssb_c_paid[]" @change="ssbCalc"  class="ssb_c_paid" style="text-align:right;width:100%;" type="text" :value="`${SsbPaid.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,')}`">
+                                                    <input name="ssb_c_paid[]" @change="ssbCalc"  class="ssb_c_paid" :style="`background-color:${checkBgColor(SsbPaid,(SsbMax*(5-salaries[key-1].ssb)/100))};text-align:right;width:100px;`"  type="text" :value="`${(SsbMax*(5-salaries[key-1].ssb)/100).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,')}`">
                                             </td>
                                         </tr>     
                                     </template>
@@ -376,7 +436,7 @@
                                                     <input name="ssb_total[]" @change="ssbCalc" class="ssb_total" :style="`background-color:${checkBgColor(get_salary_data[key-1].ssbval.total_amount,SsbPaid)};text-align:right;width:100px;`"  type="text" :value="`${get_salary_data[key-1].ssbval}`!=undefined?Math.trunc(get_salary_data[key-1].ssbval.total_amount).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,'):'' ">
                                             </td>
                                             <td style="padding: 0px;width: 30%;text-align: right;height: 10%;">
-                                                    <input name="ssb_c_paid[]" @change="ssbCalc"  class="ssb_c_paid" :style="`background-color:${checkBgColor(get_salary_data[key-1].ssbval.c_paid,SsbPaid)};text-align:right;width:100px;`"  type="text" :value="`${get_salary_data[key-1].ssbval}`!=undefined?Math.trunc(get_salary_data[key-1].ssbval.c_paid).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,'):'' ">
+                                                    <input name="ssb_c_paid[]" @change="ssbCalc"  class="ssb_c_paid" :style="`background-color:${checkBgColor(get_salary_data[key-1].ssbval.c_paid,(SsbMax*(5-salaries[key-1].ssb)/100))};text-align:right;width:100px;`"  type="text" :value="`${get_salary_data[key-1].ssbval}`!=undefined?Math.trunc(get_salary_data[key-1].ssbval.c_paid).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,'):'' ">
                                             </td>
                                         </tr>     
                                     </template>
@@ -384,7 +444,8 @@
 
                             </tbody>    
                         </table>
-                       </horizontal-scroll>
+                        </div>
+                 
                        </form>
                     </div> 
                 </div>
@@ -394,16 +455,11 @@
 </template>
 
 <script>   
-import HorizontalScroll from 'vue-horizontal-scroll'
-import 'vue-horizontal-scroll/dist/vue-horizontal-scroll.css'
-console.log(process.env.MIX_CLIENT_SECRET);
-window.APP ="{{config('global')}}";//"{config('global')}" ;//JSON.parse($globals);    //;
 
     export default {
         
         data() {
-            return {
-               appx:window.APP,
+            return {             
                 select_date:'',
                 dates:[],
                 setting:{},
@@ -412,6 +468,7 @@ window.APP ="{{config('global')}}";//"{config('global')}" ;//JSON.parse($globals
                 attendDelays:[],
                 temp: [],
                 data_check_messg:false,
+                data_check_messg1:false,
                 formChange:true,
                 year:'',
                 month:'',
@@ -427,10 +484,13 @@ window.APP ="{{config('global')}}";//"{config('global')}" ;//JSON.parse($globals
                 total_payment:'',
                 // company_ssb:'',
                 total_c_paid:'',
+                isCheckAll: false,                
+                salarymodal:[],
+                selected:'',
             }
         },
         components: {
-            HorizontalScroll
+          
         },
         computed: {
            errorsFun:function(){
@@ -454,6 +514,7 @@ window.APP ="{{config('global')}}";//"{config('global')}" ;//JSON.parse($globals
          },    
         created() {
             let that=this;
+         
             this.axios({
                 url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/settings",
                 method: 'get'
@@ -515,7 +576,35 @@ window.APP ="{{config('global')}}";//"{config('global')}" ;//JSON.parse($globals
             
            
         },
-        methods: {     
+        methods: { 
+            payslipSubmit:function(){
+                    var testingArray = [];
+                    $.each($("input[name^='checks']:checked"), function(){                      
+                        testingArray.push($(this).parent().parent().find('.pay_empid').val());
+                    });
+                    alert("My Testing emp id array are: " + testingArray.join(", "));
+            },
+            checkAll: function(){
+
+                this.isCheckAll = !this.isCheckAll;
+                this.salarymodal = [];
+                if(this.isCheckAll){ // Check all
+                    for (var key in this.salaries) {
+                        this.salarymodal.push(this.salaries[key]);
+                    // this.salarymodal.push(key,{"emp_id":this.salaries[key].emp_id,"emp_code":this.salaries[key].emp_code,"emp_name":this.salaries[key].emp_name});
+                  
+                    }
+                }
+               
+            }, 
+            updateCheckall: function(salary,salarymodal){               
+                if(this.salarymodal.length == this.salaries.length){
+                    this.isCheckAll = true;
+                }else{
+                    // $("input[class='check-all']").prop('checked', false); 
+                    this.isCheckAll = false;
+                }
+            },  
             checkBgColor:function(main,update){    
                     if(parseInt(main)!=parseInt(update) && !isNaN(main) && !isNaN(update) ){
                         return 'yellow';
@@ -931,6 +1020,7 @@ window.APP ="{{config('global')}}";//"{config('global')}" ;//JSON.parse($globals
                         that.salaryList(that.get_salary_data);                  
                     })
                     .catch(function (error) {
+                        that.$swal.close();
                         console.log('nopar byar',that.get_salary_data); 
                         console.log('geterror',error.response);
                     }); 
@@ -954,18 +1044,24 @@ window.APP ="{{config('global')}}";//"{config('global')}" ;//JSON.parse($globals
                                 tem_salary[i]['total']=(parseInt(tem_salary[i].salary_amount)+parseInt(tem_salary[i].trans_money)+parseInt(tem_salary[i].jlpt))
                                 tem_salary[i]['payment']=parseInt(tem_salary[i]['total'])-(that.SsbMax*(parseInt(tem_salary[i].ssb)/100));
                                 total_payment+=tem_salary[i]['payment'];
-                                total_c_paid+=(that.SsbMax*(3/100));
-                                tem_salary[i]['c_paid']=(that.SsbMax*(3/100));
+                                total_c_paid+=(that.SsbMax*((5-tem_salary[i].ssb)/100));
+                                tem_salary[i]['c_paid']=(that.SsbMax*((5-tem_salary[i].ssb)/100));//(that.SsbMax*(3/100));
                                 console.log('salary33',tem_salary); 
+                                // tem_salary[i]['emp_id']=tem_salary[i].emp_id;
+                                tem_salary[i]['emp_code']=that.emp_arr[tem_salary[i].emp_id];
+                                tem_salary[i]['emp_name']=that.name_arr[tem_salary[i].emp_id];
+
                             }
                         }else{
                               for(let i=0;i<tem_salary.length;i++){
                             
                                 tem_salary[i]['total']=(parseInt(tem_salary[i].salary_amount)+parseInt(tem_salary[i].trans_money)+parseInt(tem_salary[i].jlpt))
                                 tem_salary[i]['payment']=parseInt(tem_salary[i]['total'])-(that.SsbMax*(parseInt(tem_salary[i].ssb)/100));
-                             
-                                tem_salary[i]['c_paid']=(that.SsbMax*(3/100));
-                               
+
+                                tem_salary[i]['c_paid']=(that.SsbMax*((5-tem_salary[i].ssb)/100));//(that.SsbMax*(3/100));
+                                // tem_salary[i]['emp_id']=tem_salary[i].emp_id;
+                                tem_salary[i]['emp_code']=that.emp_arr[tem_salary[i].emp_id];
+                                tem_salary[i]['emp_name']=that.name_arr[tem_salary[i].emp_id];
                             }
                             for(let i=0;i<get_salary_data.length;i++){                          
                                 total_payment+=parseInt(get_salary_data[i].payment_amount);
@@ -979,9 +1075,18 @@ window.APP ="{{config('global')}}";//"{config('global')}" ;//JSON.parse($globals
                         // that.company_ssb=company_ssb;
                         that.salaries=tem_salary;
                         that.total_c_paid=total_c_paid;
+                        if(that.salaries.length===0){  
+                            that.$swal.close();                    
+                            this.data_check_messg1= true
+                            setTimeout(() => {
+                                this.data_check_messg1= false
+                            },3500)
+                            return false;
+                        }
                         that.$swal.close();
                     })
                     .catch(function (error) {
+                        that.$swal.close();
                         console.log(error.response)
                     });
             },
@@ -989,33 +1094,30 @@ window.APP ="{{config('global')}}";//"{config('global')}" ;//JSON.parse($globals
                     let cal_ssb=0,total_ssb=0,total_ssb1=0,ssb_c_paid=0,ssb_c_paid1=0;
                     total_ssb=$(event.target).parent().parent().find('.ssb_total').val()!=''?$(event.target).parent().parent().find('.ssb_total').val():0;
                     total_ssb1=$(event.target).parent().parent().prev('tr').find('.ssb_total1').text()!=''?$(event.target).parent().parent().prev('tr').find('.ssb_total1').text():0;
-
+                 
                     ssb_c_paid=$(event.target).parent().parent().find('.ssb_c_paid').val()!=''?$(event.target).parent().parent().find('.ssb_c_paid').val():0;
                     ssb_c_paid1=$(event.target).parent().parent().prev('tr').find('.ssb_c_paid1').text()!=''?$(event.target).parent().parent().prev('tr').find('.ssb_c_paid1').text():0;
-                 
-                    if( parseInt(total_ssb.toString().replace(/,/g , ''))!=parseInt(total_ssb1.toString().replace(/,/g , '')) && !isNaN(total_ssb) && !isNaN(total_ssb1) ){
-                         $(event.target).parent().parent().find('.ssb_total').css("background-color", "yellow");
+                    
+                    if(parseInt(total_ssb.toString().replace(/,/g , ''))!=parseInt(total_ssb1.toString().replace(/,/g , ''))  ){//&& !isNaN(total_ssb) && !isNaN(total_ssb1)
+                     
+                        $(event.target).parent().parent().find('.ssb_total').css("background-color", "yellow");
                     }else{
                          $(event.target).parent().parent().find('.ssb_total').css("background-color", "");
                     }
 
-                    if(parseInt(ssb_c_paid.toString().replace(/,/g , ''))!=parseInt(ssb_c_paid1.toString().replace(/,/g , '')) && !isNaN(ssb_c_paid) && !isNaN(ssb_c_paid1) ){
-                         $(event.target).parent().parent().find('.ssb_c_paid').css("background-color", "yellow");
+                    if(parseInt(ssb_c_paid.toString().replace(/,/g , ''))!=parseInt(ssb_c_paid1.toString().replace(/,/g , '')) ){// && !isNaN(ssb_c_paid) && !isNaN(ssb_c_paid1)
+                     
+                      $(event.target).parent().parent().find('.ssb_c_paid').css("background-color", "yellow");
                     }else{
                          $(event.target).parent().parent().find('.ssb_c_paid').css("background-color", "");
                     }
 
-                 $("input[name^='ssb_c_paid']").each(function() {
-                        console.log('checkpoint1',$(this).val());
-                        // console.log('comma remove',$(this).val().replace(/,/g , ''));
-                        //    console.log(!isNaN($(this).val()));
-                            //  console.log($(this).val().toString().replace(/,/g , ''));
-                            if( !isNaN($(this).val().toString().replace(/,/g , '')) && $(this).val().toString().replace(/,/g , '')!='') {
-                                 console.log('checkpoint12',$(this).val());
-                                cal_ssb+=parseInt($(this).val().toString().replace(/,/g , ''));
-                                 console.log('checkpoint123',cal_ssb);
-                            }
-                        //  that.salary_amounts+=parseInt($(this).val());
+                 $("input[name^='ssb_c_paid']").each(function() {                    
+                        if( !isNaN($(this).val().toString().replace(/,/g , '')) && $(this).val().toString().replace(/,/g , '')!='') {
+                                console.log('checkpoint12',$(this).val());
+                            cal_ssb+=parseInt($(this).val().toString().replace(/,/g , ''));
+                                console.log('checkpoint123',cal_ssb);
+                        }                      
                     });
                      $("#ssbtable").find('.paid-ssb').text(cal_ssb.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
             },
@@ -1037,10 +1139,7 @@ window.APP ="{{config('global')}}";//"{config('global')}" ;//JSON.parse($globals
 
                     b_salary=$(event.target).parent().parent().find('.income').val()!=''?$(event.target).parent().parent().find('.income').val():0;
                     b_salary1=$(event.target).parent().parent().prev('tr').find('.income1').text()!=''?$(event.target).parent().parent().prev('tr').find('.income1').text():0;
-                    // console.log('b',b_salary1); 
-                    // console.log('b1',$(event.target).parent().parent().prev('tr'));       
-
-
+                  
                     t_m=$(event.target).parent().parent().find('.trans_money').val()!=''?$(event.target).parent().parent().find('.trans_money').val():0;
                     t_m1=$(event.target).parent().parent().prev('tr').find('.trans_money1').text()!=''?$(event.target).parent().parent().prev('tr').find('.trans_money1').text():0;
 
@@ -1073,14 +1172,11 @@ window.APP ="{{config('global')}}";//"{config('global')}" ;//JSON.parse($globals
                     $(event.target).parent().parent().find('.payment_amount').val(!isNaN(payment_amount)?payment_amount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"):0);
                     // that.salary_amounts.push(parseInt(salary_amount));
                     let cal_salary=0;
-                    $("input[name^='payment_amount']").each(function() {
-                        // console.log('checkpoint',$(this).val());
-                        // console.log('comma remove',$(this).val().replace(/,/g , ''));
+                    $("input[name^='payment_amount']").each(function() {                       
                             if($(this).val()!='') {
                                 cal_salary+=parseInt($(this).val().toString().replace(/,/g , ''));
                                 $("#salaryTable").find('.cal_salaries').text(cal_salary.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
-                            }
-                        //  that.salary_amounts+=parseInt($(this).val());
+                            }                    
                     });
 
                     if(parseInt(b_salary.toString().replace(/,/g , ''))!=parseInt(b_salary1.toString().replace(/,/g , '')) && !isNaN(b_salary) && !isNaN(b_salary1) ){

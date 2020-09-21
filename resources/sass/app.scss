@@ -16,35 +16,17 @@
 table td input {
     width: 100%;   
 }
-
-#salaryTable,#ssbtable {
-    max-width: 600px;
+#salaryTable,#ssbtable {  
     margin: 0 auto;
 }
-    // #dtHorizontalExample th, td {
-    // white-space: nowrap;
-    // }
-    
-    // table.dataTable thead .sorting:after,
-    // table.dataTable thead .sorting:before,
-    // table.dataTable thead .sorting_asc:after,
-    // table.dataTable thead .sorting_asc:before,
-    // table.dataTable thead .sorting_asc_disabled:after,
-    // table.dataTable thead .sorting_asc_disabled:before,
-    // table.dataTable thead .sorting_desc:after,
-    // table.dataTable thead .sorting_desc:before,
-    // table.dataTable thead .sorting_desc_disabled:after,
-    // table.dataTable thead .sorting_desc_disabled:before {
-    // bottom: .5em;
-    // }
 textarea {
     height: 4.07em;
     resize: none;
  }
-// .errorTxt{
-//   border: 1px solid red;
-//   min-height: 20px;
-// }
 .error{
   border: 1px solid red;
+}
+.scrolling-wrapper{
+	overflow-x: auto;
+    white-space: nowrap; 
 }
