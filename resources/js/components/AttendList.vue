@@ -454,15 +454,15 @@
                         title: 'お待ちください!',
                         // add a custom html tags by defining a html method.
                         html: 'Loading......',
-                        // timer: 3000,
+                         timer: 300000,
                         showCloseButton: false,
                         showCancelButton: false,
                         showConfirmButton: false,
                         focusConfirm: false,
                         allowOutsideClick: false,
-                         onBeforeOpen: () => {
-                            that.$swal.showLoading();
-                            },
+                        //  onBeforeOpen: () => {
+                        //     that.$swal.showLoading();
+                        //     },
                         })   
             },  
             employeeCodeAndName: function(value){
@@ -600,7 +600,7 @@
                                     title: "成功しました",
                                     text: "データの登録は成功しました。",
                                     type: "success",
-                                    timer: 3000,
+                                    timer: 300000,
                                     showCancelButton: false,
                                     showConfirmButton: false,
                                     // position:'center',

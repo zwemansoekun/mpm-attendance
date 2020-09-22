@@ -44,14 +44,15 @@ class AttendDetailsExport implements FromCollection,WithEvents, WithCustomStartC
     {
         $content =  file_get_contents("http://localhost:5000/employees");
         $empApiArray = json_decode($content, true);
-        
+       
         // APIから取得する社員情報
         for ($i = 0; $i < count($empApiArray); $i++) 
         {
             $empSubArray = array();
             array_push($empSubArray, $i);
-            array_push($empSubArray, $empApiArray[$i]['employeeId']);
-            array_push($empSubArray,  $empApiArray[$i]['name']);
+            $empSubArray['employeeId'] = $empApiArray[$i]['id'];
+            $empSubArray['employeeNo'] = $empApiArray[$i]['employeeId'];
+            $empSubArray['name'] = $empApiArray[$i]['name'];
             array_push($this->empArray,  $empSubArray);
         }
 
@@ -65,7 +66,7 @@ class AttendDetailsExport implements FromCollection,WithEvents, WithCustomStartC
         from attend_details 
         where EXTRACT(YEAR_MONTH FROM date) = :date order by emp_no,date asc', ['date' => $this->printY]);
         $this->attendTime = json_decode(json_encode($this->attendTime),true);
-        //print_r($this->attendTime);
+       
 
         // attend_detailsテーブルから取得したデータを配列する
         $totalArray1 = array();
@@ -89,7 +90,7 @@ class AttendDetailsExport implements FromCollection,WithEvents, WithCustomStartC
         end as holiday from employees order by emp_id');
 
         // employeesテーブルから取得したデータを月によって日付配列を作成する
-        $totalArray2 = array();
+       $totalArray2 = array();
         foreach($empDetailArray as $emp)
         {
             $eachArray2 = array();
@@ -100,12 +101,19 @@ class AttendDetailsExport implements FromCollection,WithEvents, WithCustomStartC
                 $date=date_create($this->year.'-'.$this->month.'-'.$i);
                 $eachArray2[$date->format('Y-m-d')] = 0;
             }
-            $eachArray2["kana_name"] = "\n"."(".$emp->kana_name.")";
+           
+            for ($j = 0; $j < count($this->empArray); $j++) 
+            {
+               if ($this->empArray[$j]['employeeId'] == $emp->emp_id) {
+                    $eachArray2["empNo"] = $this->empArray[$j]['employeeNo'];
+                    $eachArray2["kana_name"] = $this->empArray[$j]['name']."\n"."(".$emp->kana_name.")"; break; 
+                } 
+               
+            }
             $eachArray2["holiday"] = $emp->holiday;
             array_push($totalArray2,$eachArray2);
         }
-       
-
+        
         $j = 0; 
         for($z = 0; $z < count($totalArray2); $z++)
         {
@@ -125,17 +133,15 @@ class AttendDetailsExport implements FromCollection,WithEvents, WithCustomStartC
             }
          }
 
-         // 月によって各社員の時間合計
+        // 月によって各社員の時間合計
          $attendSumTime = DB::select('select emp_no, SUM(total_hours) as total_hours 
                 from attend_details where EXTRACT(YEAR_MONTH FROM date) = :date 
                 group by emp_no order by emp_no', 
                 ['date' => $this->printY]);
-
+        
         $attendSumTime = json_decode(json_encode( $attendSumTime),true);
         
-        //print_r($attendSumTime);return;
-
-        // まとめ
+       // まとめ
         $j = 0; $paidHoliday = 0;  $unpaidHoliday = 0; $leaveArray = array();
          for ($i = 0; $i < count($totalArray1); $i++) 
          {
@@ -170,8 +176,6 @@ class AttendDetailsExport implements FromCollection,WithEvents, WithCustomStartC
         array_push($leaveSubArray,$unpaidHoliday);
         array_push($leaveArray,$leaveSubArray);
 
-
-        //print_r(date_create((string)$this->printY.'01')); 
          //有休計算
          $yuukyuu = DB::select('select entry_date,emp_id, DATE_ADD(entry_date, INTERVAL 3 MONTH) as paid_start_date, 
          TIMESTAMPDIFF(year, DATE_ADD(entry_date, INTERVAL 3 MONTH), now() ) as working_year, 
@@ -198,7 +202,7 @@ class AttendDetailsExport implements FromCollection,WithEvents, WithCustomStartC
              array_push($yuukyuuArray,$yuukyuuSubArray);
          }
  
-         //print_r($yuukyuuArray);return;
+         
          $monthArray = array();
          for($i = 0; $i < count($yuukyuuArray) ; $i++)
          {
@@ -215,12 +219,10 @@ class AttendDetailsExport implements FromCollection,WithEvents, WithCustomStartC
              }
              
              $month_difference = date_diff(date_create((string)$this->printY.'01'), date_create($start_date))->format('%m');
-              //print_r($month_difference);return;
- 
-             
              $start_date = (int)str_replace('-','',substr($start_date, 0, strrpos($start_date, '-')));
            
-            
+             $monthSubArray = array(); 
+             $monthSubArray['emp_no'] =  $yuukyuuArray[$i]['emp_no'];
              $sumHolidayForEach = 0;
             for($j = 0; $j <= $month_difference; $j++)
              {
@@ -248,25 +250,37 @@ class AttendDetailsExport implements FromCollection,WithEvents, WithCustomStartC
                    $sumHolidayForEach += $holidayByMonth[$z]["yuukyuu"];
                  }
                  $start_date += 1; 
+                 
                 }
-                $sumHolidayForEach = $yuukyuuArray[$i]['holiday'] - ($sumHolidayForEach * 0.5);
-                //print_r($sumHolidayForEach );
-             array_push($monthArray,$sumHolidayForEach);
+                $sumHolidayForEach = $yuukyuuArray[$i]['holiday'] - $sumHolidayForEach;
+                array_push($monthSubArray,$sumHolidayForEach);
+               array_push($monthArray,$monthSubArray);
          }
+         
        
-        // CSV出力ため配列作成する
-        for ($i = 0; $i < count($totalArray2); $i++) 
+        // CSV出力ため配列作成する 
+        for ($i = 0; $i < count($attendSumTime); $i++) 
         {
             $empSubArray = array();
             array_push($empSubArray, $i+1);
-            array_push($empSubArray, $empApiArray[$i]['employeeId']);
-            array_push($empSubArray,  $empApiArray[$i]['name'].$totalArray2[$i]['kana_name']);
-            for ($j = 1; $j <= $this->day_count; $j++)
+            foreach($totalArray2 as $array2)
             {
-                $date =date_create($this->year.'-'.$this->month.'-'.$j);
-                $date =$date->format('Y-m-d');
-                array_push($empSubArray, $totalArray2[$i][$date]);
+                //emp_no
+                //print_r( $array2);
+                 if($attendSumTime[$i]['emp_no'] == $array2['emp_no'])
+                 {
+                    array_push($empSubArray, $array2['empNo']);
+                    array_push($empSubArray,  $array2['kana_name']);
+                    for ($j = 1; $j <= $this->day_count; $j++)
+                    {
+                        $date =date_create($this->year.'-'.$this->month.'-'.$j);
+                        $date =$date->format('Y-m-d');
+                        array_push($empSubArray, $array2[$date]);
+                    }
+                 }
+
             }
+
             array_push($empSubArray,  $attendSumTime[$i]['total_hours']);
             if($leaveArray[$i][0] == 0)
             {
@@ -284,7 +298,7 @@ class AttendDetailsExport implements FromCollection,WithEvents, WithCustomStartC
             {
                 array_push($empSubArray,  $leaveArray[$i][1]);
             }
-            array_push($empSubArray,  $monthArray[$i]);
+            array_push($empSubArray,  $monthArray[$i][0]);
             array_push($this->csvArray, $empSubArray);
         }
 
