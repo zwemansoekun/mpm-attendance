@@ -1,6 +1,4 @@
 {
     "/js/app.js": "/js/app.js",
-    "/css/contextMenu.css": "/css/contextMenu.css",
-    "/css/app.css": "/css/app.css",
-    "/js/contextMenu.min.js": "/js/contextMenu.min.js"
+    "/css/app.css": "/css/app.css"
 }
