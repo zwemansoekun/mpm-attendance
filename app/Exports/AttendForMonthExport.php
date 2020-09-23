@@ -60,9 +60,9 @@ class AttendForMonthExport implements FromCollection,WithEvents, WithCustomStart
             $daySubArray = array();
             $daySubArray["id"] = $i;
             $daySubArray["date"] = date_create($this->year.'-'.$this->month.'-'.$i)->format('Y-m-d');
-            $daySubArray["in_time"] = "08:00";
-            $daySubArray["out_time"] = "17:00";
-            $daySubArray["lunch_time"] = "01:00";
+            $daySubArray["in_time"] = "";
+            $daySubArray["out_time"] = "";
+            $daySubArray["lunch_time"] = "";
             $daySubArray["total_time"] = $this->clockalize(8);
             $daySubArray["ot_time"] = "";
             $daySubArray["ot_reason"] = "";
@@ -81,19 +81,18 @@ class AttendForMonthExport implements FromCollection,WithEvents, WithCustomStart
                         $this->dayArray[$i]["in_time"] =  "有休";
                         $this->dayArray[$i]["out_time"] =  "";
                         $this->dayArray[$i]["lunch_time"] =  "";
-                        //$this->dayArray[$i]["total_time"] =  $this->clockalize($attendTime[$j]["total_hours"]);
                     }
                     else
                     {
                         $this->dayArray[$i]["in_time"] =  substr((string)$attendTime[$j]["am1"],0,5);
                         $this->dayArray[$i]["out_time"] =  substr((string)$attendTime[$j]["pm2"],0,5);
-                        //$this->dayArray[$i]["total_time"] =  $attendTime[$j]["total_hours"];
+                        $this->dayArray[$i]["lunch_time"] =  "01:00";
                     }
                     $this->dayArray[$i]["total_time"] =  $this->clockalize($attendTime[$j]["total_hours"]);
                    $j++;
                 }
             }
-           //$this->totalTime += $this->dayArray[$i]["total_time"];
+          
            list($hour, $minute) = explode(':', $this->dayArray[$i]["total_time"]);
            $minutes += $hour * 60;
            $minutes += $minute;
@@ -156,14 +155,19 @@ class AttendForMonthExport implements FromCollection,WithEvents, WithCustomStart
                 // 支社長
                 $event->sheet->getCell('E1')->setValue("支社長");
                 $event->sheet->mergeCells('E2:E4');
+                $event->sheet->mergeCells('A6:E6');
                 
-                $event->sheet->getCell('A6')->setValue("営業所名　MPミャンマー　　");
-
-             
                 $kanaName = DB::select('SELECT kana_name FROM employees WHERE emp_id = :empId', 
-                ['empId' => substr($this->employee,0,1)]);
+                    ['empId' => substr($this->employee,0,1)]);
                 $kanaName = json_decode(json_encode($kanaName),true);
-                $event->sheet->getCell('D6')->setValue("氏名 ". $kanaName[0]['kana_name']);
+                
+                $event->sheet->getCell('A6')->setValue("営業所名　MPミャンマー      "."氏名 ". $kanaName[0]['kana_name']);
+
+                $event->sheet->getStyle('A6:E6')->applyFromArray([
+                    'font' => [
+                        'underline' => true
+                    ]
+                ]);
 
                 $event->sheet->mergeCells('E8:F8');
                 $event->sheet->getCell('E8')->setValue("実　働　時　間");
@@ -174,8 +178,7 @@ class AttendForMonthExport implements FromCollection,WithEvents, WithCustomStart
 
                 for($i = 8; $i <= count($this->dayArray) + 14; $i++)
                 {
-                   
-                    $event->sheet->styleCells(
+                   $event->sheet->styleCells(
                         'A'.$i.':G'.$i,
                         [
                             'alignment' => [
@@ -199,7 +202,6 @@ class AttendForMonthExport implements FromCollection,WithEvents, WithCustomStart
                 $lineStart = 10;
                 for ($i = 1; $i <= $this->day_count; $i++)
                 {
-                    
                     $d_var = getdate(mktime(0,0,0,$this->month,$i,$this->year));
                     
                     $colorRange = 'A'.$lineStart .':G'.$lineStart;
@@ -220,9 +222,9 @@ class AttendForMonthExport implements FromCollection,WithEvents, WithCustomStart
                     }
                     if (in_array($this->year.'-'.$this->month.'-'.$i, $holidayArray)) 
                     {
-                            $event->sheet->getDelegate()->getStyle($colorRange)->getFill()
-                                ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
-                                ->getStartColor()->setARGB('FF989898');
+                        $event->sheet->getDelegate()->getStyle($colorRange)->getFill()
+                            ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                            ->getStartColor()->setARGB('FF228B22');
                         
                     }
                     $lineStart++;
@@ -233,8 +235,7 @@ class AttendForMonthExport implements FromCollection,WithEvents, WithCustomStart
                 {
                     for ($j = 0; $j < count($this->dayArray[$i]); $j++)
                     {
-                       
-                        if( $this->dayArray[$i]['in_time'] == '有休')
+                       if( $this->dayArray[$i]['in_time'] == '有休')
                         {
                             $event->sheet->getDelegate()->getStyle('B'.$lineStart)->getFont()->
                                 getColor()->setARGB(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_RED);
@@ -249,7 +250,30 @@ class AttendForMonthExport implements FromCollection,WithEvents, WithCustomStart
                 $event->sheet->getCell('A'.$lineStart)->setValue("勤　務　時　間　合　計");
                 $event->sheet->getStyle('A'.$lineStart)->getAlignment()
                     ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_JUSTIFY);
-                // sprintf("%d:%02d",   floor($t/60), $t%60)
+
+                $borderArray = [
+                    'borders' => [
+                        'top' => [
+                                'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_DOUBLE,
+                        ],
+                        'bottom' => [
+                            'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_DOUBLE,
+                        ],
+                        'left' => [
+                            'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_DOUBLE,
+                        ],
+                        'right' => [
+                            'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_DOUBLE,
+                        ],
+                    ]
+                            
+                ];
+
+                $event->sheet->getStyle('A'.$lineStart.':D'.$lineStart)->applyFromArray($borderArray);
+                $event->sheet->getStyle('E'.$lineStart)->applyFromArray($borderArray);
+                $event->sheet->getStyle('F'.$lineStart)->applyFromArray($borderArray);
+                $event->sheet->getStyle('G'.$lineStart)->applyFromArray($borderArray);
+                
                 $event->sheet->getCell('E'.$lineStart)->setValue($this->totalTime);
                 
                 // border line
@@ -266,7 +290,7 @@ class AttendForMonthExport implements FromCollection,WithEvents, WithCustomStart
                     ],
                 ];
                 
-                $event->sheet->getStyle('A8:G'.(count($this->dayArray) + 10))->applyFromArray($styleArray);
+                $event->sheet->getStyle('A8:G'.(count($this->dayArray) + 9))->applyFromArray($styleArray);
                 $event->sheet->getStyle('E1:E4')->applyFromArray($styleArray);
 
                 $lineStart = $lineStart + 2;
@@ -294,7 +318,7 @@ class AttendForMonthExport implements FromCollection,WithEvents, WithCustomStart
                 $event->sheet->getStyle('E'.$lineStart.':E'.$lineFinish)->applyFromArray($styleArray);
 
                 $event->sheet->getStyle('E1')->getAlignment()
-                ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+                    ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
             }
         ];
     }
