@@ -34,6 +34,7 @@ Route::get('/salaryList/{yearmonth}', 'SalaryController@list');
 Route::get('/salaryList/ssb/all', 'SalaryController@ssb');
 Route::post('/salaryList', 'SalaryController@store');
 Route::post('/salaryList/getsalary','SalaryController@getsalary');
+Route::get('/salaryList/download/{year}','SalaryController@download');
 
 Route::get('/dsettings','DefaultSettingController@index');
 
