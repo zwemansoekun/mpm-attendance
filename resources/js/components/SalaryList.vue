@@ -612,11 +612,19 @@
             },
    
             payslipSubmit:function(){
-                    var testingArray = [];
-                    $.each($("input[name^='checks']:checked"), function(){                      
-                        testingArray.push($(this).parent().parent().find('.pay_empid').val());
-                    });
-                    alert("My Testing emp id array are: " + testingArray.join(", "));
+                var empArray = [];
+                $.each($("input[name^='checks']:checked"), function(){                      
+                    empArray.push($(this).parent().parent().find('.pay_empid').val());
+                });
+
+                const link = document.createElement('a')
+                let url =  (window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/salary/export/"+ this.year+'-'+ this.month+'/'+ empArray;
+                    
+                //link.href = 'http://127.0.0.1:8000/salary/export/'+ this.year+'-'+ this.month+'/'+ empArray
+                link.href = url;
+                document.body.appendChild(link)
+                link.click()
+                
             },
             checkAll: function(){
 
@@ -666,17 +674,35 @@
                     return ;
                 }
 
-                this.axios
-                .post('http://127.0.0.1:8000/api/delayTime/updateMoney/'+id, delayTime)
-                .then((response) => {
-                    this.delays = response.data;
-                    this.delayDataCalculate();
+                let that=this;
+                this.axios({
+                    url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/delayTime/updateMoney/"+id,
+                    method: 'post',
+                    data: delayTime
+                })
+                .then(function (response) {
+                    that.delays = response.data;
+                    that.delayDataCalculate();
 
-                    this.data_check_messg = true;
+                    that.data_check_messg = true;
                     setTimeout(() => {
-                        this.data_check_messg = false;
+                        that.data_check_messg = false;
                     },2000)
                 })
+                .catch(function (error) {
+                });
+
+                // this.axios
+                // .post('http://127.0.0.1:8000/api/delayTime/updateMoney/'+id, delayTime)
+                // .then((response) => {
+                //     this.delays = response.data;
+                //     this.delayDataCalculate();
+
+                //     this.data_check_messg = true;
+                //     setTimeout(() => {
+                //         this.data_check_messg = false;
+                //     },2000)
+                // })
             },
             delayDataCalculate(){
                 this.attendDelays = [];
@@ -1151,15 +1177,7 @@
                     });
                      $("#ssbtable").find('.paid-ssb').text(cal_ssb.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
             },
-            excelExport(){
-                axios.get('http://127.0.0.1:8000/export')
-                .then(()=>{
-                    
-                })
-                .catch(()=> {
-                    
-                })
-            },
+            
             updateInput:function(event){ 
                     let that=this;
                     let b_salary=0,t_m=0,jlpt=0,bnu=0,total=0;  

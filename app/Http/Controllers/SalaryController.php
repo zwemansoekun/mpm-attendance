@@ -14,12 +14,14 @@ use App\EmployeeDetail;
 use Illuminate\Http\Request;
 
 use App\Exports\PaySlipExport;
-
-use App\Exports\EngineerExport;
+use App\Exports\InvoicesExport;
+use App\Exports\PaySlipsExport;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
-use Illuminate\Support\Facades\Validator;
 use Barryvdh\Debugbar\Facade as Debugbar;
+use Illuminate\Support\Facades\Validator;
+use App\Exports\EngineerExport;
+
 use App\Http\Resources\EmployeeDetail as EmployeeDetailResource;
 
 
@@ -293,34 +295,18 @@ class SalaryController extends Controller
       
     }
 
+    public function excel_export($yearMonth , $employees){
 
-    public function csv_export(){
-        $yearMonth = '2019/05';
-        $id = 6;
-        $employee = Employee::select('*')->where('emp_id',$id)->first();
-        $salary = Salary::select("*")->where("pay_month",$yearMonth)->where('employee_id',$employee->id)->first();
-        $trans_money = EmployeeDetail::where("pay_month",$yearMonth)->where('emp_id',$id)->first()->trans_money;
+        $arrEmp = array();
+        $myArray = explode(',', $employees);
         
-        $leaveData = DB::select('select (amPaidCount+pmPaidCount)/2 as paidLeave,amAbsentCount , pmAbsentCount ,
-            (amAbsentCount+pmAbsentCount)/2 as absent ,late_coming,leaving_early
-            FROM
-            (select sum(late_coming) late_coming, sum(leaving_early) leaving_early,emp_no from attend_details where emp_no = 6 
-            and EXTRACT(YEAR_MONTH FROM date) = ? group by emp_no) attend left join
-            (select count(emp_no) amPaidCount ,emp_no from attend_details where emp_no = 6 and EXTRACT(YEAR_MONTH FROM date) = ?
-            and am_leave = 1 group by emp_no) amPaid on amPaid.emp_no = attend.emp_no left join
-            (select count(emp_no) pmPaidCount, emp_no   from attend_details where emp_no = 6 and EXTRACT(YEAR_MONTH FROM date) = ?
-            and pm_leave = 1 group by emp_no) pmPaid on pmPaid.emp_no = attend.emp_no left join
-            (select count(emp_no) amAbsentCount , emp_no  from attend_details where emp_no = 6 and EXTRACT(YEAR_MONTH FROM date) = ?
-            and am_leave = 2 group by emp_no) amAbsent on amAbsent.emp_no = attend.emp_no left join 
-            (select count(emp_no) pmAbsentCount, emp_no  from attend_details where emp_no = 6 and EXTRACT(YEAR_MONTH FROM date) = ?
-            and pm_leave = 2 group by emp_no) pmAbsent on pmAbsent.emp_no = attend.emp_no
-            where attend.emp_no = 6 
-            ', ['202007','202007','202007','202007','202007'])[0];
-        Debugbar::info($leaveData);
-        $leaveData = json_decode(json_encode( $leaveData),true);
+        foreach($myArray as $my_Array){
+            $employee = Employee::select('*')->where('emp_id',$my_Array)->first();
+            array_push($arrEmp , $employee);
+        }
 
-        $filename = '給与明細フォーマット_'. now()->format('YmdHis').'.xlsx';
-        return Excel::download(new PaySlipExport($employee,$salary,'may wathone','001',$trans_money,$leaveData), $filename);
+        $filename = '給与明細_'. now()->format('YmdHis').'.xlsx';
+        return (new PaySlipsExport($yearMonth,$arrEmp))->download($filename);
     }
 
     public function getsalary(Request $request)
