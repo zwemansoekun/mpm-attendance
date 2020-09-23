@@ -17,6 +17,7 @@ class CreateDefaultSettingsTable extends Migration
             $table->id();
             $table->integer('ssb_max');
             $table->integer('ssb_paid');
+            $table->decimal('money',8,2);
             $table->timestamps();
         });
     }

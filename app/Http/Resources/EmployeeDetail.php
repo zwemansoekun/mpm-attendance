@@ -36,6 +36,7 @@ class EmployeeDetail extends JsonResource
             'kana_name' => $this->employee->kana_name,
             'entry_date' => $this->employee->entry_date,
             'dob' => $this->employee->dob,
+            'late_leave_money'=>$this->late_leave_money,
         ];
     }
 }

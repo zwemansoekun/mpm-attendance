@@ -468,19 +468,20 @@
             employeeCodeAndName: function(value){
                 return value.employeeId+' '+value.name;
             },
-            empChange:function(event){
+            empChange:function(event){   
+
                 let val='';
-        
                 if(event.target.value!=''){
-                    let  val=event.target.value;
+                    val=event.target.value;
                     let split_name=val.split(" ");
                     this.emp_no=split_name[0];
                     this.emp_code=split_name[1];
+
                     val=val.replace(this.emp_no,'');
                     val=val.replace(this.emp_code,'');
                     this.emp_name=val;
                 }  
-                
+                console.log('qqqq',val);
                 if(val!='' && this.select_date!=''){   
                     this.loadingAlert();
                     this.update_call();          
@@ -807,6 +808,7 @@
                     })                  
                     .then(response=>{ 
                         that.get_attend_data=[];
+                        that.data_combine=[];
                         that.data_combine=[];
                         that.check_attend_data=false;                        
                         that.get_attend_data=response.data;

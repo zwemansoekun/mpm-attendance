@@ -13,6 +13,9 @@
                     <router-link to="/logout" class="nav-item nav-link list-group-item list-group-item-action bg-light" onclick="event.preventDefault();
                         document.getElementById('logout-form').submit();"
                     >ログアウト
+                        <form id="logout-form"  method="POST" style="display: none;">
+                            <input type="hidden" name="_token" :value="csrf">
+                        </form>
                     </router-link>             
                     </div>
                 </div>           
@@ -36,7 +39,7 @@
        
         data() {
             return {
-               
+                csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             }
          },
         methods: {     
