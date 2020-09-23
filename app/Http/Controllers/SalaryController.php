@@ -6,19 +6,22 @@ namespace App\Http\Controllers;
 
 use App\Ssb;
 use App\Salary;
+use App\Setting;
 use App\Employee;
+use App\AttendDetail;
+
 use App\EmployeeDetail;
 use Illuminate\Http\Request;
 
 use App\Exports\PaySlipExport;
 use App\Exports\InvoicesExport;
-
 use App\Exports\PaySlipsExport;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
-
 use Barryvdh\Debugbar\Facade as Debugbar;
 use Illuminate\Support\Facades\Validator;
+use App\Exports\EngineerExport;
+
 use App\Http\Resources\EmployeeDetail as EmployeeDetailResource;
 
 
@@ -246,10 +249,48 @@ class SalaryController extends Controller
 
     public function list($yearmonth)
     {
-           
+        $adetailcount=0;
+        $ym=explode("-",$yearmonth);  
         $salary=EmployeeDetail::with('employee')->where('pay_month',str_replace("-","/",$yearmonth))->get();//->toArray();//with('employee')->
       
-        $res_salary= EmployeeDetailResource::collection($salary);
+         $daycount=cal_days_in_month(CAL_GREGORIAN,$ym[1],$ym[0]);
+
+        DB::beginTransaction();
+        try {
+            for($i=0;$i<count($salary);$i++){
+              
+            
+    
+                    
+                $adetailcount=AttendDetail::whereYear('date',$ym[0])
+                ->whereMonth('date',$ym[1])
+                ->where('emp_no',$salary[$i]['emp_id'])
+                ->where(function($q) {
+                    $q->orWhereNotNull('am1')
+                    ->orWhereNotNull('am2')
+                    ->orWhereNotNull('pm1')
+                    ->orWhereNotNull('pm2');
+                })->count();
+    
+                $adetail_lateleave=AttendDetail::whereYear('date',$ym[0])
+                ->whereMonth('date',$ym[1])
+                ->where('emp_no',$salary[$i]['emp_id'])
+                ->get();
+                $office_day=$adetail_lateleave->count();
+                $office_hour=$office_day*8;
+                $sum_hour=$adetail_lateleave->sum('total_hours');
+                $leave_attend_hr=$office_hour-$sum_hour;
+                
+                $oneday=$salary[$i]['salary_amount']/$daycount;
+                $salary[$i]['trans_money']= $salary[$i]['trans_money']*$adetailcount;
+                $salary[$i]['late_leave_money']=number_format((float)(($leave_attend_hr/8)*$oneday), 2, '.', ''); 
+            } 
+        } catch (Exception $e) {
+            DB::rollBack();
+        }
+        
+        $res_salary= EmployeeDetailResource::collection($salary);            
+
         return $res_salary;
       
     }
@@ -283,5 +324,38 @@ class SalaryController extends Controller
     //         $ssb=Ssb::get();
     //         return $ssb;
     // }
+
+    public function download($yearmonth)
+    {  
+        // $global=config('global');
+        $yearMonth=str_replace('-','/',$yearmonth);
+        // $setting='';
+        //  $employdetail=EmployeeDetail::with('employee')->where('pay_month',$yearMonth)->get();//->toArray();//with('employee')->
+        //  $setting=Setting::select('money')->where('create_month','=',$yearMonth)->get();
+        // return !$setting->isEmpty();
+        //  if($setting->isEmpty()){          
+        //      $setting=$global;
+        //  }
+        //  return $setting[0]['money'];
+
+        // $ym=explode("-",$yearmonth); 
+        // $adetail=AttendDetail::whereYear('date',2020)
+        //        ->whereMonth('date',07)
+        // ->where(function($q) {
+        //     $q->orWhereNotNull('am1')
+        //       ->orWhereNotNull('am2')
+        //       ->orWhereNotNull('pm1')
+        //       ->orWhereNotNull('pm2');
+        // })->count();
+
+        // return $adetail;
+        
+         if($yearMonth){    
+            libxml_use_internal_errors(true);      
+            return (new EngineerExport($yearMonth))->download('海外エンジニアコスト一覧表_'.$yearmonth.'.xlsx');
+         }
+        
+        // return Excel::download(new EngineerExport($yearmonth), '海外エンジニアコスト一覧表_'.$yearmonth.'.xlsx');
+    }
 
 }

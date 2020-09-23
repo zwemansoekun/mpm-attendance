@@ -15,7 +15,7 @@ class DefaultSettingController extends Controller
     public function index()
     {
         $dsetting=DefaultSetting::all([
-            'ssb_max','ssb_paid'
+            'ssb_max','ssb_paid','money'
         ])->toArray();
         // ->keyBy('ssb_max') // key every setting by its name
         // ->transform(function ($setting) {

@@ -56,7 +56,7 @@
                 </div>
                 <!-- <form id="form" class="" @submit.prevent="SalarySave"  autocomplete="on"> -->
                 <div class="row justify-content-md-center mt-4"> 
-                      <button type="button" style="background-color:#E7E6E6" class="btn  mr-3" onclick="this.blur();">エンジニアコスト一覧表</button>
+                      <button type="button" @click="engineerCost" style="background-color:#E7E6E6" class="btn  mr-3" onclick="this.blur();">エンジニアコスト一覧表</button>
 
                       <!-- <a type="button"  href="http://127.0.0.1:8000/export/" >
                             <button @click="excelExport()" class="btn mr-3" style="background-color:#E7E6E6" onclick="this.blur();">
@@ -246,8 +246,8 @@
 
                                                         <td style="background-color:#D9D9D9" class="text-right align-middle inc_tax1">{{salaries[key].income_tax}}</td>
                                                         <td style="background-color:#D9D9D9" class="text-right align-middle ssb1">{{salaries[key].ssb!=(undefined || 0)?salaries[key].ssb+"%":''}}</td>
-                                                        <td style="background-color:#D9D9D9" class="text-right align-middle leave_late">
-                                                          
+                                                        <td style="background-color:#D9D9D9" class="text-right align-middle leave_late1">
+                                                            {{salaries[key].late_leave_money!=(undefined || 0)?salaries[key].late_leave_money:''}}
                                                         </td>
 
                                                         <td style="background-color:#D9D9D9" class="text-right align-middle"></td>
@@ -577,6 +577,40 @@
            
         },
         methods: { 
+            engineerCost:function(){
+                    let that=this;
+                    let up_data={                       
+                        "pay_month":that.select_date,
+                    };
+                    this.axios({
+                      url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/salaryList/getsalary",
+                      method: 'post',
+                      data:up_data,
+                    })                  
+                    .then(response=>{ 
+                         console.log('resssss',response.data.length);       
+                        if(response!='' && response.data.length!=0 ){
+                            const url = (window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/salaryList/download/"+this.year+"-"+this.month;
+                            const link = document.createElement('a')
+                            link.href = url
+                            // link.setAttribute('download',"" ) // , 'file.png' or any other extension
+                            document.body.appendChild(link)
+                            link.click()
+                        }else{
+                                that.$fire({
+                                title: "失敗！！",
+                                text: "データはありませんでした。",
+                                type: "error",
+                                timer: 3500,
+                                showCancelButton: false,
+                                showConfirmButton: false,                              
+                                }).then(r => {                             
+                                }); 
+                        }
+                    })
+                    .catch(() => console.log('error occured'))
+            },
+   
             payslipSubmit:function(){
                 var empArray = [];
                 $.each($("input[name^='checks']:checked"), function(){                      
@@ -918,10 +952,7 @@
                       method: 'post',
                       data: {"form1": temp_salary,"form2": temp_ssb}
                     })
-                    .then(function (response) {
-                        console.log('aa1',response);
-                          console.log('aa2',response.data);
-                            console.log('aa3',response.data.message);
+                    .then(function (response) {                     
 
                         // your action after success                      
                         if(response.data){
@@ -1023,8 +1054,7 @@
 
                 // }
             },
-            update_call:function(){
-                    console.log('update');
+            update_call:function(){               
                     let that=this;  
                     let up_data={                       
                         "pay_month":that.select_date,
