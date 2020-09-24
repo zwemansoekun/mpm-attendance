@@ -520,8 +520,8 @@
                         return true;
                     },
                 });
-                let temp_arr=[];let am1,am2,pm1,pm2,thour,date;let am_leave=null,pm_leave=null;
-                let id='',late_coming=0,leaving_early=0;
+                let temp_arr=[];let am1=null,am2=null,pm1=null,pm2=null,thour=null,date=null;let am_leave=null,pm_leave=null;
+                let id=null,late_coming=0,leaving_early=0;
                 if(jQuery('#form').valid()){
                      
                      $('#attendTable tr[class^=index_]').each(function (key,value) {
@@ -577,12 +577,12 @@
                                }else
                                   temp_arr.push({"date": date,"emp_no":those.emp_no,"total_hours":thour,"am1": am1 ,"am2":am2,"pm1":pm1,"pm2":pm2,"am_leave":am_leave,"pm_leave":pm_leave,"leaving_early":leaving_early,"late_coming":late_coming}); 
                              
-                                date='';am1='';am2='';pm1='';pm2='';thour='',am_leave=null;id='';pm_leave=null;leaving_early=0;late_coming=0;
+                                date=null;am1=null;am2=null;pm1=null;pm2=null;thour=null,am_leave=null;id=null;pm_leave=null;leaving_early=0;late_coming=0;
                                 return false;
                             }
                          });    
                    });
-                    
+                    console.log('zzzzzzqqqqq',temp_arr);
                     those.loadingAlert();
                     this.axios({
                       url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/attendList",
@@ -647,7 +647,7 @@
             },
             updateInput:function(event){ 
 
-                   let am1,am2,pm1,pm2='';let total_am,total_pm=0;
+                   let am1=null,am2=null,pm1=null,pm2=null;let total_am=0,total_pm=0;
                    am1=$(event.target).parent().parent().find('.am1').val()!=undefined?$(event.target).parent().parent().find('.am1').val().split(":"):'';
                    am2=$(event.target).parent().parent().find('.am2').val()!=undefined?$(event.target).parent().parent().find('.am2').val().split(":"):'';
                    pm1=$(event.target).parent().parent().find('.pm1').val()!=undefined?$(event.target).parent().parent().find('.pm1').val().split(":"):'';
@@ -997,8 +997,8 @@
          
         showTimer(index,sec_index,day_leave=''){  
               let am_leave='';let pm_leave=''; 
-              let am1,am2,pm1,pm2;
-              let t_am='';let p_am=''; 
+              let am1=null,am2=null,pm1=null,pm2=null;
+              let t_am=null;let p_am=null; 
 
              
 
@@ -1014,16 +1014,7 @@
 
                 pm1=jQuery("."+index).find('.pm1_2').text().trim();
                 pm2=jQuery("."+index).find('.pm2_3').text().trim();
-                    console.log('m0',sec_index);
-                      console.log('m09',index);
-                         console.log('m0100',jQuery("."+index).find('[class^="mainIndex_"]'));
-                             console.log('m0110',jQuery("."+index).find('.am1_0').text().trim());
-                   console.log('m',am_leave);
-                   console.log('m1',pm_leave);
-                      console.log('m2',am1);
-                         console.log('m3',am2);
-                            console.log('m4',pm1);
-                               console.log('m5',pm2);
+                   
               }else{
                 if(jQuery("."+index).find('td .amleave').val()){
                   am_leave=jQuery("."+index).find('td .amleave').val();      
@@ -1036,12 +1027,7 @@
 
                 pm1=jQuery("."+index).prev('tr').find('[class^="mainIndex_"]').find('.pm1_2').text().trim();
                 pm2=jQuery("."+index).prev('tr').find('[class^="mainIndex_"]').find('.pm2_3').text().trim();
-                   console.log('i',am_leave);
-                   console.log('i1',pm_leave);
-                      console.log('i2',am1);
-                         console.log('i3',am2);
-                            console.log('i4',pm1);
-                               console.log('i5',pm2);
+                  
               }         
 
 
