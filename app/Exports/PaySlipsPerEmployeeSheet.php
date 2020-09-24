@@ -38,7 +38,7 @@ class PaySlipsPerEmployeeSheet implements WithTitle,WithEvents
         $this->empName = $empApiArray['name'];
 
         //$ymStr = str_replace("-","",$yearMonth);
-        $this->leaveData = DB::select('select (amPaidCount+pmPaidCount)/2 as paidLeave,amAbsentCount , pmAbsentCount ,
+        $data = DB::select('select (amPaidCount+pmPaidCount)/2 as paidLeave,amAbsentCount , pmAbsentCount ,
             (amAbsentCount+pmAbsentCount)/2 as absent ,late_coming,leaving_early
             FROM
             (select sum(late_coming) late_coming, sum(leaving_early) leaving_early,emp_no from attend_details 
@@ -57,9 +57,12 @@ class PaySlipsPerEmployeeSheet implements WithTitle,WithEvents
             on pmAbsent.emp_no = attend.emp_no where attend.emp_no = :emp_no6 
             ',['date1' => $this->yearMonth,'date2' => $this->yearMonth,'date3' => $this->yearMonth,'date4' => $this->yearMonth,'date5' => $this->yearMonth,
             'emp_no1' => $this->employee->emp_id,'emp_no2' => $this->employee->emp_id,'emp_no3' => $this->employee->emp_id
-            ,'emp_no4' => $this->employee->emp_id,'emp_no5' => $this->employee->emp_id,'emp_no6' => $this->employee->emp_id])[0];
+            ,'emp_no4' => $this->employee->emp_id,'emp_no5' => $this->employee->emp_id,'emp_no6' => $this->employee->emp_id]);
  
-        $this->leaveData = json_decode(json_encode($this->leaveData),true);
+            if($data != null){
+                $this->leaveData = json_decode(json_encode($data[0]),true);
+            }
+        
     }
 
     public function registerEvents(): array
@@ -131,37 +134,92 @@ class PaySlipsPerEmployeeSheet implements WithTitle,WithEvents
                 $month = $dateMonthArray[1];
                 $date = Carbon::createFromDate($year, $month, 1);
                 $event->sheet->getDelegate()->setCellValue('B9', $date->daysInMonth);
-                
 
                 $event->sheet->getDelegate()->setCellValue('C9', 'Present Days');
-                $presentDays = $date->daysInMonth - $this->leaveData['paidLeave'] - $this->leaveData['absent'];
+                $presentDays = 0;
+                $presentHours = 0;
+                $totalWorkingHours = $date->daysInMonth * 8;
+                if($this->leaveData != null){
+                    
+                    $presentDays = $date->daysInMonth - $this->leaveData['paidLeave'] - $this->leaveData['absent'];
+                    $presentHours = $totalWorkingHours - ($this->leaveData['paidLeave'] * 8) - ($this->leaveData['absent'] * 8);
+
+                    if($this->leaveData['late_coming'] != null){
+                        $event->sheet->getDelegate()->setCellValue('B12', $this->leaveData['late_coming']);
+                    }else{
+                        $event->sheet->getDelegate()->setCellValue('B12', '-');
+                    }
+
+                    if($this->leaveData['leaving_early'] != null){
+                        $event->sheet->getDelegate()->setCellValue('D12', $this->leaveData['leaving_early']);
+                    }else{
+                        $event->sheet->getDelegate()->setCellValue('D12', '-');
+                    }
+
+                    if($this->leaveData['amAbsentCount'] != null){
+                        $event->sheet->getDelegate()->setCellValue('B13', $this->leaveData['amAbsentCount']);
+                    }else{
+                        $event->sheet->getDelegate()->setCellValue('B13', '-');
+                    }
+
+                    if($this->leaveData['pmAbsentCount'] != null){
+                        $event->sheet->getDelegate()->setCellValue('D13', $this->leaveData['pmAbsentCount']);
+                    }else{
+                        $event->sheet->getDelegate()->setCellValue('D13', '-');
+                    }
+                    
+                    if($this->leaveData['paidLeave'] != null){
+                        $event->sheet->getDelegate()->setCellValue('B14', $this->leaveData['paidLeave']);
+                        $event->sheet->getDelegate()->setCellValue('D14', $this->leaveData['paidLeave'] * 8);
+                    }else{
+                        $event->sheet->getDelegate()->setCellValue('B14', '-');
+                        $event->sheet->getDelegate()->setCellValue('D14', '-');
+                    }
+
+                }else{
+                    $event->sheet->getDelegate()->setCellValue('B12', '-');
+                    $event->sheet->getDelegate()->setCellValue('D12', '-');
+                    $event->sheet->getDelegate()->setCellValue('B13','-');
+                    $event->sheet->getDelegate()->setCellValue('D13', '-');
+                    $event->sheet->getDelegate()->setCellValue('B14', '-');
+                    $event->sheet->getDelegate()->setCellValue('D14', '-');
+                }
+                //font align right
+                $alignRightColumns = ['B12','D12', 'B13', 'D13', 'B14', 'D14'];
+
+                foreach($alignRightColumns as $col){
+                    $event->sheet->getDelegate()
+                    ->getStyle($col)
+                    ->getAlignment()
+                    ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
+                }
+
                 $event->sheet->getDelegate()->setCellValue('D9', $presentDays);
 
                 $event->sheet->getDelegate()->setCellValue('A10', 'Total Working Hours');
-                $totalWorkingHours = $date->daysInMonth * 8;
+                
                 $event->sheet->getDelegate()->setCellValue('B10', $totalWorkingHours);
 
                 $event->sheet->getDelegate()->setCellValue('C10', 'Present Hours');
-                $presentHours = $totalWorkingHours - ($this->leaveData['paidLeave'] * 8) - ($this->leaveData['absent'] * 8);
                 $event->sheet->getDelegate()->setCellValue('D10', $presentHours);
 
                 $event->sheet->getDelegate()->setCellValue('A12', 'Late Coming (Hours)');
-                $event->sheet->getDelegate()->setCellValue('B12', $this->leaveData['late_coming']);
+                
 
                 $event->sheet->getDelegate()->setCellValue('C12', 'Leaving Early (Hours)');
-                $event->sheet->getDelegate()->setCellValue('B12', $this->leaveData['leaving_early']);
+                
 
                 $event->sheet->getDelegate()->setCellValue('A13', 'Half Day (AM)');
-                $event->sheet->getDelegate()->setCellValue('B13', $this->leaveData['amAbsentCount']);
+                
 
                 $event->sheet->getDelegate()->setCellValue('C13', 'Half Day (PM)');
-                $event->sheet->getDelegate()->setCellValue('D13', $this->leaveData['pmAbsentCount']);
+                
 
                 $event->sheet->getDelegate()->setCellValue('A14', 'Paid Leave (Days)');
-                $event->sheet->getDelegate()->setCellValue('B14', $this->leaveData['paidLeave']);
+                
 
                 $event->sheet->getDelegate()->setCellValue('C14', 'Paid Leave (Hours)');
-                $event->sheet->getDelegate()->setCellValue('D14', $this->leaveData['paidLeave'] * 8);
+                
 
                 //Salary Details
                 $event->sheet->getDelegate()->mergeCells('A15:D15');
