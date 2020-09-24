@@ -101,6 +101,9 @@ class EngineerExport implements FromCollection,WithEvents,WithStrictNullComparis
             $company_ssb=$salary[$i]->ssbval->c_paid;
             $tem_salary[$i]['actual_ssb']=number_format($salary[$i]->ssbval->total_amount);
             $tem_salary[$i]['company_ssb_jpy']= number_format((float)($company_ssb/(int)$setting[0]['money']), 2, '.', ','); 
+            
+            $tem_salary[$i]['column_offset']=null;
+            $tem_salary[$i]['position']=$employdetail[$i]['position'];
            
         }
         return collect($this->salary=$tem_salary);
@@ -221,8 +224,33 @@ class EngineerExport implements FromCollection,WithEvents,WithStrictNullComparis
                 $sheet->setCellValue('S5',"現地通貨");
                 $sheet->setCellValue('T5',"JPY");
 
+                $sheet->mergeCells('V3:V6');
+                $sheet->mergeCells('W3:W6');
+                $sheet->mergeCells('X3:X6');
+                $sheet->mergeCells('Y3:Y6');
+                $sheet->mergeCells('Z3:Z6');
+                $sheet->mergeCells('AA5:AA6');
 
+                $sheet->mergeCells('AB3:AB6');
+                $sheet->mergeCells('AC3:AC6');
+                $sheet->mergeCells('AD3:AD6');
+                $sheet->mergeCells('AE3:AE6');
+                $sheet->mergeCells('AF3:AF6');
 
+                $sheet->setCellValue('V3',"業務内容");
+                $sheet->setCellValue('W3',"生年月日");
+                $sheet->setCellValue('X3',"年齢");
+                $sheet->setCellValue('Y3',"住所");
+                $sheet->setCellValue('Z3',"電話番号");
+                $sheet->setCellValue('AA3',"各種コード");
+                $sheet->setCellValue('AA4',"ミャンマー");
+                $sheet->setCellValue('AA5',"身分証番号");
+                $sheet->setCellValue('AB3',"銀行口座番号");
+                $sheet->setCellValue('AC3',"家族構成");
+                $sheet->setCellValue('AD3',"配偶者の\n有無/子");
+                $sheet->setCellValue('AE3',"緊急連絡先");
+                $sheet->setCellValue('AF3',"通勤手段/\n時間（分）");            
+              
                  $this->salary;
                 // 海外エンジニアコスト一覧表(2020/04分　2020/05/08支給)
                 // $sheet->append([date_default_timezone_get()],'A'.$row++);
@@ -256,6 +284,8 @@ class EngineerExport implements FromCollection,WithEvents,WithStrictNullComparis
 
                 $sheet->getRowDimension(2)->setRowHeight(19);  
                 $sheet->getStyle('A3:T6')->applyFromArray($borderArray);
+                $sheet->getStyle('V3:AF6')->applyFromArray($borderArray);
+
                 $sheet->getStyle('K5:K6')->applyFromArray($borderremoveArray);
                 $sheet->getColumnDimension('A')->setWidth(13.9);
                 $sheet->getRowDimension(3)->setRowHeight(55);  
@@ -282,6 +312,19 @@ class EngineerExport implements FromCollection,WithEvents,WithStrictNullComparis
                 $sheet->getColumnDimension('R')->setWidth(17);
                 $sheet->getColumnDimension('S')->setWidth(13.9);
                 $sheet->getColumnDimension('T')->setWidth(13.9);
+                
+                $sheet->getColumnDimension('V')->setWidth(17);
+                $sheet->getColumnDimension('W')->setWidth(15);
+                $sheet->getColumnDimension('X')->setWidth(8);
+                $sheet->getColumnDimension('Y')->setWidth(35);
+                $sheet->getColumnDimension('Z')->setWidth(18);
+                $sheet->getColumnDimension('AA')->setWidth(35);
+                $sheet->getColumnDimension('AB')->setWidth(35);
+                $sheet->getColumnDimension('AC')->setWidth(12);
+                $sheet->getColumnDimension('AD')->setWidth(12);
+                $sheet->getColumnDimension('AE')->setWidth(18);
+                $sheet->getColumnDimension('AF')->setWidth(18);
+
 
 
                 $sheet->getDelegate()->getStyle('D3:I6')->getFill()
@@ -299,6 +342,10 @@ class EngineerExport implements FromCollection,WithEvents,WithStrictNullComparis
                 $sheet->getDelegate()->getStyle('R3:T6')->getFill()
                 ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
                 ->getStartColor()->setARGB('FFF200');
+
+                $sheet->getDelegate()->getStyle('V3:AF6')->getFill()
+                ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                ->getStartColor()->setARGB('D7E4BD');
 
                 $this->sheetStyle($sheet,'A3');
                 $this->sheetStyle($sheet,'B3');
@@ -331,17 +378,43 @@ class EngineerExport implements FromCollection,WithEvents,WithStrictNullComparis
                 $this->sheetStyle($sheet,'R6');
                 $this->sheetStyle($sheet,'S5');
                 $this->sheetStyle($sheet,'T5');
+                $this->sheetStyle($sheet,'V3');
+                $this->sheetStyle($sheet,'W3');
+                $this->sheetStyle($sheet,'X3');
+                $this->sheetStyle($sheet,'Y3');
+                $this->sheetStyle($sheet,'Z3');
+                $this->sheetStyle($sheet,'AA3');
+                $this->sheetStyle($sheet,'AA4');
+                $this->sheetStyle($sheet,'AA5');
+                $this->sheetStyle($sheet,'AB3');
+                $this->sheetStyle($sheet,'AC3');
+                $this->sheetStyle($sheet,'AD3');
+                $this->sheetStyle($sheet,'AE3');
+                $this->sheetStyle($sheet,'AF3');
+
+
+
+
+
+
+
+
+
 
                 
                 $sheet->getStyle('K6')->getAlignment()->setWrapText(true);
+                $sheet->getStyle('AD3')->getAlignment()->setWrapText(true);
+                $sheet->getStyle('AF3')->getAlignment()->setWrapText(true);
                 
                 $sheet->getStyle("A7:T".(count($this->salary)+7-1) )->applyFromArray($borderArray);
+                $sheet->getStyle("V7:AF".(count($this->salary)+7-1) )->applyFromArray($borderArray);
                 for($i=0;$i<count($this->salary);$i++){
 
                     $sheet->getRowDimension(7+$i)->setRowHeight(57);  
                     $this->sheetStyle($sheet,'A'.(7+$i).":T".(7+$i));
-
+                    $this->sheetStyle($sheet,'V'.(7+$i).":AF".(7+$i));
                 }
+              
             
                 // return $this->salary;
 
