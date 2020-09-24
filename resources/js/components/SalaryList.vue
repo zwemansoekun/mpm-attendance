@@ -56,20 +56,13 @@
                 </div>
                 <!-- <form id="form" class="" @submit.prevent="SalarySave"  autocomplete="on"> -->
                 <div class="row justify-content-md-center mt-4"> 
-                      <button type="button" @click="engineerCost" style="background-color:#E7E6E6" class="btn  mr-3" onclick="this.blur();">エンジニアコスト一覧表</button>
-
-                      <!-- <a type="button"  href="http://127.0.0.1:8000/export/" >
-                            <button @click="excelExport()" class="btn mr-3" style="background-color:#E7E6E6" onclick="this.blur();">
-                            給与明細作成
-                            </button>
-                        </a> -->
+                    <button type="button" @click="engineerCost" style="background-color:#E7E6E6" class="btn  mr-3" onclick="this.blur();">エンジニアコスト一覧表</button>
                       
-                        <button data-toggle="modal" data-target="#payslip"  class="btn mr-3" style="background-color:#E7E6E6" onclick="this.blur();">
-                            給与明細作成
-                        </button>
-                       
+                    <button data-toggle="modal" :disabled='payslipBtnDisable' data-target="#payslip" class="btn mr-3" style="background-color:#E7E6E6" onclick="this.blur();">
+                        給与明細作成
+                    </button>
                         
-                      <button type="submit" form="form" style="background-color:#E7E6E6" class="btn  mr-3" onclick="this.blur();">編集</button>
+                    <button type="submit" form="form" style="background-color:#E7E6E6" class="btn  mr-3" onclick="this.blur();">編集</button>
 
                 </div>
                  <form id="form" class="" @submit.prevent="SalarySave"  autocomplete="on">
@@ -487,6 +480,7 @@
                 isCheckAll: false,                
                 salarymodal:[],
                 selected:'',
+                payslipBtnDisable: false,
             }
         },
         components: {
@@ -1082,6 +1076,7 @@
                     }); 
             },
             salaryList:function(get_salary_data=''){
+                    this.payslipBtnDisable = false;
                     let that=this;  
                     let tem_salary=[];
                     let salaries_arr=[];
@@ -1134,6 +1129,7 @@
                         if(that.salaries.length===0){  
                             that.$swal.close();                    
                             this.data_check_messg1= true
+                            this.payslipBtnDisable = true;
                             setTimeout(() => {
                                 this.data_check_messg1= false
                             },3500)
