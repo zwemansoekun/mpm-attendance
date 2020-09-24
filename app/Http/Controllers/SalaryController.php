@@ -283,7 +283,7 @@ class SalaryController extends Controller
                 
                 $oneday=$salary[$i]['salary_amount']/$daycount;
                 $salary[$i]['trans_money']= $salary[$i]['trans_money']*$adetailcount;
-                $salary[$i]['late_leave_money']=number_format((float)(($leave_attend_hr/8)*$oneday), 2, '.', ''); 
+                $salary[$i]['late_leave_money']=round(number_format((float)(($leave_attend_hr/8)*$oneday), 2, '.', '')); 
             } 
         } catch (Exception $e) {
             DB::rollBack();

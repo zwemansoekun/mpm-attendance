@@ -238,8 +238,8 @@
                                                         <td rowspan="2" class="text-center align-middle">{{name_arr[salaries[key].emp_id]}}<div>({{salaries[key].kana_name}})</div></td>
                                                         <td style="background-color:#D9D9D9" class="text-center align-middle">計算値</td>
                                                         <td style="background-color:#D9D9D9" class="text-right align-middle income1">{{Math.trunc(salaries[key].salary_amount).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")}}</td>
-                                                        <td style="background-color:#D9D9D9" class="text-right align-middle trans_money1">{{salaries[key].trans_money}}</td>
-                                                        <td style="background-color:#D9D9D9" class="text-right align-middle jlpt1">{{salaries[key].jlpt}}</td>
+                                                        <td style="background-color:#D9D9D9" class="text-right align-middle trans_money1">{{(salaries[key].trans_money).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")}}</td>
+                                                        <td style="background-color:#D9D9D9" class="text-right align-middle jlpt1">{{(salaries[key].jlpt).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")}}</td>
                                                         <!-- {{salaries[key].bonus}} -->
                                                         <td style="background-color:#D9D9D9" class="text-right align-middle"></td>
                                                         <td style="background-color:#D9D9D9" class="text-right align-middle total_salary1">{{parseInt(salaries[key].total).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")}}</td>
@@ -247,7 +247,7 @@
                                                         <td style="background-color:#D9D9D9" class="text-right align-middle inc_tax1">{{salaries[key].income_tax}}</td>
                                                         <td style="background-color:#D9D9D9" class="text-right align-middle ssb1">{{salaries[key].ssb!=(undefined || 0)?salaries[key].ssb+"%":''}}</td>
                                                         <td style="background-color:#D9D9D9" class="text-right align-middle leave_late1">
-                                                            {{salaries[key].late_leave_money!=(undefined || 0)?salaries[key].late_leave_money:''}}
+                                                            {{salaries[key].late_leave_money!=(undefined || 0)?(salaries[key].late_leave_money).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"):''}}
                                                         </td>
 
                                                         <td style="background-color:#D9D9D9" class="text-right align-middle"></td>
@@ -275,17 +275,17 @@
                                                             <input name="income[]" @change="updateInput" class="income" style="text-align:right;width:100px;padding-right: 3px;" type="text"  :value="`${salaries[key]}`!=undefined?Math.trunc(salaries[key].salary_amount).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,'):'' ">
                                                             </td>
                                                             <td class="text-right align-middle" style="padding: 0px;">
-                                                                <input name="trans_money[]" @change="updateInput" class="trans_money" style="text-align:right;width:100px;padding-right: 3px;" type="text" :value="`${salaries[key]}`!=undefined?salaries[key].trans_money:'' ">
+                                                                <input name="trans_money[]" @change="updateInput" class="trans_money" style="text-align:right;width:100px;padding-right: 3px;" type="text" :value="`${salaries[key]}`!=undefined?(salaries[key].trans_money).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,'):'' ">
                                                             </td>
                                                             <td class="text-right align-middle" style="padding: 0px;">
-                                                                <input name="jlpt[]"  @change="updateInput" class="jlpt" style="text-align:right;width:100px;padding-right: 3px;" type="text" :value="`${salaries[key]}`!=undefined?salaries[key].jlpt:'' ">
+                                                                <input name="jlpt[]"  @change="updateInput" class="jlpt" style="text-align:right;width:100px;padding-right: 3px;" type="text" :value="`${salaries[key]}`!=undefined?(salaries[key].jlpt).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,'):'' ">
                                                             </td>
                                                             <td class="text-right align-middle" style="padding: 0px;">
                                                                 <input name="bonus[]" @change="updateInput" class="bonus" style="text-align:right;width:100px;padding-right: 3px;" type="text" @value="`${old(bonus)}`">
                                                             </td>
                                                             <td class="text-right align-middle" style="padding: 0px;">
                                                                     <!-- name="total_salary[]" @change="updateInput" -->
-                                                                <input class="total_salary" readonly name="total_salary[]" style="text-align:right;width:150px;padding-right: 3px;" type="text"  :value="`${salaries[key]}`!=undefined?(parseInt(salaries[key].salary_amount)+parseInt(salaries[key].trans_money)+parseInt(salaries[key].jlpt)).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,'):'' ">
+                                                                <input class="total_salary" readonly name="total_salary[]" style="text-align:right;width:150px;padding-right: 3px;" type="text"  :value="`${salaries[key]}`!=undefined?(parseInt(salaries[key].total)).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,'):'' ">
                                                             </td>
                                                                 
                                                             <!-- 控除額 -->
@@ -299,7 +299,7 @@
                                                                 ">
                                                             </td>
                                                             <td class="text-right align-middle" style="padding: 0px;">
-                                                                <input name="leave_late[]" @change="updateInput" class="leave_late" style="text-align:right;width:100px;padding-right: 3px;" type="text" @value="`${old(leave_late)}`">
+                                                                <input name="leave_late[]" @change="updateInput" class="leave_late" style="text-align:right;width:100px;padding-right: 3px;" type="text" :value="`${salaries[key].late_leave_money!=(undefined || 0)?(salaries[key].late_leave_money).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,'):''}`">
                                                             </td>
 
                                                             <td class="text-right align-middle" style="padding: 0px;">
@@ -435,8 +435,8 @@
                                                     <input name="id[]" class="form-control input-sm idx2" style="text-align: center;" type="hidden" :value="`${get_salary_data[key-1].ssbval}`!=undefined?get_salary_data[key-1].id:'' ">                                              
                                                     <input name="ssb_total[]" @change="ssbCalc" class="ssb_total" :style="`background-color:${checkBgColor(get_salary_data[key-1].ssbval.total_amount,SsbPaid)};text-align:right;width:100px;`"  type="text" :value="`${get_salary_data[key-1].ssbval}`!=undefined?Math.trunc(get_salary_data[key-1].ssbval.total_amount).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,'):'' ">
                                             </td>
-                                            <td style="padding: 0px;width: 30%;text-align: right;height: 10%;">
-                                                    <input name="ssb_c_paid[]" @change="ssbCalc"  class="ssb_c_paid" :style="`background-color:${checkBgColor(get_salary_data[key-1].ssbval.c_paid,(SsbMax*(5-salaries[key-1].ssb)/100))};text-align:right;width:100px;`"  type="text" :value="`${get_salary_data[key-1].ssbval}`!=undefined?Math.trunc(get_salary_data[key-1].ssbval.c_paid).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,'):'' ">
+                                            <td style="padding: 0px;width: 30%;text-align: right;height: 10%;">                                             
+                                                    <input name="ssb_c_paid[]" @change="ssbCalc"  class="ssb_c_paid" :style="`background-color:${checkBgColor(get_salary_data[key-1].ssbval.c_paid,SsbPaid)};text-align:right;width:100px;`"  type="text" :value="`${get_salary_data[key-1].ssbval}`!=undefined?Math.trunc(get_salary_data[key-1].ssbval.c_paid).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,'):'' ">
                                             </td>
                                         </tr>     
                                     </template>
@@ -831,7 +831,7 @@
                             $(that).find('td').each(function (index,v2) {
                                 console.log('index',index);
                                     let isLastElement = index == $(that).find('td').length-1;
-                                       console.log('isLastElement',$(that).find('td').length);
+                                     
                                     if(jQuery(this).find('.pay_month').val()){
                                          console.log('pay_month',jQuery(this).find('.pay_month'));
                                     pay_month=jQuery(this).find('.pay_month').val();
@@ -845,22 +845,22 @@
                                     income=jQuery(this).find('.income').val().toString().replace(/,/g , '');
                                     }
                                     if(jQuery(this).find('.trans_money').val()){
-                                    trans_money=jQuery(this).find('.trans_money').val();
+                                    trans_money=jQuery(this).find('.trans_money').val().toString().replace(/,/g , '');
                                     }
                                     if(jQuery(this).find('.jlpt').val()){
-                                        jlpt=jQuery(this).find('.jlpt').val();
+                                        jlpt=jQuery(this).find('.jlpt').val().toString().replace(/,/g , '');
                                     }
                                     if(jQuery(this).find('.bonus').val()){
-                                        bonus=jQuery(this).find('.bonus').val();
+                                        bonus=jQuery(this).find('.bonus').val().toString().replace(/,/g , '');
                                     }
                                     if(jQuery(this).find('.total_salary').val()){
                                         total_salary=jQuery(this).find('.total_salary').val().toString().replace(/,/g , '');
                                     }
                                     if(jQuery(this).find('.inc_tax').val()){
-                                        inc_tax=jQuery(this).find('.inc_tax').val();
+                                        inc_tax=jQuery(this).find('.inc_tax').val().toString().replace(/,/g , '');
                                     }
                                     if(jQuery(this).find('.ssb').val()){
-                                        ssb=jQuery(this).find('.ssb').val();
+                                        ssb=jQuery(this).find('.ssb').val().toString().replace(/,/g , '');
                                     }
                                     if(jQuery(this).find('.leave_late').val()){
                                         leave_late=jQuery(this).find('.leave_late').val().toString().replace(/,/g , '');
@@ -1098,7 +1098,7 @@
                             for(let i=0;i<tem_salary.length;i++){
                                console.log('salary12',tem_salary[i]); 
                                 tem_salary[i]['total']=(parseInt(tem_salary[i].salary_amount)+parseInt(tem_salary[i].trans_money)+parseInt(tem_salary[i].jlpt))
-                                tem_salary[i]['payment']=parseInt(tem_salary[i]['total'])-(that.SsbMax*(parseInt(tem_salary[i].ssb)/100));
+                                tem_salary[i]['payment']=parseInt(tem_salary[i]['total'])-( (that.SsbMax*(parseInt(tem_salary[i].ssb)/100))+parseInt(tem_salary[i]['late_leave_money']) );
                                 total_payment+=tem_salary[i]['payment'];
                                 total_c_paid+=(that.SsbMax*((5-tem_salary[i].ssb)/100));
                                 tem_salary[i]['c_paid']=(that.SsbMax*((5-tem_salary[i].ssb)/100));//(that.SsbMax*(3/100));
@@ -1112,7 +1112,7 @@
                               for(let i=0;i<tem_salary.length;i++){
                             
                                 tem_salary[i]['total']=(parseInt(tem_salary[i].salary_amount)+parseInt(tem_salary[i].trans_money)+parseInt(tem_salary[i].jlpt))
-                                tem_salary[i]['payment']=parseInt(tem_salary[i]['total'])-(that.SsbMax*(parseInt(tem_salary[i].ssb)/100));
+                                tem_salary[i]['payment']=parseInt(tem_salary[i]['total'])-( (that.SsbMax*(parseInt(tem_salary[i].ssb)/100))+parseInt(tem_salary[i]['late_leave_money']) );
 
                                 tem_salary[i]['c_paid']=(that.SsbMax*((5-tem_salary[i].ssb)/100));//(that.SsbMax*(3/100));
                                 // tem_salary[i]['emp_id']=tem_salary[i].emp_id;
@@ -1185,36 +1185,36 @@
 
                     let b_salary1=0,t_m1=0,jlpt1=0,leave_late1=0,total1=0;
 
-                    b_salary=$(event.target).parent().parent().find('.income').val()!=''?$(event.target).parent().parent().find('.income').val():0;
-                    b_salary1=$(event.target).parent().parent().prev('tr').find('.income1').text()!=''?$(event.target).parent().parent().prev('tr').find('.income1').text():0;
+                    b_salary=$(event.target).parent().parent().find('.income').val()!=''?$(event.target).parent().parent().find('.income').val().toString().replace(/,/g , ''):0;
+                    b_salary1=$(event.target).parent().parent().prev('tr').find('.income1').text().trim()!=''?$(event.target).parent().parent().prev('tr').find('.income1').text().toString().replace(/,/g , ''):0;
                   
-                    t_m=$(event.target).parent().parent().find('.trans_money').val()!=''?$(event.target).parent().parent().find('.trans_money').val():0;
-                    t_m1=$(event.target).parent().parent().prev('tr').find('.trans_money1').text()!=''?$(event.target).parent().parent().prev('tr').find('.trans_money1').text():0;
+                    t_m=$(event.target).parent().parent().find('.trans_money').val()!=''?$(event.target).parent().parent().find('.trans_money').val().toString().replace(/,/g , ''):0;
+                    t_m1=$(event.target).parent().parent().prev('tr').find('.trans_money1').text().trim()!=''?$(event.target).parent().parent().prev('tr').find('.trans_money1').text().toString().replace(/,/g , ''):0;
 
-                    jlpt=$(event.target).parent().parent().find('.jlpt').val()!=''?$(event.target).parent().parent().find('.jlpt').val():0;
-                    jlpt1=$(event.target).parent().parent().prev('tr').find('.jlpt1').text()!=''?$(event.target).parent().parent().prev('tr').find('.jlpt1').text():0;
+                    jlpt=$(event.target).parent().parent().find('.jlpt').val()!=''?$(event.target).parent().parent().find('.jlpt').val().toString().replace(/,/g , ''):0;
+                    jlpt1=$(event.target).parent().parent().prev('tr').find('.jlpt1').text().trim()!=''?$(event.target).parent().parent().prev('tr').find('.jlpt1').text().toString().replace(/,/g , ''):0;
 
-                    bnu=$(event.target).parent().parent().find('.bonus').val()!=''?$(event.target).parent().parent().find('.bonus').val():0;
+                    bnu=$(event.target).parent().parent().find('.bonus').val()!=''?$(event.target).parent().parent().find('.bonus').val().toString().replace(/,/g , ''):0;
 
-                    inc_tax=$(event.target).parent().parent().find('.inc_tax').val()!=''?$(event.target).parent().parent().find('.inc_tax').val():0;
-                    ssb=$(event.target).parent().parent().find('.ssb').val()!=''?$(event.target).parent().parent().find('.ssb').val():0;
-                    leave_late=$(event.target).parent().parent().find('.leave_late').val()!=''?$(event.target).parent().parent().find('.leave_late').val():0;
-                    leave_late1=$(event.target).parent().parent().prev('tr').find('.leave_late1').text()!=''?$(event.target).parent().parent().prev('tr').find('.leave_late1').text():0;
+                    inc_tax=$(event.target).parent().parent().find('.inc_tax').val()!=''?$(event.target).parent().parent().find('.inc_tax').val().toString().replace(/,/g , ''):0;
+                    ssb=$(event.target).parent().parent().find('.ssb').val()!=''?$(event.target).parent().parent().find('.ssb').val().toString().replace(/,/g , ''):0;
+                    leave_late=$(event.target).parent().parent().find('.leave_late').val()!=''?$(event.target).parent().parent().find('.leave_late').val().toString().replace(/,/g , ''):0;
+                    leave_late1=$(event.target).parent().parent().prev('tr').find('.leave_late1').text().trim()!=''?$(event.target).parent().parent().prev('tr').find('.leave_late1').text().toString().replace(/,/g , ''):0;
 
-                    adju1=$(event.target).parent().parent().find('.adju1').val()!=''?$(event.target).parent().parent().find('.adju1').val():0;
-                    adju2=$(event.target).parent().parent().find('.adju2').val()!=''?$(event.target).parent().parent().find('.adju2').val():0;
-                    adju3=$(event.target).parent().parent().find('.adju3').val()!=''?$(event.target).parent().parent().find('.adju3').val():0;
+                    adju1=$(event.target).parent().parent().find('.adju1').val()!=''?$(event.target).parent().parent().find('.adju1').val().toString().replace(/,/g , ''):0;
+                    adju2=$(event.target).parent().parent().find('.adju2').val()!=''?$(event.target).parent().parent().find('.adju2').val().toString().replace(/,/g , ''):0;
+                    adju3=$(event.target).parent().parent().find('.adju3').val()!=''?$(event.target).parent().parent().find('.adju3').val().toString().replace(/,/g , ''):0;
                     
-                    total=parseInt(b_salary.toString().replace(/,/g , ''))+parseInt(t_m.toString().replace(/,/g , ''))+parseInt(jlpt.toString().replace(/,/g , ''))+parseInt(bnu.toString().replace(/,/g , ''));
+                    total=parseInt(b_salary)+parseInt(t_m)+parseInt(jlpt)+parseInt(bnu);
                     if(total<0){
                         total=0;
                     }
-                    payment_amount=total - ( (parseInt(inc_tax.toString().replace(/,/g , ''))+parseInt(ssb.toString().replace(/,/g , ''))+parseInt(leave_late.toString().replace(/,/g , ''))) +  (parseInt(adju1.toString().replace(/,/g , ''))+parseInt(adju2.toString().replace(/,/g , ''))+parseInt(adju3.toString().replace(/,/g , ''))) ) ;
+                    payment_amount=total - ( (parseInt(inc_tax)+parseInt(ssb)+parseInt(leave_late)) +  (parseInt(adju1)+parseInt(adju2)+parseInt(adju3)) ) ;
                     if(payment_amount<0){
                         payment_amount=0;
                     }
 
-                    total1=$(event.target).parent().parent().prev('tr').find('.total_salary1').text()!=''?$(event.target).parent().parent().prev('tr').find('.total_salary1').text():0;
+                    total1=$(event.target).parent().parent().prev('tr').find('.total_salary1').text().trim()!=''?$(event.target).parent().parent().prev('tr').find('.total_salary1').text().toString().replace(/,/g , ''):0;
 
                     $(event.target).parent().parent().find('.total_salary').val(!isNaN(total)?total.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"):0) ;
                     $(event.target).parent().parent().find('.payment_amount').val(!isNaN(payment_amount)?payment_amount.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"):0);
@@ -1223,35 +1223,36 @@
                     $("input[name^='payment_amount']").each(function() {                       
                             if($(this).val()!='') {
                                 cal_salary+=parseInt($(this).val().toString().replace(/,/g , ''));
-                                $("#salaryTable").find('.cal_salaries').text(cal_salary.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
+                                $("#salaryTable").find('.cal_salaries').text(cal_salary.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,").trim());
                             }                    
                     });
+                    
 
-                    if(parseInt(b_salary.toString().replace(/,/g , ''))!=parseInt(b_salary1.toString().replace(/,/g , '')) && !isNaN(b_salary) && !isNaN(b_salary1) ){
+                    if(parseInt(b_salary)!=parseInt(b_salary1) && !isNaN(b_salary) && !isNaN(b_salary1) ){
                          $(event.target).parent().parent().find('.income').css("background-color", "yellow");
                     }else{
                          $(event.target).parent().parent().find('.income').css("background-color", "");
                     }
 
-                    if(parseInt(t_m.toString().replace(/,/g , ''))!=parseInt(t_m1.toString().replace(/,/g , '')) && !isNaN(t_m) && !isNaN(t_m1) ){
+                    if(parseInt(t_m)!=parseInt(t_m1) && !isNaN(t_m) && !isNaN(t_m1) ){
                          $(event.target).parent().parent().find('.trans_money').css("background-color", "yellow");
                     }else{
                          $(event.target).parent().parent().find('.trans_money').css("background-color", "");
                     }
 
-                    if(parseInt(jlpt.toString().replace(/,/g , ''))!=parseInt(jlpt1.toString().replace(/,/g , '')) && !isNaN(jlpt) && !isNaN(jlpt1) ){
+                    if(parseInt(jlpt)!=parseInt(jlpt1) && !isNaN(jlpt) && !isNaN(jlpt1) ){
                          $(event.target).parent().parent().find('.jlpt').css("background-color", "yellow");
                     }else{
                          $(event.target).parent().parent().find('.jlpt').css("background-color", "");
                     }
-
-                    if(parseInt(leave_late.toString().replace(/,/g , ''))!=parseInt(leave_late1.toString().replace(/,/g , '')) && !isNaN(leave_late) && !isNaN(leave_late1)  ){
+                   
+                    if(parseInt(leave_late)!=parseInt(leave_late1) && !isNaN(leave_late) && !isNaN(leave_late1)  ){
                          $(event.target).parent().parent().find('.leave_late').css("background-color", "yellow");
                     }else{
                          $(event.target).parent().parent().find('.leave_late').css("background-color", "");
                     }
 
-                     if(parseInt(total.toString().replace(/,/g , ''))!=parseInt(total1.toString().replace(/,/g , '')) && !isNaN(total) && !isNaN(total1) ){
+                     if(parseInt(total)!=parseInt(total1) && !isNaN(total) && !isNaN(total1) ){
                          $(event.target).parent().parent().find('.total_salary').css("background-color", "yellow");
                     }else{
                          $(event.target).parent().parent().find('.total_salary').css("background-color", "");

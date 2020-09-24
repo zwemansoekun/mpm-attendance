@@ -54,7 +54,7 @@ class EngineerExport implements FromCollection,WithEvents,WithStrictNullComparis
         //       ->orWhereNotNull('pm1')
         //       ->orWhereNotNull('pm2');
         // })->count();
-
+      
 
         if($setting->isEmpty()){
             $setting=$global;
@@ -73,14 +73,35 @@ class EngineerExport implements FromCollection,WithEvents,WithStrictNullComparis
             $innerarray=(object)$employdetail[$i]->employee;
             $tem_salary[$i]['name']=$tem_emp[$salary[$i]['employee_id']]['name']."\n (".$innerarray->kana_name.")"; //$empdet;//['kana_name'];//$tem_emp[$salary[$i]['employee_id']]['name']."\n (".$empdet[$i]['kana_name'].")";
             $tem_salary[$i]['entry_date']=str_replace('-','/',$innerarray->entry_date);
-            $tem_salary[$i]['income']=$salary[$i]['income'];
-            $tem_salary[$i]['trans_money']=$salary[$i]['trans_money'];
-            $tem_salary[$i]['jlpt']=$salary[$i]['jlpt'];
-            $tem_salary[$i]['bonus']=$salary[$i]['bonus'];
-            $tem_salary[$i]['before_deduction']=((int)$salary[$i]['income']+(int)$salary[$i]['trans_money']+(int)$salary[$i]['bonus']+(int)$salary[$i]['jlpt']);
-            $tem_salary[$i]['before_deduction_jpy']= number_format((float)($tem_salary[$i]['before_deduction'])/(int)$setting[0]['money'], 2, '.', ''); 
-            $tem_salary[$i]['income_tax']=$salary[$i]['income_tax'];
-            $tem_salary[$i]['ssb']=$salary[$i]['ssb'];
+            $tem_salary[$i]['income']=number_format($salary[$i]['income']);
+            $tem_salary[$i]['trans_money']=number_format($salary[$i]['trans_money']);
+            $tem_salary[$i]['jlpt']=number_format($salary[$i]['jlpt']);
+            $tem_salary[$i]['bonus']=number_format($salary[$i]['bonus']);
+
+            $before_deduction=(int)$salary[$i]['income']+(int)$salary[$i]['trans_money']+(int)$salary[$i]['bonus']+(int)$salary[$i]['jlpt'];
+            
+            $tem_salary[$i]['before_deduction']=number_format(((int)$salary[$i]['income']+(int)$salary[$i]['trans_money']+(int)$salary[$i]['bonus']+(int)$salary[$i]['jlpt']));
+            $tem_salary[$i]['before_deduction_jpy']= number_format((float)($before_deduction/(int)$setting[0]['money']), 2, '.', ','); 
+          
+            $tem_salary[$i]['income_tax']=number_format($salary[$i]['income_tax']);
+            $tem_salary[$i]['ssb']=number_format($salary[$i]['ssb']);
+            $tem_salary[$i]['leave_late']=number_format($salary[$i]['leave_late']);
+
+            $tem_salary[$i]['adju1']=number_format($salary[$i]['adju1']);
+            $tem_salary[$i]['adju2']=number_format($salary[$i]['adju2']);
+            $tem_salary[$i]['adju3']=number_format($salary[$i]['adju3']);
+
+            $deduction_amount=(int)$salary[$i]['income_tax']+(int)$salary[$i]['ssb']+(int)$salary[$i]['leave_late']+(int)$salary[$i]['adju1']+$salary[$i]['adju2']+$salary[$i]['adju3'];            
+            $tem_salary[$i]['payment_mm']=number_format($before_deduction- $deduction_amount);
+            $payment_jpy=$before_deduction- $deduction_amount;
+            $tem_salary[$i]['payment_jpy']= number_format((float)($payment_jpy/(int)$setting[0]['money']), 2, '.', ','); 
+
+            $tem_salary[$i]['payment_jpy']= number_format((float)($payment_jpy/(int)$setting[0]['money']), 2, '.', ','); 
+            $tem_salary[$i]['company_ssb']=number_format($salary[$i]->ssbval->c_paid);
+            $company_ssb=$salary[$i]->ssbval->c_paid;
+            $tem_salary[$i]['actual_ssb']=number_format($salary[$i]->ssbval->total_amount);
+            $tem_salary[$i]['company_ssb_jpy']= number_format((float)($company_ssb/(int)$setting[0]['money']), 2, '.', ','); 
+           
         }
         return collect($this->salary=$tem_salary);
     }
