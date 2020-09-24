@@ -82,10 +82,7 @@ class HolidayController extends Controller
     public function deleteRow($id,$year)
     {
    
-        $each_id = explode(',' , $id);
-        foreach($each_id as $id) {
-            DB::table('holidays')->where('id', '=', $id)->delete();
-        }
+        DB::table('holidays')->where('id', '=', $id)->delete();
         $holidays = Holiday::select('id','date','description')->whereYear('date',$year)->get();
         return response()->json($holidays);
     }

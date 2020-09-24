@@ -16,7 +16,8 @@ class AttendManageController extends Controller
     public $attendTime = null;
     public  $empArray = array();
     public $csvArray = array();
-  /**
+  
+    /**
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index()
@@ -34,9 +35,16 @@ class AttendManageController extends Controller
  
          $attendTime = DB::select('select emp_no from attend_details where EXTRACT(YEAR_MONTH FROM date) = :date', ['date' => $year]);
          $attendTime = json_decode(json_encode($attendTime),true);
-
-         $empno = DB::select('select emp_id from employees');
+      
+        $empno = DB::select('select emp_id from employees');
          $empno = json_decode(json_encode($empno),true);
+        
+
+         if(count($attendTime) == 0 || count($empno) == 0 )
+         {
+            return response()->json("fail");
+         }
+
 
          $attendTimeArray = array();
          for ($i = 0; $i < count($attendTime); $i++) 
@@ -68,6 +76,24 @@ class AttendManageController extends Controller
          {
             return response()->json("success");
          }
+
+         $found = array();
+         foreach($empnoArray as $num) {
+            if (in_array($num,$attendTimeArray)) {
+                array_push($found, true);
+            }else{
+                array_push($found, false);
+            }
+        }
+        
+        if(in_array(false,$found))
+        {
+           return response()->json("fail");
+        }
+        else
+        {
+           return response()->json("success");
+        }
          
     }
 

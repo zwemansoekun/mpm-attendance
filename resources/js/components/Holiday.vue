@@ -179,6 +179,7 @@ var moment = require('moment');
                 });
             },
             returnValue: function(){
+                this.loadingAlert();
                 this.axios
                     .get('http://127.0.0.1:8000/api/holidays/findYear/'+ moment(this.customDate).format("yyyy"))
                     .then(response => {
@@ -225,16 +226,40 @@ var moment = require('moment');
                     });
                 },
             select_all_via_check_box: function(id){
-                this.deleteItems.push(id)
-                this.btnDelete = true
-                
-            },
+                    this.deleteItems.push(id)
+                    this.btnDelete = true
+               },
+            loadingAlert:function(){
+                  let that=this;
+                   that.$swal({
+                        title: 'お待ちください!',
+                        // add a custom html tags by defining a html method.
+                        html: 'Loading......',
+                         timer: 60,
+                        showCloseButton: false,
+                        showCancelButton: false,
+                        showConfirmButton: false,
+                        focusConfirm: false,
+                        allowOutsideClick: false,
+                        //  onBeforeOpen: () => {
+                        //     that.$swal.showLoading();
+                        //     },
+                        }) 
+            },  
             deleteRow: function(deleteItems,date){
-                 this.axios
-                .post('http://127.0.0.1:8000/api/holidays/deleteRow/'+deleteItems+'/'+date)
-                .then(response => {
-                    this.holidays = response.data;
+                this.deleteItems.forEach((value, index) => {
+                    if(value == 'undefined'){
+                         this.holidays.splice(holidays.length - 1, 0, {});
+                    }else{
+                        
+                        this.axios
+                            .post('http://127.0.0.1:8000/api/holidays/deleteRow/'+value+'/'+date)
+                            .then(response => {
+                                this.holidays = response.data;
+                        });
+                    }
                 });
+               
             },
             dayMonthFormatter(date) {
                 return moment(date).format('MM-D');
