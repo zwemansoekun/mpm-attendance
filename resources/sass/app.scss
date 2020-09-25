@@ -24,9 +24,18 @@ textarea {
     resize: none;
  }
 .error{
-  border: 1px solid red;
+    border: 1px solid red;
 }
 .scrolling-wrapper{
 	overflow-x: auto;
     white-space: nowrap; 
 }
+
+//App.vue
+a{
+    color:#495057;
+}
+
+a[data-target]{   
+    color:#F8C471; 
+ }
