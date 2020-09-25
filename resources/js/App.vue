@@ -13,39 +13,24 @@
                     <router-link to="/logout" class="nav-item nav-link list-group-item list-group-item-action bg-light" onclick="event.preventDefault();
                         document.getElementById('logout-form').submit();"
                     >ログアウト
-                        <form id="logout-form"  method="POST" style="display: none;">
+                        <!-- <form id="logout-form"  method="POST" style="display: none;">
                             <input type="hidden" name="_token" :value="csrf">
-                        </form>
+                        </form> -->
                     </router-link>             
                     </div>
                 </div>           
             </div>    
-            <router-view></router-view>
-            <!-- Page Content -->
-            <!-- <div class="col-md-9"> 
-                <div class="container-fluid">
-                <h1 class="mt-4">Simple Sidebar</h1>
-                <p>The starting state of the menu will appear collapsed on smaller screens, and will appear non-collapsed on larger screens. When toggled using the button below, the menu will change.</p>
-                <p>Make sure to keep all page content within the <code>#page-content-wrapper</code>. The top navbar is optional, and just for demonstration. Just create an element with the <code>#menu-toggle</code> ID which will toggle the menu when clicked.</p>
-                </div>
-            </div> -->
-            <!-- /#page-content-wrapper -->
+            <router-view></router-view>         
         </div>
     </div>
 </template>
 
 <script>
-    export default {      
-       
+    export default { 
         data() {
             return {
                 csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             }
-         },
-        methods: {     
-        
-       
-        }
-
+         },    
     }
 </script>
