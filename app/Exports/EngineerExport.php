@@ -2,13 +2,14 @@
 
 namespace App\Exports;
 
+use DateTime;
 use App\Salary;
 use App\Setting;
 use App\AttendDetail;
 use App\EmployeeDetail;
 use Maatwebsite\Excel\Sheet;
-use Maatwebsite\Excel\Events\AfterSheet;
 
+use Maatwebsite\Excel\Events\AfterSheet;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Events\BeforeSheet;
 use Maatwebsite\Excel\Concerns\Exportable;
@@ -104,6 +105,25 @@ class EngineerExport implements FromCollection,WithEvents,WithStrictNullComparis
             
             $tem_salary[$i]['column_offset']=null;
             $tem_salary[$i]['position']=$employdetail[$i]['position'];
+            $tem_salary[$i]['dob']=$innerarray->dob;
+
+            $from = new DateTime($innerarray->dob);
+            $to   = new DateTime('today');
+            $age=$from->diff($to)->y;
+
+            $tem_salary[$i]['age']=$age;
+            $tem_salary[$i]['address']=$employdetail[$i]['address'];
+            $tem_salary[$i]['phone_no']=$employdetail[$i]['phone_no'];
+            $tem_salary[$i]['nrc_no']=$employdetail[$i]['nrc_no'];
+            $tem_salary[$i]['bank_account']=$employdetail[$i]['bank_account'];
+            $tem_salary[$i]['member']=$employdetail[$i]['member'];
+            $tem_salary[$i]['child']=$employdetail[$i]['child'];
+            $tem_salary[$i]['emg_ph_no']=$employdetail[$i]['emg_ph_no'];
+            $tem_salary[$i]['waste_time']=$employdetail[$i]['waste_time'];
+
+
+
+
            
         }
         return collect($this->salary=$tem_salary);
@@ -252,6 +272,7 @@ class EngineerExport implements FromCollection,WithEvents,WithStrictNullComparis
                 $sheet->setCellValue('AF3',"通勤手段/\n時間（分）");            
               
                  $this->salary;
+                 return;
                 // 海外エンジニアコスト一覧表(2020/04分　2020/05/08支給)
                 // $sheet->append([date_default_timezone_get()],'A'.$row++);
                 // $sheet->append(['Income11',2222],'A'.$row++);
@@ -402,9 +423,10 @@ class EngineerExport implements FromCollection,WithEvents,WithStrictNullComparis
 
 
                 
-                $sheet->getStyle('K6')->getAlignment()->setWrapText(true);
-                $sheet->getStyle('AD3')->getAlignment()->setWrapText(true);
-                $sheet->getStyle('AF3')->getAlignment()->setWrapText(true);
+                // $sheet->getStyle('K6')->getAlignment()->setWrapText(true);
+                // $sheet->getStyle('AD3')->getAlignment()->setWrapText(true);
+                // $sheet->getStyle('AF3')->getAlignment()->setWrapText(true);
+          
                 
                 $sheet->getStyle("A7:T".(count($this->salary)+7-1) )->applyFromArray($borderArray);
                 $sheet->getStyle("V7:AF".(count($this->salary)+7-1) )->applyFromArray($borderArray);
@@ -414,57 +436,17 @@ class EngineerExport implements FromCollection,WithEvents,WithStrictNullComparis
                     $this->sheetStyle($sheet,'A'.(7+$i).":T".(7+$i));
                     $this->sheetStyle($sheet,'V'.(7+$i).":AF".(7+$i));
                 }
-              
-            
-                // return $this->salary;
-
-              
-               
-           
-                
+                $sheet->setSelectedCells(null);
+                return;
             }
         ];
     }
 
     public function sheetStyle($sheet,$val)    {
+        $sheet->getStyle($val)->getAlignment()->setWrapText(true);
         $sheet->getStyle($val)->getAlignment()
         ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
         $sheet->getStyle($val)->getAlignment()
         ->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
-    }
-    // public function headings(): array
-    // {
-    //     return [
-    //         '#',
-    //         'Name',
-    //         'Email',
-    //         'Created at',
-    //         'Updated at'
-    //     ];
-    // }
-
-
-
-
-
-
-
-
-
-
-
-    // public function query()
-    // {
-    //     // return Invoice::query()->whereYear('created_at', $this->year);
-    //     // return Invoice::query();
-    // }
- 
-    // return (new InvoicesExport)->forYear(2018)->download('invoices.xlsx');
-    // public function forYear(int $year)
-    // {
-    //     $this->year = $year;
-        
-    //     return $this;
-    // }
-
+    }  
 }
