@@ -5,12 +5,11 @@
  */
 
 require('./bootstrap');
-window.$=window.JQuery= require('jquery')//window.JQuery
+window.$=window.JQuery= require('jquery')
 window.Vue = require('vue');
 window.moment = require('moment');
 jQuery.noConflict(); 
 
-import VueSweetalert2 from 'vue-sweetalert2';
 import App from './App.vue';
 import VueRouter from 'vue-router';
 import VueAxios from 'vue-axios';
@@ -18,8 +17,7 @@ import axios from 'axios';
 import {routes} from './routes';
 import { Verify } from 'crypto';
 import VueSimpleAlert from "vue-simple-alert";
-
-
+import VueSweetalert2 from 'vue-sweetalert2';
 
 Vue.use(VueRouter);
 Vue.use(VueAxios, axios);
@@ -37,12 +35,11 @@ Vue.mixin({
     created() {
         let that=this;
         this.axios({
-            url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/dsettings",
+            url:process.env.VUE_APP_URL+"/dsettings",//(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/dsettings",
             method: 'get'
         })
         .then(function (response) {
-            let global='';
-            console.log('global',response.data);
+            let global='';          
             global=response.data;
             for(let i=0;i<global.length;i++){
               that.SsbMax=global[i]['ssb_max'];
