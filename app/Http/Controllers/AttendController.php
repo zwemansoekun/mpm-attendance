@@ -12,26 +12,6 @@ use Maatwebsite\Excel\Facades\Excel;
 class AttendController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -60,7 +40,7 @@ class AttendController extends Controller
                             // 'leaving_early' => 'numeric|nullable',
                     ],[
                         'date.required'=> '日付は必要です。', // custom message
-                        'date.date_format'=> '日付の形式をチェックして下さい！', // custom message
+                        'date.date_format'=> '日付の形式をチェックして下さい！', 
                         'total_hours.numeric'=> '合計時間をチェックして下さい！', 
                         'am1.date_format'=> 'AM1をチェックして下さい！',
                         'am2.date_format'=> 'AM2をチェックして下さい！',
@@ -94,9 +74,7 @@ class AttendController extends Controller
                                             'pm_leave' =>$val['pm_leave'],
                                             'late_coming' =>$val['late_coming'],
                                             'leaving_early' => $val['leaving_early'],
-                                        ]);                              
-                            
-
+                                        ]);
                 };
                     
             }else{
@@ -110,52 +88,7 @@ class AttendController extends Controller
             }
     
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
-
+    
     /**
      * 
      *
@@ -169,8 +102,7 @@ class AttendController extends Controller
         $attend='';
         if($request->year && $request->month){
             $date='%'.$request->year."-".$request->month.'%'; 
-            $attend=AttendDetail::where('emp_no', $request->emp_no)->where('date','like',$date)->get()->toArray();
-            // var_dump($attend);
+            $attend=AttendDetail::where('emp_no', $request->emp_no)->where('date','like',$date)->get()->toArray();          
         }
       
        return $attend;

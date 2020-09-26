@@ -1,6 +1,5 @@
 <template>
-    <div class="col-md-10">
-            
+    <div class="col-md-10">            
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-4"> 
@@ -128,104 +127,93 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                    
+                </div>  
                 
                 <div class="row" >
-                    <div class="col-md-9">
-                      
+                    <div class="col-md-9">                      
                      
-                            <form id="form1" class=""  autocomplete="on" >
-                            <!-- {{emps}} -->
-                            <!-- {{salaries}} -->
+                        <form id="form1" class=""  autocomplete="on" >
+                         
                             <div class="scrolling-wrapper  flex-row flex-nowrap">                         
-                            <table id="salaryTable" class="table table-sm table-md table-bordered">
-                                <span class="col-md-2 mt-4 table-borderless" style="background-color:#DEEBF7"> 
-                                        {{this.paymentDate(this.select_date,1)}}     
-                                </span>
-                                <span class="col-md-2 mt-4 table-borderless"> 
-                                        支給
-                                </span>  
-                            <tr>
-                                <th  class="border-bottom-0">
-                                   
-                                </th>
-                                <th rowspan="3"  class="align-middle text-center">
-                                    名前
-                                </th>
-                                <th rowspan="3" class="align-middle text-center">
+                                <table id="salaryTable" class="table table-sm table-md table-bordered">
+                                    <span class="col-md-2 mt-4 table-borderless" style="background-color:#DEEBF7"> 
+                                            {{this.paymentDate(this.select_date,1)}}     
+                                    </span>
+                                    <span class="col-md-2 mt-4 table-borderless"> 
+                                            支給
+                                    </span>  
+                                    <tr>
+                                        <th  class="border-bottom-0">
+                                        
+                                        </th>
+                                        <th rowspan="3"  class="align-middle text-center">
+                                            名前
+                                        </th>
+                                        <th rowspan="3" class="align-middle text-center">
 
-                                </th>
-                                <th colspan="5"  style="background-color:#FBE5D6" class="align-middle text-center">
-                                    控除前
-                                </th>
-                                <th colspan="3"   style="background-color:#D9D9D9" class="align-middle text-center">
-                                    控除額
-                                </th>
-                                <th colspan="3"  style="background-color:#D9D9D9" class="align-middle text-center">
-                                    その他調整(控除の場合-)
-                                </th>
-                                <th rowspan="2" style="text-align: center;background-color:#DAE3F3"  class="align-middle text-center border-bottom-0">
-                                    支給額
-                                </th>
-                            </tr>
-                            <tr>  
-                                <th   class="align-middle text-center border-bottom-0 border-top-0">
-                                    従業員番号
-                                </th>
-                                <th  rowspan="2"  class="text-center align-middle"  style="background-color:#FBE5D6;">
-                                    基本給
-                                </th>
-                                <th   rowspan="2" class="text-center align-middle"  style="background-color:#FBE5D6;">
-                                    通勤交通費
-                                </th>
-                                <th   rowspan="2" class="text-center align-middle"  style="background-color:#FBE5D6;">
-                                    JLPT
-                                </th>
-                                <th  rowspan="2" class="text-center align-middle"  style="background-color:#FBE5D6;">
-                                    ボーナス
-                                </th>
-                                <th   rowspan="2" class="text-center align-middle"  style="background-color:#FBE5D6;">
-                                    合計
-                                </th>
-                                <th   rowspan="2" class="text-center align-middle" style="background-color:#D9D9D9;">
-                                    所得税
-                                </th>
-                                <th   rowspan="2" class="text-center align-middle" style="background-color:#D9D9D9;">
-                                    SSB
-                                </th>
-                                <th   rowspan="2" class="text-center align-middle" style="background-color:#D9D9D9;">
-                                    遅刻欠勤早退
-                                </th> 
-                                <th  rowspan="2" class="text-center" style="background-color:#D9D9D9;">
+                                        </th>
+                                        <th colspan="5"  style="background-color:#FBE5D6" class="align-middle text-center">
+                                            控除前
+                                        </th>
+                                        <th colspan="3"   style="background-color:#D9D9D9" class="align-middle text-center">
+                                            控除額
+                                        </th>
+                                        <th colspan="3"  style="background-color:#D9D9D9" class="align-middle text-center">
+                                            その他調整(控除の場合-)
+                                        </th>
+                                        <th rowspan="2" style="text-align: center;background-color:#DAE3F3"  class="align-middle text-center border-bottom-0">
+                                            支給額
+                                        </th>
+                                    </tr>
+                                    <tr>  
+                                        <th   class="align-middle text-center border-bottom-0 border-top-0">
+                                            従業員番号
+                                        </th>
+                                        <th  rowspan="2"  class="text-center align-middle"  style="background-color:#FBE5D6;">
+                                            基本給
+                                        </th>
+                                        <th   rowspan="2" class="text-center align-middle"  style="background-color:#FBE5D6;">
+                                            通勤交通費
+                                        </th>
+                                        <th   rowspan="2" class="text-center align-middle"  style="background-color:#FBE5D6;">
+                                            JLPT
+                                        </th>
+                                        <th  rowspan="2" class="text-center align-middle"  style="background-color:#FBE5D6;">
+                                            ボーナス
+                                        </th>
+                                        <th   rowspan="2" class="text-center align-middle"  style="background-color:#FBE5D6;">
+                                            合計
+                                        </th>
+                                        <th   rowspan="2" class="text-center align-middle" style="background-color:#D9D9D9;">
+                                            所得税
+                                        </th>
+                                        <th   rowspan="2" class="text-center align-middle" style="background-color:#D9D9D9;">
+                                            SSB
+                                        </th>
+                                        <th   rowspan="2" class="text-center align-middle" style="background-color:#D9D9D9;">
+                                            遅刻欠勤早退
+                                        </th> 
+                                        <th  rowspan="2" class="text-center" style="background-color:#D9D9D9;">
 
-                                </th>
-                                <th  rowspan="2" class="text-center" style="background-color:#D9D9D9;">
-                                    
-                                </th>
-                                <th rowspan="2" class="text-center" style="background-color:#D9D9D9;">
-                                    
-                                </th>
-                                
-                            </tr>
-                            <tr>
-                                <th  class="border-top-0">
-                                </th>
-                                <th class="align-middle text-right border-top-0 cal_salaries" style="background-color:#DAE3F3;text-align:right;height: 34px;" v-text="total_payment">
-                                        <!-- {{cal_salaries}} -->
-                                        <!-- {{total_payment}} -->
-                                </th>  
-                            </tr>
-
-                            <tbody>
-                                <!-- {{salaries.length}} -->
-                                <!-- <tr> -->
-                                    <!-- v-bind:key="key" v-for="(salary,key) in salaries" -->
-                                    <!-- <table  class="table table-sm table-bordered"  style="position: absolute;"> -->
-                                            <template  v-for="(salary,key) in salaries">
+                                        </th>
+                                        <th  rowspan="2" class="text-center" style="background-color:#D9D9D9;">
                                             
-                                                    <!-- {{key}} -->
+                                        </th>
+                                        <th rowspan="2" class="text-center" style="background-color:#D9D9D9;">
+                                            
+                                        </th>
+                                        
+                                    </tr>
+                                    <tr>
+                                        <th  class="border-top-0">
+                                        </th>
+                                        <th class="align-middle text-right border-top-0 cal_salaries" style="background-color:#DAE3F3;text-align:right;height: 34px;" v-text="total_payment">                                      
+                                        </th>  
+                                    </tr>
+
+                                    <tbody>                              
+                                        <template  v-for="(salary,key) in salaries">                                  
+                                            
                                                     <tr v-bind:key="key">
                                                         <td rowspan="2"  class="text-center align-middle">{{emp_arr[salaries[key].emp_id]}}</td>
                                                         <td rowspan="2" class="text-center align-middle">{{name_arr[salaries[key].emp_id]}}<div>({{salaries[key].kana_name}})</div></td>
@@ -233,7 +221,7 @@
                                                         <td style="background-color:#D9D9D9" class="text-right align-middle income1">{{Math.trunc(salaries[key].salary_amount).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")}}</td>
                                                         <td style="background-color:#D9D9D9" class="text-right align-middle trans_money1">{{(salaries[key].trans_money).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")}}</td>
                                                         <td style="background-color:#D9D9D9" class="text-right align-middle jlpt1">{{(salaries[key].jlpt).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")}}</td>
-                                                        <!-- {{salaries[key].bonus}} -->
+                                                
                                                         <td style="background-color:#D9D9D9" class="text-right align-middle"></td>
                                                         <td style="background-color:#D9D9D9" class="text-right align-middle total_salary1">{{parseInt(salaries[key].total).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")}}</td>
 
@@ -247,14 +235,6 @@
                                                         <td style="background-color:#D9D9D9" class="text-right align-middle"></td>
                                                         <td style="background-color:#D9D9D9" class="text-right align-middle"></td>
                                                         <td style="background-color:#D9D9D9" class="text-right align-middle">
-
-                                                                <!-- {{
-                                                                   ( (parseInt(salaries[key].salary_amount)+parseInt(salaries[key].trans_money)+parseInt(salaries[key].jlpt))
-                                                                    -
-                                                                    (parseInt(salaries[key].ssb))
-                                                                   ).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")
-                                                                }} -->
-
                                                         </td>
                                                     </tr>
                                                     <tr v-bind:key="'A'+key" :class="`index_${key}`">
@@ -308,12 +288,12 @@
                                                                 <!-- :value="``" -->
                                                                 <input name="payment_amount[]" readonly class="payment_amount" style="text-align:right;width:150px;padding-right: 3px;" type="text" 
                                                                 :value="`${salaries[key].payment}`.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,')">
-                                                                 <!-- :value="`${(parseInt(salaries[key].salary_amount)+parseInt(salaries[key].trans_money)+parseInt(salaries[key].jlpt))-(parseInt(salaries[key].ssb))}`.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,')"> -->
+                                                                    <!-- :value="`${(parseInt(salaries[key].salary_amount)+parseInt(salaries[key].trans_money)+parseInt(salaries[key].jlpt))-(parseInt(salaries[key].ssb))}`.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,')"> -->
                                                             </td>
                                                         </template>
                                                         <template v-else>                                              
                                                                                                                     
-                                                             <td class="text-right align-middle" style="padding: 0px;">
+                                                                <td class="text-right align-middle" style="padding: 0px;">
                                                                 <input name="id[]" class="form-control input-sm idx1" style="text-align: center;" type="hidden" :value="`${get_salary_data[key]}`!=undefined?get_salary_data[key].id:'' ">   
                                                                 <input name="income[]" @change="updateInput" class="income" :style="`background-color:${checkBgColor(get_salary_data[key].income,salaries[key].salary_amount)};text-align:right;width:100px;padding-right: 3px;`" type="text" :value="`${get_salary_data[key]}`!=undefined?Math.trunc(get_salary_data[key].income).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,') :'' ">
                                                             </td>
@@ -349,96 +329,91 @@
                                                                 <input name="adju2[]" @change="updateInput" class="adju2" style="text-align:right;width:100px;" type="text" :value="`${get_salary_data[key]}`!=undefined?Math.trunc(get_salary_data[key].adju2).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,'):'' ">
                                                             </td>
                                                             <td class="text-right align-middle" style="padding: 0px;">
-                                                               <input name="adju3[]" @change="updateInput" class="adju3" style="text-align:right;width:100px;" type="text" :value="`${get_salary_data[key]}`!=undefined?Math.trunc(get_salary_data[key].adju3).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,'):'' ">
+                                                                <input name="adju3[]" @change="updateInput" class="adju3" style="text-align:right;width:100px;" type="text" :value="`${get_salary_data[key]}`!=undefined?Math.trunc(get_salary_data[key].adju3).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,'):'' ">
                                                             </td>
                                                             <td class="text-right align-middle" style="padding: 0px;">
                                                                 <!-- :value="``" -->
                                                                 <input name="payment_amount[]" readonly class="payment_amount" style="text-align:right;width:150px;padding-right: 3px;" type="text" :value="`${get_salary_data[key]}`!=undefined?Math.trunc(get_salary_data[key].payment_amount).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,'):'' ">
                                                             </td>
                                                         </template>    
-                                                    </tr>
-                                            
-                                            </template>
-                            </tbody>
-
-                        </table>    
-                        </div>                        
+                                                    </tr>                                    
+                                        </template>
+                                    </tbody>
+                                </table>    
+                            </div>                        
                         </form>   
                     </div>
                   
                     <div class="col-md-3">
                         <span  class="col-md-2 mt-4"></span>
                         <form id="form2" class="" autocomplete="on" >
-                        <div class="scrolling-wrapper  flex-row flex-nowrap">
-                    
-                        <table id="ssbtable" class="table table-sm table-bordered" style="width: 300px;">
-                            <tr>
-                                <th  colspan="2" class="align-middle text-center">
-                                        SSB
-                                </th>
-                                 <th  rowspan="3" class="align-middle text-center">
-                                        備考
-                                </th>
-                            </tr>
-                            <tr>
-                                <th rowspan="2" class="align-middle text-center" style="text-align: center;">
-                                        総額
-                                </th>
-                                 <th   class="align-middle text-center border-bottom-0" style="background-color:yellow">
-                                        会社負担分
-                                </th>
-                            </tr>
-                            <tr>
-                                <th   class="align-middle text-right border-top-0 paid-ssb" style="background-color:yellow;height: 31px;"  v-text="total_c_paid">
-                                                                            
-                                </th>   
-                            </tr>
-                            <tbody>
-                                <!-- {{ssbs[0].id}} -->
-                                   <template  v-for="key in salaries.length">
-                                            
-                                    <tr v-bind:key="key">
-                                        <!-- {{ssbs.length!=0?Math.trunc(ssbs[0].total_amount).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"):'15,000'}} -->
-                                       <td style="padding: 0px;width: 30%;text-align: right;background-color:#D9D9D9" class="ssb_total1">{{SsbPaid.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")}}</td>
-                                        <!-- {{ssbs.length!=0?Math.trunc(ssbs[0].c_paid).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"):'15,000'}} -->
-                                       <td style="padding: 0px;width: 30%;text-align: right;background-color:#D9D9D9" class="ssb_c_paid1">{{SsbPaid.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")}}</td>
-                                       <td style="padding: 0px;width: 40%;" rowspan="2">
+                            <div class="scrolling-wrapper  flex-row flex-nowrap">
+                        
+                                <table id="ssbtable" class="table table-sm table-bordered" style="width: 300px;">
+                                    <tr>
+                                        <th  colspan="2" class="align-middle text-center">
+                                                SSB
+                                        </th>
+                                        <th  rowspan="3" class="align-middle text-center">
+                                                備考
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th rowspan="2" class="align-middle text-center" style="text-align: center;">
+                                                総額
+                                        </th>
+                                        <th   class="align-middle text-center border-bottom-0" style="background-color:yellow">
+                                                会社負担分
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th   class="align-middle text-right border-top-0 paid-ssb" style="background-color:yellow;height: 31px;"  v-text="total_c_paid">
+                                                                                    
+                                        </th>   
+                                    </tr>
+                                    <tbody>                             
+                                        <template  v-for="key in salaries.length">
+                                                    
+                                            <tr v-bind:key="key">
+                                        
+                                            <td style="padding: 0px;width: 30%;text-align: right;background-color:#D9D9D9" class="ssb_total1">{{SsbPaid.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")}}</td>
+                                        
+                                            <td style="padding: 0px;width: 30%;text-align: right;background-color:#D9D9D9" class="ssb_c_paid1">{{SsbPaid.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")}}</td>
+                                            <td style="padding: 0px;width: 40%;" rowspan="2">
+                                                    <template v-if="get_salary_data.length==0"> 
+                                                        <textarea name="remark[]" class="remark" style="text-align:left;width:100%;border: none;-webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;" @value="`${old(remark)}`"></textarea>
+                                                    </template>    
+                                                    <template v-else> 
+                                                        <textarea name="remark[]" class="remark" style="text-align:left;width:100%;border: none;-webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;" :value="`${get_salary_data[key-1].ssbval}`!=undefined?get_salary_data[key-1].ssbval.remark:'' "></textarea>
+                                                    </template>
+                                                    <!-- <input name="remark[]"  class="remark" style="text-align:left;width:100px;" type="text" :value="``"> -->
+                                            </td>
+                                        </tr>  
                                             <template v-if="get_salary_data.length==0"> 
-                                                <textarea name="remark[]" class="remark" style="text-align:left;width:100%;border: none;-webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;" @value="`${old(remark)}`"></textarea>
-                                            </template>    
-                                            <template v-else> 
-                                                 <textarea name="remark[]" class="remark" style="text-align:left;width:100%;border: none;-webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;" :value="`${get_salary_data[key-1].ssbval}`!=undefined?get_salary_data[key-1].ssbval.remark:'' "></textarea>
+                                                <tr v-bind:key="'A'+key" :class="`index_${key-1}`">
+                                                    <td style="padding: 0px;width: 30%;text-align: right;height: 10%;">
+                                                            <input name="ssb_total[]" @change="ssbCalc" class="ssb_total" style="text-align:right;width:100%;" type="text" :value="`${SsbPaid.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,')}`">
+                                                    </td>
+                                                    <td style="padding: 0px;width: 30%;text-align: right;height: 10%;">
+                                                            <input name="ssb_c_paid[]" @change="ssbCalc"  class="ssb_c_paid" :style="`background-color:${checkBgColor(SsbPaid,(SsbMax*(5-salaries[key-1].ssb)/100))};text-align:right;width:100px;`"  type="text" :value="`${(SsbMax*(5-salaries[key-1].ssb)/100).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,')}`">
+                                                    </td>
+                                                </tr>     
                                             </template>
-                                            <!-- <input name="remark[]"  class="remark" style="text-align:left;width:100px;" type="text" :value="``"> -->
-                                       </td>
-                                   </tr>  
-                                    <template v-if="get_salary_data.length==0"> 
-                                        <tr v-bind:key="'A'+key" :class="`index_${key-1}`">
-                                            <td style="padding: 0px;width: 30%;text-align: right;height: 10%;">
-                                                    <input name="ssb_total[]" @change="ssbCalc" class="ssb_total" style="text-align:right;width:100%;" type="text" :value="`${SsbPaid.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,')}`">
-                                            </td>
-                                            <td style="padding: 0px;width: 30%;text-align: right;height: 10%;">
-                                                    <input name="ssb_c_paid[]" @change="ssbCalc"  class="ssb_c_paid" :style="`background-color:${checkBgColor(SsbPaid,(SsbMax*(5-salaries[key-1].ssb)/100))};text-align:right;width:100px;`"  type="text" :value="`${(SsbMax*(5-salaries[key-1].ssb)/100).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,')}`">
-                                            </td>
-                                        </tr>     
-                                    </template>
-                                    <template v-else>
-                                         <tr v-bind:key="'A'+key" :class="`index_${key-1}`">
-                                            <td style="padding: 0px;width: 30%;text-align: right;height: 10%;">    
-                                                    <input name="id[]" class="form-control input-sm idx2" style="text-align: center;" type="hidden" :value="`${get_salary_data[key-1].ssbval}`!=undefined?get_salary_data[key-1].id:'' ">                                              
-                                                    <input name="ssb_total[]" @change="ssbCalc" class="ssb_total" :style="`background-color:${checkBgColor(get_salary_data[key-1].ssbval.total_amount,SsbPaid)};text-align:right;width:100px;`"  type="text" :value="`${get_salary_data[key-1].ssbval}`!=undefined?Math.trunc(get_salary_data[key-1].ssbval.total_amount).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,'):'' ">
-                                            </td>
-                                            <td style="padding: 0px;width: 30%;text-align: right;height: 10%;">                                             
-                                                    <input name="ssb_c_paid[]" @change="ssbCalc"  class="ssb_c_paid" :style="`background-color:${checkBgColor(get_salary_data[key-1].ssbval.c_paid,SsbPaid)};text-align:right;width:100px;`"  type="text" :value="`${get_salary_data[key-1].ssbval}`!=undefined?Math.trunc(get_salary_data[key-1].ssbval.c_paid).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,'):'' ">
-                                            </td>
-                                        </tr>     
-                                    </template>
-                                   </template>
-
-                            </tbody>    
-                        </table>
-                        </div>
-                 
+                                            <template v-else>
+                                                <tr v-bind:key="'A'+key" :class="`index_${key-1}`">
+                                                    <td style="padding: 0px;width: 30%;text-align: right;height: 10%;">    
+                                                            <input name="id[]" class="form-control input-sm idx2" style="text-align: center;" type="hidden" :value="`${get_salary_data[key-1].ssbval}`!=undefined?get_salary_data[key-1].id:'' ">                                              
+                                                            <input name="ssb_total[]" @change="ssbCalc" class="ssb_total" :style="`background-color:${checkBgColor(get_salary_data[key-1].ssbval.total_amount,SsbPaid)};text-align:right;width:100px;`"  type="text" :value="`${get_salary_data[key-1].ssbval}`!=undefined?Math.trunc(get_salary_data[key-1].ssbval.total_amount).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,'):'' ">
+                                                    </td>
+                                                    <td style="padding: 0px;width: 30%;text-align: right;height: 10%;">                                             
+                                                            <input name="ssb_c_paid[]" @change="ssbCalc"  class="ssb_c_paid" :style="`background-color:${checkBgColor(get_salary_data[key-1].ssbval.c_paid,SsbPaid)};text-align:right;width:100px;`"  type="text" :value="`${get_salary_data[key-1].ssbval}`!=undefined?Math.trunc(get_salary_data[key-1].ssbval.c_paid).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,'):'' ">
+                                                    </td>
+                                                </tr>     
+                                            </template>
+                                        </template>
+                                    </tbody>    
+                                </table>
+                            </div>                
                        </form>
                     </div> 
                 </div>
@@ -474,18 +449,14 @@
                 ssbs:'',
                 error_check_messg:false,
                 get_salary_data:[],
-                total_payment:'',
-                // company_ssb:'',
+                total_payment:'',           
                 total_c_paid:'',
                 isCheckAll: false,                
                 salarymodal:[],
                 selected:'',
                 payslipBtnDisable: false,
             }
-        },
-        components: {
-          
-        },
+        },    
         computed: {
            errorsFun:function(){
                 this.error_check_messg = true 
@@ -510,7 +481,7 @@
             let that=this;
          
             this.axios({
-                url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/settings",
+                url:process.env.MIX_APP_URL+ "/settings",//(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/settings",
                 method: 'get'
             })
             .then(function (response) {
@@ -520,7 +491,7 @@
             });
 
             this.axios({
-                url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/setting/all",
+                url:process.env.MIX_APP_URL+"/setting/all",//(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/setting/all",
                 method: 'get'
             })
             .then(function (response) {
@@ -530,7 +501,7 @@
             });
 
             this.axios({
-                url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/delayTimes",
+                url:process.env.MIX_APP_URL+"/delayTimes",//(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/delayTimes",
                 method: 'get'
             })
             .then(function (response) {
@@ -552,23 +523,14 @@
                     that.emps=response.data;
                    if(that.emps){
                   
-                       for(let v in that.emps){
-                            // console.log('dddd',that.emps[v].id);
+                       for(let v in that.emps){                        
                            that.emp_arr[that.emps[v].id]=that.emps[v].employeeId;
                            that.name_arr[that.emps[v].id]=that.emps[v].name;
                        }
                      
                    }
                   
-            });
-           
-            // this.axios
-            // .get((window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/salaryList/ssb/all")
-            // .then(response => {
-            //         that.ssbs=response.data;
-            // })
-            
-           
+            });            
         },
         methods: { 
             engineerCost:function(){
@@ -577,12 +539,11 @@
                         "pay_month":that.select_date,
                     };
                     this.axios({
-                      url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/salaryList/getsalary",
+                      url:process.env.MIX_APP_URL+"/salaryList/getsalary",//(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/salaryList/getsalary",
                       method: 'post',
                       data:up_data,
                     })                  
-                    .then(response=>{ 
-                         console.log('resssss',response.data.length);       
+                    .then(response=>{                        
                         if(response!='' && response.data.length!=0 ){
                             const url = (window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/salaryList/download/"+this.year+"-"+this.month;
                             const link = document.createElement('a')
@@ -627,8 +588,7 @@
                 if(this.isCheckAll){ // Check all
                     for (var key in this.salaries) {
                         this.salarymodal.push(this.salaries[key]);
-                    // this.salarymodal.push(key,{"emp_id":this.salaries[key].emp_id,"emp_code":this.salaries[key].emp_code,"emp_name":this.salaries[key].emp_name});
-                  
+                    // this.salarymodal.push(key,{"emp_id":this.salaries[key].emp_id,"emp_code":this.salaries[key].emp_code,"emp_name":this.salaries[key].emp_name});                  
                     }
                 }
                
@@ -670,7 +630,7 @@
 
                 let that=this;
                 this.axios({
-                    url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/delayTime/updateMoney/"+id,
+                    url:process.env.MIX_APP_URL+"/delayTime/updateMoney/"+id,//(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/delayTime/updateMoney/"+id,
                     method: 'post',
                     data: delayTime
                 })
@@ -685,18 +645,6 @@
                 })
                 .catch(function (error) {
                 });
-
-                // this.axios
-                // .post('http://127.0.0.1:8000/api/delayTime/updateMoney/'+id, delayTime)
-                // .then((response) => {
-                //     this.delays = response.data;
-                //     this.delayDataCalculate();
-
-                //     this.data_check_messg = true;
-                //     setTimeout(() => {
-                //         this.data_check_messg = false;
-                //     },2000)
-                // })
             },
             delayDataCalculate(){
                 this.attendDelays = [];
@@ -767,8 +715,6 @@
             SalarySave:function(){
                 let that=this;
                 // let those=this;
-
-
                 var validator1 = jQuery('#form1').validate({
                   
                     rules: {
@@ -783,8 +729,7 @@
                             // "leave_late[]":"",
                             "payment_amount[]":"required",
                     },  
-                    messages: {
-                                
+                    messages: {                                
                             // "income[]": {
                             //     required: '基本給は必要です。',
                             // },     
@@ -823,23 +768,20 @@
                         $('#salaryTable tr[class^=index_]').each(function (key,value) {
                             let that=this;   
                             $(that).find('td').each(function (index,v2) {
-                                console.log('index',index);
+                             
                                     let isLastElement = index == $(that).find('td').length-1;
                                      
-                                    if(jQuery(this).find('.pay_month').val()){
-                                         console.log('pay_month',jQuery(this).find('.pay_month'));
-                                    pay_month=jQuery(this).find('.pay_month').val();
+                                    if(jQuery(this).find('.pay_month').val()){                                       
+                                        pay_month=jQuery(this).find('.pay_month').val();
                                     }
-                                    if(jQuery(this).find('.employee_id').val()){
-                                         console.log('employee_id',jQuery(this).find('.employee_id'));
-                                    employee_id=jQuery(this).find('.employee_id').val();
+                                    if(jQuery(this).find('.employee_id').val()){                                      
+                                        employee_id=jQuery(this).find('.employee_id').val();
                                     }
-                                    if(jQuery(this).find('.income').val()){
-                                         console.log('income',jQuery(this).find('.income'));
-                                    income=jQuery(this).find('.income').val().toString().replace(/,/g , '');
+                                    if(jQuery(this).find('.income').val()){                                     
+                                        income=jQuery(this).find('.income').val().toString().replace(/,/g , '');
                                     }
                                     if(jQuery(this).find('.trans_money').val()){
-                                    trans_money=jQuery(this).find('.trans_money').val().toString().replace(/,/g , '');
+                                        trans_money=jQuery(this).find('.trans_money').val().toString().replace(/,/g , '');
                                     }
                                     if(jQuery(this).find('.jlpt').val()){
                                         jlpt=jQuery(this).find('.jlpt').val().toString().replace(/,/g , '');
@@ -869,14 +811,12 @@
                                         adju3=jQuery(this).find('.adju3').val().toString().replace(/,/g , '');
                                     }
                                     if(jQuery(this).find('.payment_amount').val()){
-                                        payment_amount=jQuery(this).find('.payment_amount').val().toString().replace(/,/g , '');
-                                        console.log('bbbbb',payment_amount);
+                                        payment_amount=jQuery(this).find('.payment_amount').val().toString().replace(/,/g , '');                                       
                                     }
                                     if(jQuery(this).find('.idx1').val()){
                                        id1=jQuery(this).find('.idx1').val();
                                     }
-                                    if (isLastElement) {
-                                          console.log('final',isLastElement);
+                                    if (isLastElement) {                                        
                                         if(id1!=''){
                                               temp_salary.push({"id":id1,"pay_month":pay_month,"employee_id":employee_id,"income":income,"trans_money":trans_money,"jlpt":jlpt,"bonus":bonus,"income_tax":inc_tax,"ssb":ssb,"leave_late":leave_late,"payment_amount":payment_amount,"total_salary":total_salary,"adju1":adju1,"adju2":adju2,"adju3":adju3});//
                                         }else{
@@ -933,31 +873,23 @@
                         showCancelButton: false,
                         showConfirmButton: false,
                         // position:'center',
-                        }).then(r => {
-                        //    console.log(r.value);
+                        }).then(r => {                      
                         }); 
                     return false;
                 }
-
-                // console.log('temp_salary',temp_salary);
-                // console.log('temp_ssb',temp_ssb);
+              
                 this.axios({
-                      url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/salaryList",
+                      url:process.env.MIX_APP_URL+"/salaryList",//(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/salaryList",
                       method: 'post',
                       data: {"form1": temp_salary,"form2": temp_ssb}
                     })
                     .then(function (response) {                     
 
                         // your action after success                      
-                        if(response.data){
-                            // console.log(response.data);    
-                            
-                            // your action after success                      
-                            //  console.log('message',response.message);
+                        if(response.data){                            
                             if(response.data.message==true){
                                 that.salaries=[];
-                                that.get_salary_data=[];
-                                console.log(that.salaries);
+                                that.get_salary_data=[];                            
                                 that.update_call();  
                                 that.$fire({
                                     title: "成功しました",
@@ -967,8 +899,7 @@
                                     showCancelButton: false,
                                     showConfirmButton: false,
                                     // position:'center',
-                                }).then(r => {
-                                    //    console.log(r.value);
+                                }).then(r => {                                
                                 });
                             }else{
                                 that.$fire({
@@ -979,13 +910,10 @@
                                 showCancelButton: false,
                                 showConfirmButton: false,
                                 // position:'center',
-                                }).then(r => {
-                                //    console.log(r.value);
+                                }).then(r => {                             
                                 }); 
                                 that.errors=response.data.errors;                             
-                            }                       
-                      
-
+                            } 
                         }
                     })
                     .catch(function (error) {
@@ -1032,21 +960,6 @@
                 }else{
                     return false;
                 }
-
-                // if(event.target.value!=''){
-
-                    // this.axios
-                    // .get((window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/salaryList/"+this.year+"-"+this.month)                 
-                    // .then(response => {
-                    //     // console.log('salary',response.data.length); 
-                    //     that.salaries=response.data;
-                    //     // console.log('salary',response.data.length);
-                    // })
-                    // .catch(function (error) {
-                    //     // console.log(error.response)
-                    // });
-
-                // }
             },
             update_call:function(){               
                     let that=this;  
@@ -1055,24 +968,16 @@
                         // "employee_id ":
                     };
                     this.axios({
-                      url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/salaryList/getsalary",
+                      url:process.env.MIX_APP_URL+"/salaryList/getsalary",//(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/salaryList/getsalary",
                       method: 'post',
                       data:up_data,
                     })                  
-                    .then(response=>{ 
-                        // that.get_attend_data=[];
-                        // that.data_combine=[];
-                        // that.check_attend_data=false;                        
-                        that.get_salary_data=response.data;
-                        console.log('getsalary',that.get_salary_data);
-                          console.log('data',response.data);
-                        console.log('nores',that.get_salary_data);   
+                    .then(response=>{                                        
+                        that.get_salary_data=response.data;                      
                         that.salaryList(that.get_salary_data);                  
                     })
                     .catch(function (error) {
-                        that.$swal.close();
-                        console.log('nopar byar',that.get_salary_data); 
-                        console.log('geterror',error.response);
+                        that.$swal.close();                      
                     }); 
             },
             salaryList:function(get_salary_data=''){
@@ -1087,17 +992,16 @@
                     .get((window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/salaryList/"+this.year+"-"+this.month )                 
                     .then(response => {
                         // that.salaries=response.data;
-                        tem_salary=response.data;
-                        console.log('salary1',tem_salary.length); 
+                        tem_salary=response.data;                     
                         if(get_salary_data==''){
                             for(let i=0;i<tem_salary.length;i++){
-                               console.log('salary12',tem_salary[i]); 
+                            
                                 tem_salary[i]['total']=(parseInt(tem_salary[i].salary_amount)+parseInt(tem_salary[i].trans_money)+parseInt(tem_salary[i].jlpt))
                                 tem_salary[i]['payment']=parseInt(tem_salary[i]['total'])-( (that.SsbMax*(parseInt(tem_salary[i].ssb)/100))+parseInt(tem_salary[i]['late_leave_money']) );
                                 total_payment+=tem_salary[i]['payment'];
                                 total_c_paid+=(that.SsbMax*((5-tem_salary[i].ssb)/100));
                                 tem_salary[i]['c_paid']=(that.SsbMax*((5-tem_salary[i].ssb)/100));//(that.SsbMax*(3/100));
-                                console.log('salary33',tem_salary); 
+                           
                                 // tem_salary[i]['emp_id']=tem_salary[i].emp_id;
                                 tem_salary[i]['emp_code']=that.emp_arr[tem_salary[i].emp_id];
                                 tem_salary[i]['emp_name']=that.name_arr[tem_salary[i].emp_id];
@@ -1118,10 +1022,8 @@
                                 total_payment+=parseInt(get_salary_data[i].payment_amount);
                                 total_c_paid+=parseInt(get_salary_data[i].ssbval.c_paid);                          
                             }
-                        }
-                      
-                        console.log('ok',tem_salary);
-                        console.log('ok22',total_payment);
+                        }                      
+                     
                         that.total_payment=total_payment;
                         // that.company_ssb=company_ssb;
                         that.salaries=tem_salary;
@@ -1138,8 +1040,7 @@
                         that.$swal.close();
                     })
                     .catch(function (error) {
-                        that.$swal.close();
-                        console.log(error.response)
+                        that.$swal.close();                     
                     });
             },
             ssbCalc:function(event){
@@ -1166,9 +1067,9 @@
 
                  $("input[name^='ssb_c_paid']").each(function() {                    
                         if( !isNaN($(this).val().toString().replace(/,/g , '')) && $(this).val().toString().replace(/,/g , '')!='') {
-                                console.log('checkpoint12',$(this).val());
+                             
                             cal_ssb+=parseInt($(this).val().toString().replace(/,/g , ''));
-                                console.log('checkpoint123',cal_ssb);
+                              
                         }                      
                     });
                      $("#ssbtable").find('.paid-ssb').text(cal_ssb.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
@@ -1253,8 +1154,6 @@
                     }else{
                          $(event.target).parent().parent().find('.total_salary').css("background-color", "");
                     }
-
-
             }, 
         }
     }

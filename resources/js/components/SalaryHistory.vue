@@ -381,7 +381,7 @@ import Datepicker from 'vuejs-datepicker';
             findEmployeeData(){
                 let that=this;
                 this.axios({
-                    url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/employee/"+this.emp_id,
+                    url:process.env.MIX_APP_URL+"/employee/"+this.emp_id,//(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/employee/"+this.emp_id,
                     method: 'get'
                 })
                 .then(function (response) {
@@ -393,7 +393,7 @@ import Datepicker from 'vuejs-datepicker';
             findLastHistory(){
                 let that=this;
                 this.axios({
-                    url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/employeeDetail/lastData/"+this.emp_id,
+                    url:process.env.MIX_APP_URL+"/employeeDetail/lastData/"+this.emp_id,//(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/employeeDetail/lastData/"+this.emp_id,
                     method: 'get'
                 })
                 .then(function (response) {
@@ -410,7 +410,7 @@ import Datepicker from 'vuejs-datepicker';
             findEmployeeHistory(){
                 let that=this;
                 this.axios({
-                    url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/employeeDetail/"+this.emp_id,
+                    url:process.env.MIX_APP_URL+"/employeeDetail/"+this.emp_id,//(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/employeeDetail/"+this.emp_id,
                     method: 'get'
                 })
                 .then(function (response) {
@@ -615,7 +615,7 @@ import Datepicker from 'vuejs-datepicker';
                 }
 
                 this.axios({
-                    url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/employee/save/"+this.emp_id,
+                    url:process.env.MIX_APP_URL+"/employee/save/"+this.emp_id,//(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/employee/save/"+this.emp_id,
                     method: 'post',
                     data: this.empData
                 })
@@ -627,7 +627,7 @@ import Datepicker from 'vuejs-datepicker';
 
                 let that=this;
                 this.axios({
-                    url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/employeeDetail/updateAll",
+                    url:process.env.MIX_APP_URL+"/employeeDetail/updateAll",//(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/employeeDetail/updateAll",
                     method: 'post',
                     data: this.empDetails
                 })

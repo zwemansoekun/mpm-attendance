@@ -3,13 +3,11 @@
 namespace App\Http\Controllers;
 
 
-
 use App\Ssb;
 use App\Salary;
 use App\Setting;
 use App\Employee;
 use App\AttendDetail;
-
 use App\EmployeeDetail;
 use Illuminate\Http\Request;
 
@@ -27,26 +25,7 @@ use App\Http\Resources\EmployeeDetail as EmployeeDetailResource;
 
 class SalaryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
+    
     /**
      * Store a newly created resource in storage.
      *
@@ -75,19 +54,19 @@ class SalaryController extends Controller
                         'leave_late'=>'numeric|nullable',
                         'employee_id'=>'required|numeric',
                 ],[
-                    'income.required'=> '基本給は必要です。', // custom message
-                    'income.numeric'=> '基本給をチェックして下さい！', // custom message
-                    'total_salary.required'=> '合計は必要です。', // custom message
-                    'total_salary.numeric'=> '合計をチェックして下さい！', // custom message
-                    'trans_money.numeric'=> '通勤交通費をチェックして下さい！', 
-                    'jlpt.numeric'=> 'JLPTをチェックして下さい！',
-                    'bonus.numeric'=> 'ボーナスをチェックして下さい！',
-                    'payment_amount.required'=> '支給額は必要です。',
-                    'payment_amount.numeric'=> '支給額をチェックして下さい！', // custom message
-                    'income_tax.required'=> '所得税は必要です。',
-                    'income_tax.numeric'=> '所得税をチェックして下さい！', // custom message
-                    'ssb.numeric'=> 'SSBをチェックして下さい！',
-                    'leave_late.numeric'=> '遅刻欠勤早退をチェックして下さい！',
+                        'income.required'=> '基本給は必要です。', // custom message
+                        'income.numeric'=> '基本給をチェックして下さい！',
+                        'total_salary.required'=> '合計は必要です。',
+                        'total_salary.numeric'=> '合計をチェックして下さい！',
+                        'trans_money.numeric'=> '通勤交通費をチェックして下さい！', 
+                        'jlpt.numeric'=> 'JLPTをチェックして下さい！',
+                        'bonus.numeric'=> 'ボーナスをチェックして下さい！',
+                        'payment_amount.required'=> '支給額は必要です。',
+                        'payment_amount.numeric'=> '支給額をチェックして下さい！',
+                        'income_tax.required'=> '所得税は必要です。',
+                        'income_tax.numeric'=> '所得税をチェックして下さい！',
+                        'ssb.numeric'=> 'SSBをチェックして下さい！',
+                        'leave_late.numeric'=> '遅刻欠勤早退をチェックして下さい！',
                 ]);
                 if ($validator->fails()) {
                     return ['errors' => $validator->errors()->all()];                               
@@ -106,18 +85,17 @@ class SalaryController extends Controller
                         'c_paid' => 'required|numeric',
                         'remark'=> 'nullable',
                 ],[
-                    'total_amount.required'=> '総額は必要です。', // custom message
-                    'total_amount.numeric'=> '総額をチェックして下さい！', // custom message
-                    'c_paid.required'=> '会社負担分は必要です。', // custom message
-                    'c_paid.numeric'=> '会社負担分をチェックして下さい！', // custom message
+                        'total_amount.required'=> '総額は必要です。', // custom message
+                        'total_amount.numeric'=> '総額をチェックして下さい！', 
+                        'c_paid.required'=> '会社負担分は必要です。', 
+                        'c_paid.numeric'=> '会社負担分をチェックして下さい！', 
                 ]);
                 if ($validator->fails()) {
                     return ['errors' => $validator->errors()->all()];                               
                 }
             }
-        }
-        
-        // $data1=$request->form1;
+        }        
+    
         $data1=$request->form1;
         $data2=$request->form2;
         $datas1='';$datas2='';
@@ -174,93 +152,20 @@ class SalaryController extends Controller
                 return ['message'=>true];
             }else{
                 return ["message"=>false];
-            }
-    
-            
-        
-
-
-    
-        //  return count($data1);   
-        // DB::beginTransaction();
-        // try {
-        //     $datas2=Ssb::insert($data2);
-        //     $ssbid=DB::getPdo()->lastInsertId();
-        //     if($ssbid){
-        //         for($i=0;$i<count($data1);$i++){
-        //             $data1[$i]['ssb_id']=$ssbid++;
-        //         }
-        //         $datas1=Salary::insert($data1);
-        //     }
-        //     DB::commit();
-        // } catch (Exception $e) {
-        //     DB::rollBack();
-        // }
-       
-
-
-       
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+            }       
     }
 
     public function list($yearmonth)
     {
         $adetailcount=0;
         $ym=explode("-",$yearmonth);  
-        $salary=EmployeeDetail::with('employee')->where('pay_month',str_replace("-","/",$yearmonth))->get();//->toArray();//with('employee')->
+        $salary=EmployeeDetail::with('employee')->where('pay_month',str_replace("-","/",$yearmonth))->get();
       
          $daycount=cal_days_in_month(CAL_GREGORIAN,$ym[1],$ym[0]);
 
         DB::beginTransaction();
         try {
-            for($i=0;$i<count($salary);$i++){
-              
-            
-    
+            for($i=0;$i<count($salary);$i++){ 
                     
                 $adetailcount=AttendDetail::whereYear('date',$ym[0])
                 ->whereMonth('date',$ym[1])
@@ -313,8 +218,7 @@ class SalaryController extends Controller
     {
         $salary='';
         if($request->pay_month){
-            $salary=Salary::with('ssbval')->where('pay_month',$request->pay_month)->get()->toArray();
-            // var_dump($attend);
+            $salary=Salary::with('ssbval')->where('pay_month',$request->pay_month)->get()->toArray();          
         }
       
        return $salary;
@@ -324,38 +228,14 @@ class SalaryController extends Controller
     //         $ssb=Ssb::get();
     //         return $ssb;
     // }
-
     public function download($yearmonth)
-    {  
-        // $global=config('global');
+    {        
         $yearMonth=str_replace('-','/',$yearmonth);
-        // $setting='';
-        //  $employdetail=EmployeeDetail::with('employee')->where('pay_month',$yearMonth)->get();//->toArray();//with('employee')->
-        //  $setting=Setting::select('money')->where('create_month','=',$yearMonth)->get();
-        // return !$setting->isEmpty();
-        //  if($setting->isEmpty()){          
-        //      $setting=$global;
-        //  }
-        //  return $setting[0]['money'];
-
-        // $ym=explode("-",$yearmonth); 
-        // $adetail=AttendDetail::whereYear('date',2020)
-        //        ->whereMonth('date',07)
-        // ->where(function($q) {
-        //     $q->orWhereNotNull('am1')
-        //       ->orWhereNotNull('am2')
-        //       ->orWhereNotNull('pm1')
-        //       ->orWhereNotNull('pm2');
-        // })->count();
-
-        // return $adetail;
-        
+              
          if($yearMonth){    
             libxml_use_internal_errors(true);      
             return (new EngineerExport($yearMonth))->download('海外エンジニアコスト一覧表_'.$yearmonth.'.xlsx');
-         }
-        
-        // return Excel::download(new EngineerExport($yearmonth), '海外エンジニアコスト一覧表_'.$yearmonth.'.xlsx');
+         }        
+   
     }
-
 }

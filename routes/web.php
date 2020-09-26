@@ -17,29 +17,32 @@ use Illuminate\Support\Facades\Route;
 //     return view('welcome');
 // });
 
-Auth::routes(['register' => false]);//
+Auth::routes(['register' => false]);
 
-Route::get('/',  function () {
-        return view('layouts.app');
-})->middleware('auth');
+// Route::get('/',  function () {
+//         return view('layouts.app');
+// })->middleware('auth');
 
 Route::group(['middleware' => 'auth'], function()
 {
-Route::get('/attendManage/download/{year}', 'AttendManageController@download');
+
+Route::get('/',  function () {
+      return view('layouts.app');
+});
+
+Route::get('/attendList/csvOutput/{employee}/{date}','AttendController@csvOutput');
 Route::post('/attendList','AttendController@store');
 Route::post('/attendList/getmonth','AttendController@getmonth');
 
-
-Route::get('/salaryList/{yearmonth}', 'SalaryController@list');
+Route::get('/salaryList/{yearmonth}', 'SalaryController@list')->where('yearmonth', '[0-9 -]+');
 Route::get('/salaryList/ssb/all', 'SalaryController@ssb');
+Route::get('/salary/export/{yearMonth}/{employees}', 'SalaryController@excel_export');
+Route::get('/salaryList/download/{year}','SalaryController@download')->where('year', '[0-9 -]+');
 Route::post('/salaryList', 'SalaryController@store');
 Route::post('/salaryList/getsalary','SalaryController@getsalary');
 
-Route::get('/salary/export/{yearMonth}/{employees}', 'SalaryController@excel_export');
-Route::get('/salaryList/download/{year}','SalaryController@download');
-
-
 Route::get('/dsettings','DefaultSettingController@index');
+Route::get('/attendManage/download/{year}', 'AttendManageController@download');
 
 Route::get('/settings',  'SettingController@index');
 Route::get('/setting/all', 'SettingController@all');
@@ -59,15 +62,14 @@ Route::get('/employeeDetail/lastData/{emp_id}', 'EmployeeDetailController@findLa
 Route::get('/employeeDetail/{emp_id}', 'EmployeeDetailController@findByEmployee');
 Route::post('/employeeDetail/updateAll', 'EmployeeDetailController@updateAll');
 
-Route::get('/attendList/csvOutput/{employee}/{date}','AttendController@csvOutput');
-
-
+Route::get('{any}', function () {
+        return view('layouts.app');
+})->where('any', '.*');
 
 });
 
-
-Route::get('{any}', function () {
-         return view('layouts.app');
-})->where('any', '.*')->middleware('auth');
+// Route::get('{any}', function () {
+//          return view('layouts.app');
+// })->where('any', '.*')->middleware('auth');
 
 

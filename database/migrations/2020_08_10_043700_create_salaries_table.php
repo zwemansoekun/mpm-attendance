@@ -16,19 +16,15 @@ class CreateSalariesTable extends Migration
         Schema::create('salaries', function (Blueprint $table) {
             $table->id();
             $table->string('pay_month');
-            $table->integer('income');
-            // $table->decimal('income',10, 2);
+            $table->integer('income');        
             $table->integer('trans_money')->nullable();
             $table->integer('jlpt')->nullable();
             $table->integer('bonus')->nullable();
             $table->integer('income_tax');
             $table->integer('ssb');
-            $table->integer('total_salary');
-            // $table->decimal('ssb',10, 2);
-            $table->integer('leave_late')->nullable();
-            // $table->decimal('leave_late',10, 2);
-            $table->integer('payment_amount');
-            // $table->decimal('payment_amount',10, 2);
+            $table->integer('total_salary');      
+            $table->integer('leave_late')->nullable();         
+            $table->integer('payment_amount');         
             $table->integer('employee_id'); // f_key
             $table->integer('ssb_id'); //f_key //check pay pr
             $table->integer('adju1')->nullable(); //adjustments (in case of deduction-)

@@ -335,11 +335,7 @@
                                                 <td   colspan="2"  :style="`background-color:${checkBgColor(year,month,dayindex+1,1)};height: 3.3em;`" ></td>
                                                 <td ></td>
                                                  <td ></td>  
-                                        </template>    
-
-                                      
-                                           
-                                                
+                                        </template> 
                                     </tr>
                                     <tr v-bind:key="'A'+dayindex" v-bind:style="`height:${day_name(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])=='table-secondary'?'2.6em':''}`" v-bind:class="`index_${dayindex} ${day_name(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])}`">
                                                
@@ -368,8 +364,6 @@
     </div>    
 </template>
 <script>
-// import Dakokurow from './layouts/Dakokurow.vue';
-// import Dakokurow2 from './layouts/Dakokurow2.vue';
     export default {
         data() {
             return {
@@ -400,11 +394,7 @@
                 data_combine:[],
                 formchange:'',
             }
-        },
-        components:{
-            // Dakokurow,
-            // Dakokurow2
-        },
+        },     
         created() {
             this.axios
                 .get('http://localhost:5000/employees')
@@ -417,9 +407,9 @@
                 .get('http://localhost:5000/attendances/all/date')
                 .then(response => {
              
-                this.dates=response.data.filter(function (el) {
-                     return el['recordedDateTime'] != null;
-                });
+                    this.dates=response.data.filter(function (el) {
+                        return el['recordedDateTime'] != null;
+                    });
             
                 });    
         },
@@ -480,8 +470,7 @@
                     val=val.replace(this.emp_no,'');
                     val=val.replace(this.emp_code,'');
                     this.emp_name=val;
-                }  
-                console.log('qqqq',val);
+                }              
                 if(val!='' && this.select_date!=''){   
                     this.loadingAlert();
                     this.update_call();          
@@ -581,11 +570,10 @@
                                 return false;
                             }
                          });    
-                   });
-                    console.log('zzzzzzqqqqq',temp_arr);
+                   });                   
                     those.loadingAlert();
                     this.axios({
-                      url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/attendList",
+                      url:process.env.MIX_APP_URL+"/attendList",//(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/attendList",
                       method: 'post',
                       data: temp_arr
                     })
@@ -605,8 +593,7 @@
                                     showCancelButton: false,
                                     showConfirmButton: false,
                                     // position:'center',
-                                }).then(r => {
-                                    //    console.log(r.value);
+                                }).then(r => {                              
                                 });
                             }else{
                                 those.$swal.close();
@@ -618,8 +605,7 @@
                                 showCancelButton: false,
                                 showConfirmButton: false,
                                 // position:'center',
-                                }).then(r => {
-                                //    console.log(r.value);
+                                }).then(r => {                             
                                 }); 
                                 those.errors=response.data.errors;                             
                             }                       
@@ -638,8 +624,7 @@
                         showCancelButton: false,
                         showConfirmButton: false,
                         // position:'center',
-                        }).then(r => {
-                        //    console.log(r.value);
+                        }).then(r => {                     
                         }); 
                     return false;
                 }
@@ -654,8 +639,7 @@
                    pm2=$(event.target).parent().parent().find('.pm2').val()!=undefined?$(event.target).parent().parent().find('.pm2').val().split(":"):'';
                 
                   const {t_hr, t_min,late_coming,leaving_early}=this.totalHourCal(am1,am2,pm1,pm2,total_am,total_pm,'',''); 
-                  console.log('up_leaving_early',leaving_early);
-                  console.log('up_late_coming',late_coming);
+
                   let res=isNaN((parseFloat(t_hr)+parseFloat(t_min)).toFixed(2))?'':(parseFloat(t_hr)+parseFloat(t_min)).toFixed(2);
 
                 jQuery(event.target).parent().parent().find(".thour").val(Math.abs(res).toFixed(2));
@@ -681,14 +665,11 @@
                 $(function() {
 
                     jQuery(document).on("contextmenu","[class^=paid-leave1],[class^=paid-leave2]", function(e){
-                            parent_class_name=jQuery(this).parent().attr('class');
-                            
+                            parent_class_name=jQuery(this).parent().attr('class');                            
                             // if(parent_class_name==undefined){
                             //      parent_class_name=jQuery(this).parent().find('[class^=index_]').attr('class');
                             // }
-                            class_name=jQuery(this).attr('class').split(' ')[0];
-                            console.log('p',parent_class_name);
-                            console.log('c',class_name);
+                            class_name=jQuery(this).attr('class').split(' ')[0];                         
                     });
 
                     $.contextMenu({
@@ -701,9 +682,7 @@
                             if(key=='o'){
                                    
                                 let dakoku=that.showTimer(parent_class_name,class_name,'circle');
-                                console.log('hc',jQuery("."+parent_class_name).find('.paid-leave1'));
-                                   console.log('checkdakoku',dakoku);
-                                     console.log('class_name',class_name);
+                              
                                 if(class_name=='paid-leave1'){
                                     jQuery("."+parent_class_name).find('.amleave').remove();
                                     if(dakoku!='dakoku')
@@ -719,7 +698,7 @@
 
                             }else{
                                 let dakoku=that.showTimer(parent_class_name,class_name,'dash');
-                                console.log('checkdakoku',dakoku);
+
                                 if(class_name=='paid-leave1'){
                                     jQuery("."+parent_class_name).find('.amleave').remove();
                                     if(dakoku!='dakoku')
@@ -802,7 +781,7 @@
                         "month":this.month,
                     };
                     this.axios({
-                      url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/attendList/getmonth",
+                      url:process.env.MIX_APP_URL+"/attendList/getmonth",//(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/attendList/getmonth",
                       method: 'post',
                       data:up_data,
                     })                  
@@ -812,18 +791,16 @@
                         that.data_combine=[];
                         that.check_attend_data=false;                        
                         that.get_attend_data=response.data;
-                        // console.log('nores',that.get_attend_data);   
+
                         that.ampm_calling(that.get_attend_data);                  
                     })
                     .catch(function (error) {
-                         that.$swal.close();
-                         console.log('nopar byar',that.get_attend_data); 
-                        console.log('geterror',error.response);
+                         that.$swal.close();                      
                     }); 
 
            },   
             ampm_calling(attend_data=''){        
-                    // console.log('ampmin',attend_data);           
+                     
                     let that = this;
                     let those=this;
                     this.ampm_by_day_arr=[];
@@ -849,14 +826,13 @@
                         }else{
                             this.form_open=true;
                         }             
-                        // console.log('api return',response.data);
+                
                         let memory_record={};let push_record=[];
                         response.data.forEach(function(res, index) {
                                 if (res.recordedDateTime === that.memory && that.memory !== "") {
                                     that.memory = res.recordedDateTime;
-                                    //   console.log('t1',Object.keys(memory_record).length);
-                                     memory_record[res.recordedDateTime]= res 
-                                    // console.log('y1',Object.keys(memory_record).length);
+                                
+                                     memory_record[res.recordedDateTime]= res                                   
                                         
                                     that.ampm_inner_arr.push(res);
                                 } else if (res.recordedDateTime !== that.memory && that.memory !== "") {
@@ -865,16 +841,13 @@
                                     memory_record={};
                                     that.ampm_inner_arr = [];
                                     that.memory = res.recordedDateTime;
-                                        //  console.log('t2',Object.keys(memory_record).length);
+                                      
                                     memory_record[ res.recordedDateTime]= res 
-                                        //  console.log('y2',Object.keys(memory_record).length);
-                                    // push_record.push(memory_record);    
+                                 
                                     that.ampm_inner_arr.push(res);
                                 } else {
-                                    that.memory = res.recordedDateTime;   
-                                        //  console.log('t3',Object.keys(memory_record).length);  
-                                    memory_record[ res.recordedDateTime]= res    
-                                        //  console.log('y3',Object.keys(memory_record).length);                      
+                                    that.memory = res.recordedDateTime; 
+                                    memory_record[ res.recordedDateTime]= res 
                                     that.ampm_inner_arr.push(res);
                                 }
                                 if(response.data.length - 1 === index) {
@@ -882,7 +855,7 @@
                                     that.ampm_arr.push(that.ampm_inner_arr);//.slice(0,4)
                                 }
                         });
-                        // console.log('second filter',that.ampm_arr);
+                    
                         that.memory=''; 
 
                         for(let i=1;i<=this.dayCount;i++){
@@ -901,7 +874,7 @@
                                                     that.ampm_by_day.push(null); //{"am_pm":"00:00","hour":"00","minute":"00"}
                                                 }
                                             } 
-                                            // console.log('third filter',that.ampm_by_day);                           
+                                                                
                                             let store_arr=[];
                                             for(let i=0;i<that.ampm_by_day.length;i++){
                                         
@@ -931,8 +904,7 @@
                                                 }
                                             } 
                                            
-                                            tem_store.push({"0":pre_store,"1":[]});
-                                            //   console.log('fourth filter',tem_store);       
+                                            tem_store.push({"0":pre_store,"1":[]});                                         
                                             pre_store={};//tar=[];
                                           
                                             that.status=1; 
@@ -1168,8 +1140,7 @@
                              
                     let total_am=0;let total_pm=0; 
                     const {t_hr, t_min,late_coming,leaving_early}=this.totalHourCal(auto_am1,auto_am2,auto_pm1,auto_pm2,total_am,total_pm,t_am,p_am);               
-                    console.log('a_leaving_early',leaving_early);
-                    console.log('a_late_coming',late_coming);
+              
                     let res=isNaN((parseFloat(t_hr)+parseFloat(t_min)).toFixed(2))?'':(parseFloat(t_hr)+parseFloat(t_min)).toFixed(2);   
                     
                     jQuery("."+sec_index).find(".thour").val(res==0?"0.00":Math.abs(res).toFixed(2));
@@ -1184,8 +1155,7 @@
         },
                 
             totalHourCal(auto_am1,auto_am2,auto_pm1,auto_pm2,total_am,total_pm,t_am,p_am){
-                console.log('auto_am2',auto_am2);
-                console.log('auto_am1',auto_am1);
+
                 let late_coming=0,leaving_early=0;
                 if(auto_am1!='' && auto_am1!=undefined && (  ( parseInt(auto_am1[0])==8 && 5<parseInt(auto_am1[1]) || 9<=parseInt(auto_am1[0])   )   ) ){
                     late_coming+=(+auto_am1[0] + (+auto_am1[1] / 60))-(8);  

@@ -22,9 +22,9 @@
                     <router-link to="/logout"   class="nav-item nav-link list-group-item  bg-light" onclick="event.preventDefault();
                         document.getElementById('logout-form').submit();"
                     ><a  @click="nameColor($event)">ログアウト</a>
-                        <!-- <form id="logout-form"  method="POST" style="display: none;">
+                        <form id="logout-form" action="/logout" method="POST" style="display: none;">
                             <input type="hidden" name="_token" :value="csrf">
-                        </form> -->
+                        </form>
                     </router-link>             
                     </div>
                 </div>           

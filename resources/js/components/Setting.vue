@@ -113,7 +113,7 @@
         created() {
             let that=this;
             this.axios({
-                url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/settings",
+                url:process.env.MIX_APP_URL+"/settings",//(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/settings",
                 method: 'get'
             })
             .then(function (response) {
@@ -123,7 +123,7 @@
             });
 
             this.axios({
-                url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/setting/all",
+                url:process.env.MIX_APP_URL+"/setting/all",//(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/setting/all",
                 method: 'get'
             })
             .then(function (response) {
@@ -133,7 +133,7 @@
             });
 
             this.axios({
-                url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/delayTimes",
+                url:process.env.MIX_APP_URL+"/delayTimes",//(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/delayTimes",
                 method: 'get'
             })
             .then(function (response) {
@@ -161,7 +161,7 @@
 
                 let that=this;
                 this.axios({
-                    url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/setting/updateMoney/"+this.setting.id,
+                    url:process.env.MIX_APP_URL+"/setting/updateMoney/"+this.setting.id,//(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/setting/updateMoney/"+this.setting.id,
                     method: 'post',
                     data: this.setting
                 })
@@ -188,7 +188,7 @@
 
                 let that=this;
                 this.axios({
-                    url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/setting/updateAm/"+this.setting.id,
+                    url:process.env.MIX_APP_URL+"/setting/updateAm/"+this.setting.id,//(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/setting/updateAm/"+this.setting.id,
                     method: 'post',
                     data: this.setting
                 })
@@ -215,7 +215,7 @@
 
                 let that=this;
                 this.axios({
-                    url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/setting/updatePm/"+this.setting.id,
+                    url:process.env.MIX_APP_URL+"/setting/updatePm/"+this.setting.id,//(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/setting/updatePm/"+this.setting.id,
                     method: 'post',
                     data: this.setting
                 })
@@ -245,7 +245,7 @@
 
                 let that=this;
                 this.axios({
-                    url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/delayTime/updateAm/"+id,
+                    url:process.env.MIX_APP_URL+"/delayTime/updateAm/"+id,//(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/delayTime/updateAm/"+id,
                     method: 'post',
                     data: delayTime
                 })
@@ -274,7 +274,7 @@
 
                 let that=this;
                 this.axios({
-                    url:(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/delayTime/updatePm/"+id,
+                    url:process.env.MIX_APP_URL+"/delayTime/updatePm/"+id,//(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/delayTime/updatePm/"+id,
                     method: 'post',
                     data: delayTime
                 })

@@ -31,16 +31,16 @@ class AppServiceProvider extends ServiceProvider
         //     var_dump($query->sql);
         // });
         JsonResource::withoutWrapping();
-        config([
-            'global' => DefaultSetting::all([
-                'money','ssb_max'
-            ])
-            // ->keyBy('money') // key every setting by its name
-            // ->transform(function ($setting) {
-            //      return $setting->money; // return only the value
-            // })
-            // ->toArray() // make it an array
-        ]);
+        // config([
+        //     'global' => DefaultSetting::all([
+        //         'money','ssb_max'
+        //     ])
+        //     // ->keyBy('money') // key every setting by its name
+        //     // ->transform(function ($setting) {
+        //     //      return $setting->money; // return only the value
+        //     // })
+        //     // ->toArray() // make it an array
+        // ]);
           
     }
 }

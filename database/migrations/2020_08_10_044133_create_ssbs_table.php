@@ -14,12 +14,9 @@ class CreateSsbsTable extends Migration
     public function up()
     {
         Schema::create('ssbs', function (Blueprint $table) {
-            $table->id();
-            //$table->string('ssb_month');
+            $table->id();        
             $table->integer('total_amount');
-            $table->integer('c_paid');
-            // $table->decimal('total_amount',10, 2);
-            // $table->decimal('c_paid',10, 2);
+            $table->integer('c_paid');    
             $table->string('remark')->nullable();
             $table->timestamps();
         });
