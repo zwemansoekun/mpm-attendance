@@ -33,9 +33,9 @@ Vue.mixin({
       }
     },
     created() {
-        let that=this;
+        let that=this;    
         this.axios({
-            url:process.env.VUE_APP_URL+"/dsettings",//(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/dsettings",
+            url:process.env.MIX_APP_URL+"/dsettings",//(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/dsettings",
             method: 'get'
         })
         .then(function (response) {

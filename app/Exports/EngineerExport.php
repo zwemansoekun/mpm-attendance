@@ -5,23 +5,22 @@ namespace App\Exports;
 use DateTime;
 use App\Salary;
 use App\Setting;
-use App\AttendDetail;
+use App\DelayTime;
 use App\EmployeeDetail;
-use Maatwebsite\Excel\Sheet;
 
+use Maatwebsite\Excel\Sheet;
 use Maatwebsite\Excel\Events\AfterSheet;
-use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Events\BeforeSheet;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\WithEvents;
+// use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\FromCollection;
-use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithStrictNullComparison;
 use App\Http\Resources\EmployeeDetail as EmployeeDetailResource;
 
 class EngineerExport implements FromCollection,WithEvents,WithStrictNullComparison
 {
-    //FromCollection,FromQuery,ShouldAutoSize,WithStrictNullComparison,
+    //FromCollection,ShouldAutoSize,WithStrictNullComparison,
     use Exportable;
 
     private $pay_month;
@@ -35,33 +34,21 @@ class EngineerExport implements FromCollection,WithEvents,WithStrictNullComparis
     public function collection()
     {
         $setting='';
-        // $adetailcount=0;
+     
         $employee =  file_get_contents("http://localhost:5000/employees");
         $empArray = json_decode($employee, true);
         $tem_emp=[];$tem_salary=[];      
-        $global=config('global');
-        // $ym=explode("/",$this->pay_month); 
-        // return $global[0]['money'];
+        $global=Setting::select('money')->order_by('updated_at', 'desc')->first();//config('global');   //repair   
 
         $salary=Salary::with('ssbval')->where('pay_month',$this->pay_month)->get();
-        $employdetail=EmployeeDetail::with('employee')->where('pay_month',$this->pay_month)->get();//->toArray();//with('employee')->
-        $setting=Setting::select('money')->where('create_month',$this->pay_month)->get();
-
-        // $adetailcount=AttendDetail::whereYear('date',$ym[0])
-        //        ->whereMonth('date',$ym[1])
-        // ->where(function($q) {
-        //     $q->orWhereNotNull('am1')
-        //       ->orWhereNotNull('am2')
-        //       ->orWhereNotNull('pm1')
-        //       ->orWhereNotNull('pm2');
-        // })->count();
-      
+        $employdetail=EmployeeDetail::with('employee')->where('pay_month',$this->pay_month)->get();
+        
+        $setting=DelayTime::select('money')->where('month',$this->pay_month)->order_by('updated_at', 'desc')->first();//->where('create_month',$this->pay_month)->get();      
 
         if($setting->isEmpty()){
-            $setting=$global;
+            $setting=$global;    
         }
-        // $empdet= EmployeeDetailResource::collection($employdetail);
-        // return $setting;
+      
         for ($i = 0; $i < count($empArray); $i++) 
         {
             $tem_emp[$empArray[$i]['id']]['emp_code']=$empArray[$i]['employeeId'];
@@ -120,10 +107,6 @@ class EngineerExport implements FromCollection,WithEvents,WithStrictNullComparis
             $tem_salary[$i]['child']=$employdetail[$i]['child'];
             $tem_salary[$i]['emg_ph_no']=$employdetail[$i]['emg_ph_no'];
             $tem_salary[$i]['waste_time']=$employdetail[$i]['waste_time'];
-
-
-
-
            
         }
         return collect($this->salary=$tem_salary);
@@ -161,8 +144,7 @@ class EngineerExport implements FromCollection,WithEvents,WithStrictNullComparis
                 );
               
                 $sheet->setCellValue('A1',date("Y/m/d H:i"));
-
-                // $sheet->mergeCells('A2:G2');
+            
                 $increasedMonth= date('Y/m/d', strtotime($this->pay_month."/08". ' + 1 month'));
                
                 $sheet->styleCells(
@@ -272,12 +254,7 @@ class EngineerExport implements FromCollection,WithEvents,WithStrictNullComparis
                 $sheet->setCellValue('AF3',"通勤手段/\n時間（分）");            
               
                  $this->salary;
-                 return;
-                // 海外エンジニアコスト一覧表(2020/04分　2020/05/08支給)
-                // $sheet->append([date_default_timezone_get()],'A'.$row++);
-                // $sheet->append(['Income11',2222],'A'.$row++);
-                // $sheet->append(['Income2222',333],'A'.$row++);
-                // $sheet = $generateCell($income,$sheet,$row);
+                 return;             
             },
 
             AfterSheet::class  => function(AfterSheet $event) {                
@@ -411,22 +388,7 @@ class EngineerExport implements FromCollection,WithEvents,WithStrictNullComparis
                 $this->sheetStyle($sheet,'AC3');
                 $this->sheetStyle($sheet,'AD3');
                 $this->sheetStyle($sheet,'AE3');
-                $this->sheetStyle($sheet,'AF3');
-
-
-
-
-
-
-
-
-
-
-                
-                // $sheet->getStyle('K6')->getAlignment()->setWrapText(true);
-                // $sheet->getStyle('AD3')->getAlignment()->setWrapText(true);
-                // $sheet->getStyle('AF3')->getAlignment()->setWrapText(true);
-          
+                $this->sheetStyle($sheet,'AF3');          
                 
                 $sheet->getStyle("A7:T".(count($this->salary)+7-1) )->applyFromArray($borderArray);
                 $sheet->getStyle("V7:AF".(count($this->salary)+7-1) )->applyFromArray($borderArray);

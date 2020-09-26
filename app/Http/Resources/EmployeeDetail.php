@@ -13,9 +13,7 @@ class EmployeeDetail extends JsonResource
      * @return array
      */
     public function toArray($request)
-    {
-        // return $request;
-        // return parent::toArray($request);
+    { 
         return [
             'id' => $this->id,
             'pay_month' => $this->pay_month,
