@@ -35,7 +35,7 @@ class EngineerExport implements FromCollection,WithEvents,WithStrictNullComparis
     {
         $setting='';
      
-        $employee =  file_get_contents("http://localhost:5000/employees");
+        $employee =  file_get_contents(env("MIX_APP_API_URL")."/employees");
         $empArray = json_decode($employee, true);
         $tem_emp=[];$tem_salary=[];      
         $global=Setting::select('money')->order_by('updated_at', 'desc')->first();//config('global');   //repair   
