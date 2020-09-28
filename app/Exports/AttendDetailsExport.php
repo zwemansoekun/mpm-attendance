@@ -42,7 +42,7 @@ class AttendDetailsExport implements FromCollection,WithEvents, WithCustomStartC
 
     public function collection()
     {
-        $content =  file_get_contents(env("MIX_APP_API_URL")."/employees");
+        $content =  file_get_contents("http://localhost:5000/employees");
         $empApiArray = json_decode($content, true);
        
         // APIから取得する社員情報

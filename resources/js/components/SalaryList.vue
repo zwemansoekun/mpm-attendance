@@ -512,12 +512,12 @@
             });
 
             this.axios
-                .get(process.env.MIX_APP_API_URL+'/attendances/all/date')
+                .get('http://localhost:5000/attendances/all/date')
                 .then(response => {
                     this.dates=response.data;
             }); 
             this.axios
-                .get(process.env.MIX_APP_API_URL+'/employees')
+                .get('http://localhost:5000/employees')
                 .then(response => {
                 
                     that.emps=response.data;
