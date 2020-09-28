@@ -271,7 +271,7 @@
                                                                                 </template> 
                                                                             </td>
                                                                             <td v-bind:key="'C'+key"  style="padding: 0px;">
-                                                                                <template v-if="day[0].am2!==null">   
+                                                                                <template v-if="day[0].am2!==null"> 
                                                                                 <input :name="`am2[]`"  @change="updateInput" :class="`form-control input-sm am2`"  style="text-align: center;" type="text" @value="`${old(am2)}`"> 
                                                                                 </template>
                                                                                 <template v-else>
@@ -501,7 +501,7 @@
                             "am2[]": "required",
                             "pm1[]": "required",
                             "pm2[]": "required",
-                            "total_hours[]":"required",
+                            // "total_hours[]":"required",
                             // "am_leave[]":"required",
                             // "pm_leave[]":"required",
                     },  
@@ -957,7 +957,7 @@
                     });
 
                     this.axios
-                    .get('http://127.0.0.1:8000/api/setting/delayTime/'+this.year+"/"+this.month)//+this.year+"/"+this.month
+                    .get(process.env.MIX_APP_URL+'/api/setting/delayTime/'+this.year+"/"+this.month)//+this.year+"/"+this.month
                     .then(response => { 
                           that.default_ampm.am=response.data.am;
                           that.default_ampm.pm=response.data.pm;
@@ -1173,7 +1173,7 @@
                     leaving_early+=17-(+auto_pm2[0] + (+auto_pm2[1] / 60));
                       
                 }
-                if(t_am!=''){
+                if(t_am!='' && t_am!=null){
                     total_am=4;
                 }else if(auto_am1!='' && auto_am2!='' && auto_am1!=undefined && auto_am2!=undefined){
                     total_am= (+auto_am2[0] + (+auto_am2[1] / 60))-(+auto_am1[0] + (+auto_am1[1] / 60));  
@@ -1181,7 +1181,7 @@
                         total_am=0;
                     }                
                 }
-                if(p_am!=''){
+                if(p_am!=''  && p_am!=null){
                     total_pm=4;
                 }else if(auto_pm1!='' && auto_pm2!=''  && auto_pm1!=undefined && auto_pm2!=undefined){
                     total_pm=(+auto_pm2[0] + (+auto_pm2[1] / 60))-(+auto_pm1[0] + (+auto_pm1[1] / 60));  
@@ -1230,7 +1230,7 @@
                 split_string = select_date.split("/");
                 date = split_string[0] + split_string[1];
                 const link = document.createElement('a');
-                link.href = 'http://127.0.0.1:8000/attendList/csvOutput/'+employee+'/'+ date;
+                link.href = process.env.MIX_APP_URL+'/attendList/csvOutput/'+employee+'/'+ date;
                 document.body.appendChild(link);
                 link.click();
 

@@ -575,7 +575,7 @@
                 const link = document.createElement('a')
                 let url =  (window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/salary/export/"+ this.year+'-'+ this.month+'/'+ empArray;
                     
-                //link.href = 'http://127.0.0.1:8000/salary/export/'+ this.year+'-'+ this.month+'/'+ empArray
+                //link.href =process.env.MIX_APP_API_URL+'/salary/export/'+ this.year+'-'+ this.month+'/'+ empArray
                 link.href = url;
                 document.body.appendChild(link)
                 link.click()
