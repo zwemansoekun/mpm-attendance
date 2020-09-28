@@ -31,7 +31,7 @@ class PaySlipsPerEmployeeSheet implements WithTitle,WithEvents
         $this->salaryData = Salary::select("*")->where("pay_month",$ym)->where('employee_id',$this->employee->emp_id)->first();
         $this->trans_money = EmployeeDetail::where("pay_month",$ym)->where('emp_id',$this->employee->emp_id)->first()->trans_money;
 
-        $content =  file_get_contents("http://localhost:5000/employees/".$this->employee->emp_id);
+        $content =  file_get_contents(env("MIX_APP_API_URL")."/employees/".$this->employee->emp_id);
         $empApiArray = json_decode($content, true);
 
         $this->empId = $empApiArray['employeeId'];

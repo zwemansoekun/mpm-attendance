@@ -397,14 +397,14 @@
         },     
         created() {
             this.axios
-                .get('http://localhost:5000/employees')
+                .get(process.env.MIX_APP_API_URL+'/employees')
                 .then(response => {
                 
                     this.emps=response.data;
                   
                 });
             this.axios
-                .get('http://localhost:5000/attendances/all/date')
+                .get(process.env.MIX_APP_API_URL+'/attendances/all/date')
                 .then(response => {
              
                     this.dates=response.data.filter(function (el) {
@@ -813,7 +813,7 @@
                    
                     this.dayCount=new Date(this.year,this.month, 0).getDate();
                     this.axios
-                    .get("http://localhost:5000/attendances/ampm/"+this.emp_no+"/"+this.year+this.month)                 
+                    .get(process.env.MIX_APP_API_URL+"/attendances/ampm/"+this.emp_no+"/"+this.year+this.month)                 
                     .then(response => {
 
                         if(response.data.length===0){
