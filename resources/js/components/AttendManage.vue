@@ -48,14 +48,14 @@ var moment = require('moment');
                 });
             },
             returnValue: function(){
-                axios.post('http://127.0.0.1:8000/api/attendManage/csvOutput/'+ moment(this.customDate).format("yyyyMM"))
+                axios.post(process.env.MIX_APP_URL+'/api/attendManage/csvOutput/'+ moment(this.customDate).format("yyyyMM"))
                     .then((response) => {
                         console.log(response.data);
                         if(response.data == "fail"){
                             this.dataError = true;
                         }else{
                              const link = document.createElement('a')
-                             link.href = 'http://127.0.0.1:8000/attendManage/download/'+ moment(this.customDate).format("yyyyMM")
+                             link.href =process.env.MIX_APP_URL+'/attendManage/download/'+ moment(this.customDate).format("yyyyMM")
                              document.body.appendChild(link)
                              link.click()
                             this.dataError = false

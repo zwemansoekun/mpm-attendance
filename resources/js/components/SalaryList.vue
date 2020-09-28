@@ -512,12 +512,12 @@
             });
 
             this.axios
-                .get('http://localhost:5000/attendances/all/date')
+                .get(process.env.MIX_APP_API_URL+'/attendances/all/date')
                 .then(response => {
                     this.dates=response.data;
             }); 
             this.axios
-                .get('http://localhost:5000/employees')
+                .get(process.env.MIX_APP_API_URL+'/employees')
                 .then(response => {
                 
                     that.emps=response.data;
@@ -575,7 +575,7 @@
                 const link = document.createElement('a')
                 let url =  (window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/salary/export/"+ this.year+'-'+ this.month+'/'+ empArray;
                     
-                //link.href = 'http://127.0.0.1:8000/salary/export/'+ this.year+'-'+ this.month+'/'+ empArray
+                //link.href =process.env.MIX_APP_API_URL+'/salary/export/'+ this.year+'-'+ this.month+'/'+ empArray
                 link.href = url;
                 document.body.appendChild(link)
                 link.click()

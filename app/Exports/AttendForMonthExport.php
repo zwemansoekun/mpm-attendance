@@ -160,8 +160,10 @@ class AttendForMonthExport implements FromCollection,WithEvents, WithCustomStart
                 $kanaName = DB::select('SELECT kana_name FROM employees WHERE emp_id = :empId', 
                     ['empId' => substr($this->employee,0,1)]);
                 $kanaName = json_decode(json_encode($kanaName),true);
-                
-                $event->sheet->getCell('A6')->setValue("営業所名　MPミャンマー      "."氏名 ". $kanaName[0]['kana_name']);
+                $kanaName=isset($kanaName[0])?$kanaName[0]['kana_name']:'';
+                 
+               
+                $event->sheet->getCell('A6')->setValue("営業所名　MPミャンマー      "."氏名 ".$kanaName);
 
                 $event->sheet->getStyle('A6:E6')->applyFromArray([
                     'font' => [
