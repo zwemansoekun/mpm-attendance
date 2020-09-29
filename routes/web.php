@@ -62,6 +62,8 @@ Route::get('/employeeDetail/lastData/{emp_id}', 'EmployeeDetailController@findLa
 Route::get('/employeeDetail/{emp_id}', 'EmployeeDetailController@findByEmployee');
 Route::post('/employeeDetail/updateAll', 'EmployeeDetailController@updateAll');
 
+Route::get('/holiday/{yearmonth}', 'HolidayController@holiday')->where('yearmonth', '[0-9 -]+');
+
 Route::get('{any}', function () {
         return view('layouts.app');
 })->where('any', '.*');

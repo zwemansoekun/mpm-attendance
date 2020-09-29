@@ -77,7 +77,8 @@
                         </thead>
                         <tbody>
                             <template v-for="(day,dayindex) in data_combine" >
-                                <template v-if="day!==null">  
+                            
+                                <template v-if="day!==null && holidays[dayindex+1]!=(dayindex+1) ">  
                                     <tr v-bind:key="dayindex"  v-bind:style="`height:${day_name(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])=='table-secondary'?'3.3em':''}`" v-bind:class="`mainIndex_${dayindex} ${day_name(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])}`">
                                         
                                             <template v-if="day_name(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])=='table-secondary'">
@@ -321,10 +322,11 @@
                                     </tr>   
                                 </template>
                                 <template v-else>
-                                    <tr v-bind:key="dayindex"  v-bind:style="`height:${day_name(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])=='table-secondary'?'3.3em':''}`" v-bind:class="`mainIndex_${dayindex} ${day_name(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])}`">
+                                    <!-- {{holidays[dayindex+1]==(dayindex+1) }} -->
+                                    <tr v-bind:key="dayindex"  v-bind:style="`height:${day_name(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()],holidays[dayindex+1]==(dayindex+1))==('table-secondary' || 'table-success')?'3.3em':''}`" v-bind:class="`mainIndex_${dayindex} ${day_name(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()],holidays[dayindex+1]==(dayindex+1))}`">
                                         <td  style="text-align: center;" rowspan="2"><div style="text-align: center;">{{dayindex+1}} {{ days[new Date(year+"/"+month+"/"+(dayindex+1)).getDay()]}}</div></td>     
                                        
-                                        <template v-if="`${day_name(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])}`!=''">
+                                        <template v-if="`${day_name(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()],holidays[dayindex+1]==(dayindex+1))}`!=''">
                                             <td rowspan="2" colspan="2"></td>
                                             <td rowspan="2" colspan="2"></td>
                                             <td rowspan="2" ></td>
@@ -337,10 +339,10 @@
                                                  <td ></td>  
                                         </template> 
                                     </tr>
-                                    <tr v-bind:key="'A'+dayindex" v-bind:style="`height:${day_name(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])=='table-secondary'?'2.6em':''}`" v-bind:class="`index_${dayindex} ${day_name(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])}`">
+                                    <tr v-bind:key="'A'+dayindex" v-bind:style="`height:${day_name(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()],holidays[dayindex+1]==(dayindex+1))==('table-secondary' || 'table-success')?'2.6em':''}`" v-bind:class="`index_${dayindex} ${day_name(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()],holidays[dayindex+1]==(dayindex+1))}`">
                                                
                                                
-                                               <template v-if="`${day_name(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()])}`==''">
+                                               <template v-if="`${day_name(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()],holidays[dayindex+1]==(dayindex+1))}`==''">
                                                        <td class="paid-leave1 align-middle text-center" colspan="2" style="height:2.6em;padding:0px;"></td> 
                                                         <td class="paid-leave2 align-middle text-center" colspan="2" style="height:2.6em;padding:0px;"></td>
                                                         <td  style="padding: 0px;">
@@ -393,6 +395,7 @@
                 check_attend_data:true,  
                 data_combine:[],
                 formchange:'',
+                holidays:[],
             }
         },     
         created() {
@@ -411,7 +414,8 @@
                         return el['recordedDateTime'] != null;
                     });
             
-                });    
+                });   
+       
         },
         computed: {
             errorsFun:function(){              
@@ -438,6 +442,26 @@
               this.mouse_rclick();
         },      
         methods: {  
+            getHolidays:function(){
+                let that=this;let holiday=[];
+                this.axios  
+                .get(process.env.MIX_APP_URL+'/holiday/'+that.year+that.month)
+                .then(response => {
+                    
+                    holiday=response.data;
+                    console.log('holidays',holiday);
+
+                  
+                   if(holiday){
+                  
+                       for(let v in holiday){                        
+                           that.holidays[holiday[v].day]=holiday[v].day;                         
+                       }
+                     
+                   }
+
+                });   
+            },
             loadingAlert:function(){
                   let that=this;
                    that.$swal({
@@ -747,9 +771,13 @@
                       return '';
                 } 
             },            
-           day_name(res){
+           day_name(res,holiday=false){
                 {   
-                     return (res==="Sat" || res==="Sun")? 'table-secondary' : '';
+                    if(holiday==true){
+                         return 'table-success';
+                    }else{
+                         return (res==="Sat" || res==="Sun")? 'table-secondary' : '';
+                    }                    
                 }  
            },
            ampm_index(index){
@@ -774,6 +802,9 @@
            },   
            update_call(){
                     let that=this;  
+
+                    that.getHolidays();
+
                     let up_data={
                         "emp_no":this.emp_no,
                         "date":this.select_date,
