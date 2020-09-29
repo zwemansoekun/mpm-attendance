@@ -1225,14 +1225,41 @@
                     return ap_split!=''?ap_split:'';
             },
             csvOutput(employee,select_date){
-                
-                let split_string =[]; let date;
-                split_string = select_date.split("/");
-                date = split_string[0] + split_string[1];
-                const link = document.createElement('a');
-                link.href = process.env.MIX_APP_URL+'/attendList/csvOutput/'+employee+'/'+ date;
-                document.body.appendChild(link);
-                link.click();
+                   let that=this;
+                   let where_data={
+                        "emp_no":this.emp_no,
+                        "date":this.select_date,
+                        "year":this.year,
+                        "month":this.month,
+                    };
+                    this.axios({
+                      url:process.env.MIX_APP_URL+"/attendList/getmonth",//(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/attendList/getmonth",
+                      method: 'post',
+                      data:where_data,
+                    })                 
+                    .then(response=>{      
+                        if(response!='' && response.data.length!=0 ){
+
+                            let split_string =[]; let date;
+                            split_string = select_date.split("/");
+                            date = split_string[0] + split_string[1];
+                            const link = document.createElement('a');
+                            link.href = process.env.MIX_APP_URL+'/attendList/csvOutput/'+employee+'/'+ date;
+                            document.body.appendChild(link);
+                            link.click();
+
+                        }else{
+                                that.$fire({
+                                title: "失敗！！",
+                                text: "データはありませんでした。",
+                                type: "error",
+                                timer: 3500,
+                                showCancelButton: false,
+                                showConfirmButton: false,                              
+                                }).then(r => {                             
+                                }); 
+                        }
+                    }).catch(() => console.log('error occured'))         
 
             },          
         }, 

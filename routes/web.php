@@ -30,7 +30,7 @@ Route::get('/',  function () {
       return view('layouts.app');
 });
 
-Route::get('/attendList/csvOutput/{employee}/{date}','AttendController@csvOutput');
+Route::get('/attendList/csvOutput/{employee}/{date}','AttendController@csvOutput')->where('date', '[0-9]+');
 Route::post('/attendList','AttendController@store');
 Route::post('/attendList/getmonth','AttendController@getmonth');
 
