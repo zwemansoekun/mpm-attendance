@@ -3,18 +3,19 @@
 namespace App\Exports;
 
 use App\AttendDetail;
-use Maatwebsite\Excel\Concerns\FromCollection;
-use Maatwebsite\Excel\Concerns\WithEvents;
-use Maatwebsite\Excel\Events\BeforeExport;
-use Maatwebsite\Excel\Events\AfterSheet;
-use Illuminate\Support\Facades\DB;
-use Maatwebsite\Excel\Concerns\WithCustomStartCell;
-use Maatwebsite\Excel\Concerns\Exportable;
-use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
-use Maatwebsite\Excel\Concerns\WithHeadings;
+use App\EmployeeDetail;
 use \Maatwebsite\Excel\Sheet;
+use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Events\AfterSheet;
 use Barryvdh\Debugbar\Facade as Debugbar;
 use Maatwebsite\Excel\Concerns\WithTitle;
+use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Events\BeforeExport;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\FromCollection;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
+use Maatwebsite\Excel\Concerns\WithCustomStartCell;
 
 class AttendForMonthExport implements FromCollection,WithEvents, WithCustomStartCell ,WithHeadings,WithTitle
 
@@ -31,6 +32,7 @@ class AttendForMonthExport implements FromCollection,WithEvents, WithCustomStart
     public $day_count = null;
     public $dayArray = array();
     public $totalTime = 0.0;
+    private $attendCount=0;
 
   
     public function __construct(String $employee,int $printY) 
@@ -70,7 +72,7 @@ class AttendForMonthExport implements FromCollection,WithEvents, WithCustomStart
             array_push($this->dayArray,$daySubArray);
         }
         
-        $j = 0; $minutes = 0; 
+        $j = 0; $minutes = 0; $attendCount=0;
         for ($i = 0; $i < $this->day_count; $i++)
         {
             if($j < count($attendTime ))
@@ -87,7 +89,12 @@ class AttendForMonthExport implements FromCollection,WithEvents, WithCustomStart
                     {
                         $this->dayArray[$i]["in_time"] =  substr((string)$attendTime[$j]["am1"],0,5);
                         $this->dayArray[$i]["out_time"] =  substr((string)$attendTime[$j]["pm2"],0,5);
-                        $this->dayArray[$i]["lunch_time"] =  "01:00";
+                        if($this->dayArray[$i]["in_time"] ||  $this->dayArray[$i]["out_time"]){
+                                $attendCount++;
+                        }
+                        if($this->clockalize($attendTime[$j]["total_hours"])!='00:00'){
+                            $this->dayArray[$i]["lunch_time"] =  "01:00";
+                        }                      
                     }
                     $this->dayArray[$i]["total_time"] =  $this->clockalize($attendTime[$j]["total_hours"]);
                    $j++;
@@ -98,7 +105,7 @@ class AttendForMonthExport implements FromCollection,WithEvents, WithCustomStart
            $minutes += $hour * 60;
            $minutes += $minute;
         }
-
+        $this->attendCount=$attendCount;
         $hours = floor($minutes / 60);
         $minutes -= $hours * 60;
 
@@ -162,7 +169,12 @@ class AttendForMonthExport implements FromCollection,WithEvents, WithCustomStart
                     ['empId' => substr($this->employee,0,1)]);
                 $kanaName = json_decode(json_encode($kanaName),true);
                 $kanaName=isset($kanaName[0])?$kanaName[0]['kana_name']:'';
-                 
+
+
+                $employdetail=EmployeeDetail::with('employee')->where('pay_month',$this->year."/".$this->month)->get();            
+                if($employdetail->isNotEmpty()){
+                    $trans_money=$employdetail[0]['trans_money'];
+                }
                                                         
                 $event->sheet->getCell('A6')->setValue("営業所名　MPミャンマー　　　　　　　  氏名".$kanaName);
 
@@ -345,19 +357,25 @@ class AttendForMonthExport implements FromCollection,WithEvents, WithCustomStart
              
                 $event->sheet->getCell('B'.$lineStart)->setValue("勤務日数");
                 $this->sheetStyle($event->sheet,'B'.$lineStart.":B".($lineStart+1));                
-                $event->sheet->getCell('B'.($lineStart+1))->setValue(" 日");                
+                $event->sheet->getCell('B'.($lineStart+1))->setValue($this->attendCount."     日");                
                 $event->sheet->getStyle('B'.($lineStart+1))->getAlignment()
                     ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
 
-                $event->sheet->getCell('D'.$lineStart)->setValue("一日交通費");
-                $this->sheetStyle($event->sheet,'D'.$lineStart.":D".($lineStart+1));      
-                $event->sheet->getCell('D'.($lineStart+1))->setValue(" チャット");
+                $event->sheet->getCell('D'.$lineStart)->setValue("一日交通費");           
+                $this->sheetStyle($event->sheet,'D'.$lineStart.":D".($lineStart+1)); 
+                if(!isset($trans_money)){
+                    $trans_money='';
+                    $total_trans='';
+                }else{
+                    $total_trans=$trans_money*$this->attendCount;
+                }     
+                $event->sheet->getCell('D'.($lineStart+1))->setValue($trans_money."チャット");
                 $event->sheet->getStyle('D'.($lineStart+1))->getAlignment()
                     ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
 
                 $event->sheet->getCell('E'.$lineStart)->setValue("交通費合計");
                 $this->sheetStyle($event->sheet,'E'.$lineStart.":E".($lineStart+1));      
-                $event->sheet->getCell('E'.($lineStart+1))->setValue(" チャット");
+                $event->sheet->getCell('E'.($lineStart+1))->setValue($total_trans."チャット");
                 $event->sheet->getStyle('E'.($lineStart+1))->getAlignment()
                     ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
                

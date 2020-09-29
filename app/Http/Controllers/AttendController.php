@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use App\AttendDetail;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use Barryvdh\Debugbar\Facade as Debugbar;
-use App\Exports\AttendForMonthExport;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\AttendForMonthExport;
+use Barryvdh\Debugbar\Facade as Debugbar;
+use Illuminate\Support\Facades\Validator;
 
 class AttendController extends Controller
 {
@@ -117,7 +117,7 @@ class AttendController extends Controller
      */
 
     public function csvOutput($employee,$date)
-    {
+    {        
         return Excel::download(new AttendForMonthExport($employee,$date), '出勤簿生成.xlsx');     
     }
 }
