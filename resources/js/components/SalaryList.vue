@@ -560,7 +560,7 @@
                     })                  
                     .then(response=>{                        
                         if(response!='' && response.data.length!=0 ){
-                            const url = (window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/salaryList/download/"+this.year+"-"+this.month;
+                            const url =process.env.MIX_APP_URL+"/salaryList/download/"+this.year+"-"+this.month;
                             const link = document.createElement('a')
                             link.href = url
                             // link.setAttribute('download',"" ) // , 'file.png' or any other extension
@@ -588,7 +588,7 @@
                 });
 
                 const link = document.createElement('a')
-                let url =  (window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/salary/export/"+ this.year+'-'+ this.month+'/'+ empArray;
+                let url =  process.env.MIX_APP_URL+"/salary/export/"+ this.year+'-'+ this.month+'/'+ empArray;
                     
                 //link.href =process.env.MIX_APP_API_URL+'/salary/export/'+ this.year+'-'+ this.month+'/'+ empArray
                 link.href = url;
@@ -1004,7 +1004,7 @@
                     // let company_ssb=0;
                     let total_c_paid=0;
                     this.axios
-                    .get((window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/salaryList/"+this.year+"-"+this.month )                 
+                    .get(process.env.MIX_APP_URL+"/salaryList/"+this.year+"-"+this.month )                 
                     .then(response => {
                         // that.salaries=response.data;
                         tem_salary=response.data;                     
