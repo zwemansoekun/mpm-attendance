@@ -15,9 +15,9 @@ class CreateEmployeesTable extends Migration
     {
         Schema::create('employees', function (Blueprint $table) {
             $table->id();      
-            $table->string('kana_name');
-            $table->date('entry_date');
-            $table->date('dob');
+            $table->string('kana_name')->comment = "名前(フリガナ)";
+            $table->date('entry_date')->comment = "入社日(mm/dd/yyyy)";
+            $table->date('dob')->comment = "生年月日(mm/dd/yyyy)";
             $table->bigInteger('emp_id')->unsigned()->index();
             // $table->primary('emp_id'); //api_emp_id
             $table->timestamps();
