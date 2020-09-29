@@ -57,7 +57,10 @@
                 <div class="row justify-content-md-center mt-4"> 
                     <button type="button" @click="engineerCost" style="background-color:#E7E6E6" class="btn  mr-3" onclick="this.blur();">エンジニアコスト一覧表</button>
                       
-                    <button data-toggle="modal" :disabled='payslipBtnDisable' data-target="#payslip" class="btn mr-3" style="background-color:#E7E6E6" onclick="this.blur();">
+                    <button data-toggle="modal" v-if="!payslipBtnDisable" data-target="#payslip" class="btn mr-3" style="background-color:#E7E6E6" onclick="this.blur();">
+                        給与明細作成
+                    </button>
+                    <button type="button" @click="errorAlet" v-if="payslipBtnDisable" class="btn mr-3" style="background-color:#E7E6E6" onclick="this.blur();">
                         給与明細作成
                     </button>
                         
@@ -533,6 +536,18 @@
             });            
         },
         methods: { 
+            errorAlet:function(){
+                let that=this;
+                that.$fire({
+                                title: "失敗！！",
+                                text: "データはありませんでした。",
+                                type: "error",
+                                timer: 3500,
+                                showCancelButton: false,
+                                showConfirmButton: false,                              
+                                }).then(r => {                             
+                                }); 
+            },
             engineerCost:function(){
                     let that=this;
                     let up_data={                       
@@ -973,7 +988,7 @@
                       data:up_data,
                     })                  
                     .then(response=>{                                        
-                        that.get_salary_data=response.data;                      
+                        that.get_salary_data=response.data;                  
                         that.salaryList(that.get_salary_data);                  
                     })
                     .catch(function (error) {
@@ -994,6 +1009,7 @@
                         // that.salaries=response.data;
                         tem_salary=response.data;                     
                         if(get_salary_data==''){
+                             this.payslipBtnDisable = true;
                             for(let i=0;i<tem_salary.length;i++){
                             
                                 tem_salary[i]['total']=(parseInt(tem_salary[i].salary_amount)+parseInt(tem_salary[i].trans_money)+parseInt(tem_salary[i].jlpt))
@@ -1031,7 +1047,6 @@
                         if(that.salaries.length===0){  
                             that.$swal.close();                    
                             this.data_check_messg1= true
-                            this.payslipBtnDisable = true;
                             setTimeout(() => {
                                 this.data_check_messg1= false
                             },3500)
