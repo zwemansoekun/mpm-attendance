@@ -87,6 +87,24 @@ class HolidayController extends Controller
         return response()->json($holidays);
     }
 
+    public function holiday($date)
+    {
+        // return $date;
+        if($date){
+      
+            $dayArray = DB::select('select EXTRACT(DAY FROM date) AS day from 
+                    holidays where EXTRACT(YEAR_MONTH FROM date) = :date ', 
+                    ['date' => $date]);
+                  
+            if(empty($dayArray)){
+                return null;
+            }           
+                return  $dayArray;         
+        }
+        return false;
+        
+    }
+
 }
 
 
