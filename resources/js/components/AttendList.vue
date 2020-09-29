@@ -34,6 +34,27 @@
                 <strong >データはありませんでした。</strong> 
         </div>
 
+        <div class="container-fluid mt-5" v-if="form_open">
+            <table class="table table-borderless">
+                <tr>
+                    <td class="bg-danger"></td>
+                    <td>遅刻・早退</td>
+                </tr>
+                <tr>
+                    <td class="bg-warning"></td>
+                    <td>遅刻(許容範囲か要確認)</td>
+                </tr>
+                <tr>
+                    <td style="background-color:#FBE5D6"></td>
+                    <td>打刻なし</td>
+                </tr>
+                <tr>
+                    <td class="table-success"></td>
+                    <td>休日</td>
+                </tr>
+            </table>
+        </div>
+
         <div class="container mt-5" v-if="form_open">
                             
             <div class="row">
