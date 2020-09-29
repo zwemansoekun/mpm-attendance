@@ -284,13 +284,13 @@ class EngineerExport implements FromCollection,WithEvents,WithStrictNullComparis
                 $sheet->getStyle('A3:T6')->applyFromArray($borderArray);
                 $sheet->getStyle('V3:AF6')->applyFromArray($borderArray);
 
-                $sheet->getStyle('K5:K6')->applyFromArray($borderremoveArray);
-                $sheet->getColumnDimension('A')->setWidth(13.9);
+                $sheet->getStyle('K5:K6')->applyFromArray($borderremoveArray);           
                 $sheet->getRowDimension(3)->setRowHeight(55);  
                 $sheet->getRowDimension(4)->setRowHeight(14); 
                 $sheet->getRowDimension(5)->setRowHeight(41); 
                 $sheet->getRowDimension(6)->setRowHeight(42); 
 
+                $sheet->getColumnDimension('A')->setWidth(13.9);
                 $sheet->getColumnDimension('B')->setWidth(32);
                 $sheet->getColumnDimension('C')->setWidth(14.5);
                 $sheet->getColumnDimension('D')->setWidth(15.3);

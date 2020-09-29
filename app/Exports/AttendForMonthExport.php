@@ -14,8 +14,9 @@ use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use \Maatwebsite\Excel\Sheet;
 use Barryvdh\Debugbar\Facade as Debugbar;
+use Maatwebsite\Excel\Concerns\WithTitle;
 
-class AttendForMonthExport implements FromCollection,WithEvents, WithCustomStartCell ,WithHeadings
+class AttendForMonthExport implements FromCollection,WithEvents, WithCustomStartCell ,WithHeadings,WithTitle
 
 {
     use Exportable;
@@ -145,12 +146,12 @@ class AttendForMonthExport implements FromCollection,WithEvents, WithCustomStart
                 $event->sheet->getColumnDimension('D')->setWidth(15);
                 $event->sheet->getColumnDimension('E')->setWidth(15);
                 $event->sheet->getColumnDimension('F')->setWidth(15);
-                $event->sheet->getColumnDimension('G')->setWidth(17);
+                $event->sheet->getColumnDimension('G')->setWidth(20);
          
                 $date = substr_replace((string)$this->printY.'月', '年', 4, 0);
                 $event->sheet->getCell('A1')->setValue("出勤簿 ".$date);
                 $event->sheet->getRowDimension(1)->setRowHeight(20);
-                $event->sheet->getDelegate()->getStyle('A1')->getFont()->setSize(15);
+                // $event->sheet->getDelegate()->getStyle('A1')->getFont()->setSize(15);
                
                 // 支社長
                 $event->sheet->getCell('E1')->setValue("支社長");
@@ -162,8 +163,8 @@ class AttendForMonthExport implements FromCollection,WithEvents, WithCustomStart
                 $kanaName = json_decode(json_encode($kanaName),true);
                 $kanaName=isset($kanaName[0])?$kanaName[0]['kana_name']:'';
                  
-               
-                $event->sheet->getCell('A6')->setValue("営業所名　MPミャンマー      "."氏名 ".$kanaName);
+                                                        
+                $event->sheet->getCell('A6')->setValue("営業所名　MPミャンマー　　　　　　　  氏名".$kanaName);
 
                 $event->sheet->getStyle('A6:E6')->applyFromArray([
                     'font' => [
@@ -177,9 +178,41 @@ class AttendForMonthExport implements FromCollection,WithEvents, WithCustomStart
                 Sheet::macro('styleCells', function (Sheet $sheet, string $cellRange, array $style) {
                     $sheet->getDelegate()->getStyle($cellRange)->applyFromArray($style);
                 });
+                $event->sheet->styleCells(
+                    'A1',
+                    [
+                        'font' => [
+                            'name' =>  'ＭＳ Ｐゴシック',
+                            'size' =>  18,   
+                            'bold' =>  true  
+                        ],                      
+                    ]
+                ); 
+                $event->sheet->styleCells(
+                    'E1',
+                    [
+                        'font' => [
+                            'name' =>  'ＭＳ Ｐゴシック',
+                            'size' =>  12     
+                        ],
+                    ]
+                );
+                $event->sheet->styleCells(
+                    'A6:G50',
+                    [
+                        'font' => [
+                            'name' =>  'ＭＳ Ｐゴシック',
+                            'size' =>  12     
+                        ],
+                    ]
+                );
 
                 for($i = 8; $i <= count($this->dayArray) + 14; $i++)
                 {
+                   if($i>9){
+                       $event->sheet->getRowDimension($i)->setRowHeight(19);
+                   } 
+                 
                    $event->sheet->styleCells(
                         'A'.$i.':G'.$i,
                         [
@@ -211,7 +244,7 @@ class AttendForMonthExport implements FromCollection,WithEvents, WithCustomStart
                     {
                         $event->sheet->getDelegate()->getStyle($colorRange)->getFill()
                                  ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
-                                 ->getStartColor()->setARGB(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_RED);
+                                 ->getStartColor()->setARGB('C00000');//\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_RED
                         $event->sheet->getCell('B'.$lineStart)->setValue("");
                         $event->sheet->getCell('C'.$lineStart)->setValue("");
                         $event->sheet->getCell('D'.$lineStart)->setValue("");
@@ -240,9 +273,9 @@ class AttendForMonthExport implements FromCollection,WithEvents, WithCustomStart
                        if( $this->dayArray[$i]['in_time'] == '有休')
                         {
                             $event->sheet->getDelegate()->getStyle('B'.$lineStart)->getFont()->
-                                getColor()->setARGB(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_RED);
+                                getColor()->setARGB('C00000');
                             $event->sheet->getDelegate()->getStyle('E'.$lineStart)->getFont()->
-                                getColor()->setARGB(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_RED);
+                                getColor()->setARGB('C00000');
                         }
                     }
                     $lineStart++;
@@ -269,12 +302,25 @@ class AttendForMonthExport implements FromCollection,WithEvents, WithCustomStart
                         ],
                     ]
                             
-                ];
+                ];   
+                // $tableBorderArray = [
+                //     'borders' => [
+                //         'outline' => [
+                //             'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_MEDIUM,
+                //             'color' => ['argb' => 'FF000000'],
+                //         ],
+                //         'inside' => [
+                //             'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                //             'color' => ['argb' => 'FF000000'],
+                //         ],
+                //     ],
+                // ];   
 
                 $event->sheet->getStyle('A'.$lineStart.':D'.$lineStart)->applyFromArray($borderArray);
                 $event->sheet->getStyle('E'.$lineStart)->applyFromArray($borderArray);
                 $event->sheet->getStyle('F'.$lineStart)->applyFromArray($borderArray);
                 $event->sheet->getStyle('G'.$lineStart)->applyFromArray($borderArray);
+                // $event->sheet->getStyle('A8:G9')->applyFromArray($tableBorderArray);
                 
                 $event->sheet->getCell('E'.$lineStart)->setValue($this->totalTime);
                 
@@ -298,14 +344,19 @@ class AttendForMonthExport implements FromCollection,WithEvents, WithCustomStart
                 $lineStart = $lineStart + 2;
              
                 $event->sheet->getCell('B'.$lineStart)->setValue("勤務日数");
-                $event->sheet->getCell('B'.($lineStart+1))->setValue(" 日");
+                $this->sheetStyle($event->sheet,'B'.$lineStart.":B".($lineStart+1));                
+                $event->sheet->getCell('B'.($lineStart+1))->setValue(" 日");                
                 $event->sheet->getStyle('B'.($lineStart+1))->getAlignment()
                     ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
+
                 $event->sheet->getCell('D'.$lineStart)->setValue("一日交通費");
+                $this->sheetStyle($event->sheet,'D'.$lineStart.":D".($lineStart+1));      
                 $event->sheet->getCell('D'.($lineStart+1))->setValue(" チャット");
                 $event->sheet->getStyle('D'.($lineStart+1))->getAlignment()
                     ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
+
                 $event->sheet->getCell('E'.$lineStart)->setValue("交通費合計");
+                $this->sheetStyle($event->sheet,'E'.$lineStart.":E".($lineStart+1));      
                 $event->sheet->getCell('E'.($lineStart+1))->setValue(" チャット");
                 $event->sheet->getStyle('E'.($lineStart+1))->getAlignment()
                     ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
@@ -321,6 +372,43 @@ class AttendForMonthExport implements FromCollection,WithEvents, WithCustomStart
 
                 $event->sheet->getStyle('E1')->getAlignment()
                     ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+
+                $lineExtraFinish = $lineFinish + 2; 
+                $event->sheet->getDelegate()->getStyle('A'.$lineExtraFinish)->getFill()
+                ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                ->getStartColor()->setARGB('C00000');
+           
+                $event->sheet->getDelegate()->getStyle('A'.($lineExtraFinish+1))->getFill()
+                ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                ->getStartColor()->setARGB('548235');
+                
+                $event->sheet->getCell('B'.$lineExtraFinish)->setValue("土日");
+                $event->sheet->getCell('B'.($lineExtraFinish+1))->setValue("祝日");
+
+                $event->sheet->mergeCells('A8:A9');    
+                $event->sheet->mergeCells('B8:B9');   
+                $event->sheet->mergeCells('C8:C9');
+                $event->sheet->mergeCells('D8:D9');
+                $event->sheet->mergeCells('E8:F8');
+
+
+                $this->sheetStyle($event->sheet,'A8');
+                $this->sheetStyle($event->sheet,'B8');
+                $this->sheetStyle($event->sheet,'C8');
+                $this->sheetStyle($event->sheet,'D8');
+                $this->sheetStyle($event->sheet,'E8');
+                $this->sheetStyle($event->sheet,'E9');
+                $this->sheetStyle($event->sheet,'F9');
+                $this->sheetStyle($event->sheet,'G8');
+                $this->sheetStyle($event->sheet,'G9');
+
+                $this->sheetStyle($event->sheet,'A10:G'.(count($this->dayArray) + 10));
+                // $this->sheetStyle($event->sheet,'A'.(count($this->dayArray) + 10));
+           
+
+
+
+
             }
         ];
     }
@@ -347,6 +435,20 @@ class AttendForMonthExport implements FromCollection,WithEvents, WithCustomStart
         $retval = sprintf("%02d:%02d", $h, $m);
         return $retval;
     }
+
+    public function title(): string
+    {
+        return  $this->month . '月 ';
+    }
+
+    public function sheetStyle($sheet,$val)  
+    {
+        $sheet->getStyle($val)->getAlignment()->setWrapText(true);
+        $sheet->getStyle($val)->getAlignment()
+        ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle($val)->getAlignment()
+        ->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+    }  
     
 }  
                 

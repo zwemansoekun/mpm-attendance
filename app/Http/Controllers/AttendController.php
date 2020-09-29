@@ -118,6 +118,6 @@ class AttendController extends Controller
 
     public function csvOutput($employee,$date)
     {
-        return Excel::download(new AttendForMonthExport($employee,$date), '出勤簿生成.xlsx');
+        return Excel::download(new AttendForMonthExport($employee,$date), '出勤簿生成.xlsx');     
     }
 }
