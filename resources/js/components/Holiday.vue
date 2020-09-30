@@ -3,7 +3,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-4" id="app"> 
-                    <datepicker  :minimumView="'year'" :maximumView="'year'" v-model="customDate" 
+                    <datepicker class="datepicker1" :minimumView="'year'" :maximumView="'year'" v-model="customDate" 
                             :format="customFormatter" id="dtPicker" 
                              v-on:selected="selectedDate()" ></datepicker>
                 </div>  
@@ -41,14 +41,16 @@
                 </thead>
                 <tbody v-sortable.tr="holidays" v-if="isRowOne">
                     <tr v-for="holiday in holidays" :key="holiday.id">
-                        <td><input type="checkbox"  @click="select_all_via_check_box(holiday.id)" v-model="holiday.selected"></td>
+                        <td class="align-middle">
+                            <input type="checkbox" @click="select_all_via_check_box(holiday.id)" v-model="holiday.selected">
+                        </td>
                         <td>
                             <span v-if="holiday.dtError" class="text-danger">日付を入力してください</span>
                             <span v-if="holiday.dtDuplicateError" class="text-danger">日付は重複しています</span>
                             <span v-if="holiday.yearError" class="text-danger">
                                 {{customFormatter(customDate)}}の休日を入力してください
                             </span>
-                            <datepicker  :minimumView="'day'" :maximumView="'month'" v-model="holiday.date" 
+                            <datepicker class="datepicker1" :minimumView="'day'" :maximumView="'month'" v-model="holiday.date" 
                                 :format="dayMonthFormatter" :typeable="true"></datepicker>
                         </td>
                         <td>
@@ -70,6 +72,21 @@
         </div>
     </div>
 </template>
+
+<style >
+.datepicker1 input{
+    height: calc(1.6em + 0.75rem + 2px);
+    padding: 0.375rem 0.75rem;
+    font-size: 0.9rem;
+    font-weight: 400;
+    line-height: 1.6;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+}
+</style>
 
 <script>
 import Datepicker from 'vuejs-datepicker'
