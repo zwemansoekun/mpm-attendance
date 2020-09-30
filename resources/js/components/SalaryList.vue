@@ -13,37 +13,39 @@
             <div class="alert alert-success mt-5" role="alert" v-if="data_check_messg">
                  <strong >データは成功しました。</strong> 
             </div>
-
-            <table class="table table-bordered mt-5" v-if="formChange">
-                <thead>
-                    <tr>
-                        <th scope="col">年月</th>
-                        <th scope="col">支給日</th>
-                        <th scope="col">JPN/MMK</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="d in attendDelays" :key="d.id">
-                        <td>
-                            {{ d.month}}
-                        </td>
-                        <td>
-                            {{ paymentDate(d.month)}}
-                        </td>
-                        <td>
-                            <div class="row" v-if="d.moneyDelayError">
-                                <div class="col text-danger">{{d.moneyDelayErrorMsg}}</div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <input type="text" class="form-control" v-model="d.money">
+            <div class="container">
+                <table class="table table-bordered mt-5" v-if="formChange">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="align-middle text-center" style="width: 25%;">年月</th>
+                            <th scope="col" class="align-middle text-center" style="width: 25%;">支給日</th>
+                            <th scope="col" class="align-middle text-center" style="width: 50%;">JPN/MMK</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="d in attendDelays" :key="d.id">
+                            <td class="align-middle text-center">
+                                {{ d.month}}
+                            </td>
+                            <td class="align-middle text-center">
+                                {{ paymentDate(d.month)}}
+                            </td>
+                            <td class="align-middle text-center">
+                                <div class="row" v-if="d.moneyDelayError">
+                                    <div class="col text-danger">{{d.moneyDelayErrorMsg}}</div>
                                 </div>
-                                <div class="col"><button type="button" class="btn btn-primary" @click="updateDelayMoney(d.id ,d)" onclick="this.blur();">編集</button></div>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+                                <div class="row">
+                                    <div class="col-sm-5">
+                                        <input type="text" class="form-control" v-model="d.money">
+                                    </div>
+                                    <div class="col-sm-2"><button type="button" class="btn btn-primary" @click="updateDelayMoney(d.id ,d)" onclick="this.blur();">編集</button></div>
+                                    <div class="col-sm-5"><button type="button" class="btn btn-primary"  onclick="this.blur();">エンジニアコスト一覧表</button></div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         
