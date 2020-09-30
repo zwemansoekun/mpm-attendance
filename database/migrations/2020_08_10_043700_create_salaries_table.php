@@ -15,21 +15,21 @@ class CreateSalariesTable extends Migration
     {
         Schema::create('salaries', function (Blueprint $table) {
             $table->id();
-            $table->string('pay_month');
-            $table->integer('income');        
-            $table->integer('trans_money')->nullable();
-            $table->integer('jlpt')->nullable();
-            $table->integer('bonus')->nullable();
-            $table->integer('income_tax');
-            $table->integer('ssb');
-            $table->integer('total_salary');      
-            $table->integer('leave_late')->nullable();         
-            $table->integer('payment_amount');         
+            $table->string('pay_month')->comment = "year/month";
+            $table->integer('income')->comment = "基本給";        
+            $table->integer('trans_money')->nullable()->comment = "通勤交通費";
+            $table->integer('jlpt')->nullable()->comment = "JLPT";
+            $table->integer('bonus')->nullable()->comment = "ボーナス";
+            $table->integer('income_tax')->comment = "所得税";
+            $table->integer('ssb')->comment = "SSB";
+            $table->integer('total_salary')->comment = "合計";      
+            $table->integer('leave_late')->nullable()->comment = "遅刻欠勤早退";      
+            $table->integer('payment_amount')->comment = "支給額"  ;      
             $table->integer('employee_id'); // f_key
             $table->integer('ssb_id'); //f_key //check pay pr
-            $table->integer('adju1')->nullable(); //adjustments (in case of deduction-)
-            $table->integer('adju2')->nullable(); 
-            $table->integer('adju3')->nullable(); 
+            $table->integer('adju1')->nullable()->comment = "その他調整(控除の場合-)"; //adjustments (in case of deduction-)
+            $table->integer('adju2')->nullable()->comment = "その他調整(控除の場合-)"; 
+            $table->integer('adju3')->nullable()->comment = "その他調整(控除の場合-)"; 
             $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
             // $table->timestamps();

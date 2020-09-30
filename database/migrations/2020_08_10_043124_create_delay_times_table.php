@@ -15,10 +15,10 @@ class CreateDelayTimesTable extends Migration
     {
         Schema::create('delay_times', function (Blueprint $table) {
             $table->id();
-            $table->string('month');
-            $table->integer('am');
-            $table->integer('pm');
-            $table->decimal('money',10, 2);
+            $table->string('month')->comment = "年月(year/month)";
+            $table->integer('am')->comment = "AM遅刻許容時間";
+            $table->integer('pm')->comment = "PM遅刻許容時間";
+            $table->decimal('money',10, 2)->comment = "JPN/MMK";
             $table->timestamps();
         });
     }

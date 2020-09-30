@@ -15,9 +15,9 @@ class CreateSsbsTable extends Migration
     {
         Schema::create('ssbs', function (Blueprint $table) {
             $table->id();        
-            $table->integer('total_amount');
-            $table->integer('c_paid');    
-            $table->string('remark')->nullable();
+            $table->integer('total_amount')->comment = "総額";
+            $table->integer('c_paid')->comment = "会社負担分";  
+            $table->string('remark')->nullable()->comment = "備考";
             $table->timestamps();
         });
     }
