@@ -13,8 +13,9 @@ use Maatwebsite\Excel\Concerns\Exportable;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Barryvdh\Debugbar\Facade as Debugbar;
+use Maatwebsite\Excel\Concerns\WithTitle;
 
-class AttendDetailsExport implements FromCollection,WithEvents, WithCustomStartCell ,WithHeadings
+class AttendDetailsExport implements FromCollection,WithEvents, WithCustomStartCell ,WithHeadings,WithTitle
 
 {
     use Exportable;
@@ -590,6 +591,12 @@ class AttendDetailsExport implements FromCollection,WithEvents, WithCustomStartC
     {
       return  [$this->workdays,$this->namedays];
     }
+
+    public function title(): string
+    {
+        return '勤怠管理表'.$this->year."-".$this->month;
+    }
+
 }  
                 
             
