@@ -15,7 +15,7 @@
             </div>
             <div class="row">
                 <div class="container-fluid">
-                    <table class="table table-bordered mt-5" v-if="formChange" style="width: 60%;">
+                    <table class="table table-bordered mt-5" v-if="formChange" style="width: 70%;">
                         <thead>
                             <tr>
                                 <th scope="col" class="align-middle text-center" style="width: 25%;">年月</th>
