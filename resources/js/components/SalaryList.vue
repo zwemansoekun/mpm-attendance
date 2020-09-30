@@ -13,37 +13,42 @@
             <div class="alert alert-success mt-5" role="alert" v-if="data_check_messg">
                  <strong >データは成功しました。</strong> 
             </div>
-
-            <table class="table table-bordered mt-5" v-if="formChange">
-                <thead>
-                    <tr>
-                        <th scope="col">年月</th>
-                        <th scope="col">支給日</th>
-                        <th scope="col">JPN/MMK</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="d in attendDelays" :key="d.id">
-                        <td>
-                            {{ d.month}}
-                        </td>
-                        <td>
-                            {{ paymentDate(d.month)}}
-                        </td>
-                        <td>
-                            <div class="row" v-if="d.moneyDelayError">
-                                <div class="col text-danger">{{d.moneyDelayErrorMsg}}</div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <input type="text" class="form-control" v-model="d.money">
+            <div class="container">
+                <table class="table table-bordered mt-5" v-if="formChange">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="align-middle text-center" style="width: 25%;">年月</th>
+                            <th scope="col" class="align-middle text-center" style="width: 25%;">支給日</th>
+                            <th scope="col" class="align-middle text-center" style="width: 50%;">JPN/MMK</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="d in attendDelays" :key="d.id">
+                            <td class="align-middle text-center">
+                                {{ d.month}}
+                            </td>
+                            <td class="align-middle text-center">
+                                {{ paymentDate(d.month)}}
+                            </td>
+                            <td class="align-middle text-center">
+                                <div class="row" v-if="d.moneyDelayError">
+                                    <div class="col text-danger">{{d.moneyDelayErrorMsg}}</div>
                                 </div>
-                                <div class="col"><button type="button" class="btn btn-primary" @click="updateDelayMoney(d.id ,d)" onclick="this.blur();">編集</button></div>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+                                <div class="row">
+                                    <div class="col-sm-5">
+                                        <input type="text" class="form-control" v-model="d.money">
+                                    </div>
+                                    <div class="col-sm-2"><button type="button" class="btn btn-primary" @click="updateDelayMoney(d.id ,d)" onclick="this.blur();">編集</button></div>                                   
+                                    <div class="col-sm-5">
+                                        <input type="hidden" class="monthly" :value="`${d.month}`">
+                                        <button type="button" class="btn btn-primary" @click="eachEngineerCost($event)" onclick="this.blur();">エンジニアコスト一覧表</button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         
@@ -138,7 +143,7 @@
                         <form id="form1" class=""  autocomplete="on" >
                          
                             <div class="scrolling-wrapper  flex-row flex-nowrap">                         
-                                <table id="salaryTable" class="table table-sm table-md table-bordered">
+                                <table id="salaryTable" class="table table-sm table-bordered">
                                     <span class="col-md-2 mt-4 table-borderless" style="background-color:#DEEBF7"> 
                                             {{this.paymentDate(this.select_date,1)}}     
                                     </span>
@@ -548,10 +553,21 @@
                                 }).then(r => {                             
                                 }); 
             },
-            engineerCost:function(){
+            eachEngineerCost:function(){
+                this.select_date='';
+                let monthly=jQuery(event.target).closest('div').find('.monthly').val();              
+                this.engineerCost(monthly);
+            },  
+            engineerCost:function(monthly=''){
                     let that=this;
+                    let eachmonth='',eachyear='',splitdate='';
+                    if(monthly!=''){
+                        splitdate=monthly.split("/");
+                        eachyear=splitdate[0];
+                        eachmonth=splitdate[1];
+                    }
                     let up_data={                       
-                        "pay_month":that.select_date,
+                        "pay_month":that.select_date!=''?that.select_date:monthly,
                     };
                     this.axios({
                       url:process.env.MIX_APP_URL+"/salaryList/getsalary",//(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/salaryList/getsalary",
@@ -560,7 +576,7 @@
                     })                  
                     .then(response=>{                        
                         if(response!='' && response.data.length!=0 ){
-                            const url = (window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/salaryList/download/"+this.year+"-"+this.month;
+                            const url =process.env.MIX_APP_URL+"/salaryList/download/"+(this.year!=''?this.year:eachyear)+"-"+(this.month!=''?this.month:eachmonth);
                             const link = document.createElement('a')
                             link.href = url
                             // link.setAttribute('download',"" ) // , 'file.png' or any other extension
@@ -588,7 +604,7 @@
                 });
 
                 const link = document.createElement('a')
-                let url =  (window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/salary/export/"+ this.year+'-'+ this.month+'/'+ empArray;
+                let url =  process.env.MIX_APP_URL+"/salary/export/"+ this.year+'-'+ this.month+'/'+ empArray;
                     
                 //link.href =process.env.MIX_APP_API_URL+'/salary/export/'+ this.year+'-'+ this.month+'/'+ empArray
                 link.href = url;
@@ -1004,7 +1020,7 @@
                     // let company_ssb=0;
                     let total_c_paid=0;
                     this.axios
-                    .get((window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/salaryList/"+this.year+"-"+this.month )                 
+                    .get(process.env.MIX_APP_URL+"/salaryList/"+this.year+"-"+this.month )                 
                     .then(response => {
                         // that.salaries=response.data;
                         tem_salary=response.data;                     
