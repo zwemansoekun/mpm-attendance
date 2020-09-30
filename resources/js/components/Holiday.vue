@@ -17,21 +17,21 @@
             </div>
 
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-4 mt-3">
                     <button type="button" class="btn btn-primary" ref="btnToggle" @click="addRow(holidays)" 
                         :disabled="!btnEnabled" >{{btnText.text}}
                     </button>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-4 mt-3">
                     <button type="button" class="btn btn-primary" v-if="isBtnHidden" @click="copyRow()">前年の物をコピー</button>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-4 mt-3">
                     <button type="button" class="btn btn-primary" :disabled="!btnDelete" 
                         @click="deleteRow(deleteItems,customFormatter(customDate))">削除</button>
                 </div>
             </div> 
             
-            <table class="table table-bordered">
+            <table class="table table-bordered mt-3">
                 <thead>
                     <tr>
                         <th scope="col"></th>

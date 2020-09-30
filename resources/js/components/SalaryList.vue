@@ -15,7 +15,7 @@
             </div>
             <div class="row">
                 <div class="container-fluid">
-                    <table class="table table-bordered mt-5" v-if="formChange" style="width: 70%;">
+                    <table class="table table-md table-bordered mt-5" v-if="formChange" style="width:85%;">
                         <thead>
                             <tr>
                                 <th scope="col" class="align-middle text-center" style="width: 25%;">年月</th>
@@ -42,7 +42,7 @@
                                         <div class="col-sm-3"><button type="button" class="btn btn-primary" @click="updateDelayMoney(d.id ,d)" onclick="this.blur();">編集</button></div>                                   
                                         <div class="col-sm-6">
                                             <input type="hidden" class="monthly" :value="`${d.month}`">
-                                            <button type="button" class="btn btn-primary" @click="eachEngineerCost($event)" onclick="this.blur();">エンジニアコスト一覧表</button>
+                                            <button type="button" class="btn btn-primary"  style="font-size: 15px;" @click="eachEngineerCost($event)" onclick="this.blur();">エンジニアコスト一覧表</button>
                                         </div>
                                     </div>
                                 </td>
@@ -100,7 +100,7 @@
                         <div class="modal-content">    
                              <div class="modal-body">
                                 <div class="container-fluid">                           
-                                    <table class="table table-sm table-bordered">
+                                    <table class="table table-md table-bordered">
                                         <thead>                      
                                             <th class="align-middle text-center">
                                                 <input class="align-middle text-center check-all" style="width:1.5em;height:1.5em;" type='checkbox' @click='checkAll()' v-model='isCheckAll'> 
