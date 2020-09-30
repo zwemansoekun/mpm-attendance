@@ -38,8 +38,11 @@
                                     <div class="col-sm-5">
                                         <input type="text" class="form-control" v-model="d.money">
                                     </div>
-                                    <div class="col-sm-2"><button type="button" class="btn btn-primary" @click="updateDelayMoney(d.id ,d)" onclick="this.blur();">編集</button></div>
-                                    <div class="col-sm-5"><button type="button" class="btn btn-primary"  onclick="this.blur();">エンジニアコスト一覧表</button></div>
+                                    <div class="col-sm-2"><button type="button" class="btn btn-primary" @click="updateDelayMoney(d.id ,d)" onclick="this.blur();">編集</button></div>                                   
+                                    <div class="col-sm-5">
+                                        <input type="hidden" class="monthly" :value="`${d.month}`">
+                                        <button type="button" class="btn btn-primary" @click="eachEngineerCost($event)" onclick="this.blur();">エンジニアコスト一覧表</button>
+                                    </div>
                                 </div>
                             </td>
                         </tr>
@@ -140,7 +143,7 @@
                         <form id="form1" class=""  autocomplete="on" >
                          
                             <div class="scrolling-wrapper  flex-row flex-nowrap">                         
-                                <table id="salaryTable" class="table table-sm table-md table-bordered">
+                                <table id="salaryTable" class="table table-sm table-bordered">
                                     <span class="col-md-2 mt-4 table-borderless" style="background-color:#DEEBF7"> 
                                             {{this.paymentDate(this.select_date,1)}}     
                                     </span>
@@ -550,10 +553,21 @@
                                 }).then(r => {                             
                                 }); 
             },
-            engineerCost:function(){
+            eachEngineerCost:function(){
+                this.select_date='';
+                let monthly=jQuery(event.target).closest('div').find('.monthly').val();              
+                this.engineerCost(monthly);
+            },  
+            engineerCost:function(monthly=''){
                     let that=this;
+                    let eachmonth='',eachyear='',splitdate='';
+                    if(monthly!=''){
+                        splitdate=monthly.split("/");
+                        eachyear=splitdate[0];
+                        eachmonth=splitdate[1];
+                    }
                     let up_data={                       
-                        "pay_month":that.select_date,
+                        "pay_month":that.select_date!=''?that.select_date:monthly,
                     };
                     this.axios({
                       url:process.env.MIX_APP_URL+"/salaryList/getsalary",//(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/salaryList/getsalary",
@@ -562,7 +576,7 @@
                     })                  
                     .then(response=>{                        
                         if(response!='' && response.data.length!=0 ){
-                            const url =process.env.MIX_APP_URL+"/salaryList/download/"+this.year+"-"+this.month;
+                            const url =process.env.MIX_APP_URL+"/salaryList/download/"+(this.year!=''?this.year:eachyear)+"-"+(this.month!=''?this.month:eachmonth);
                             const link = document.createElement('a')
                             link.href = url
                             // link.setAttribute('download',"" ) // , 'file.png' or any other extension

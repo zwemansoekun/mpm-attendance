@@ -38,12 +38,12 @@ class EngineerExport implements FromCollection,WithEvents,WithStrictNullComparis
         $employee =  file_get_contents(env("MIX_APP_API_URL")."/employees");
         $empArray = json_decode($employee, true);
         $tem_emp=[];$tem_salary=[];      
-        $global=Setting::select('money')->order_by('updated_at', 'desc')->first();//config('global');   //repair   
+        $global=Setting::select('money')->orderBy('updated_at', 'desc')->get();//config('global');   //repair   
 
         $salary=Salary::with('ssbval')->where('pay_month',$this->pay_month)->get();
         $employdetail=EmployeeDetail::with('employee')->where('pay_month',$this->pay_month)->get();
         
-        $setting=DelayTime::select('money')->where('month',$this->pay_month)->order_by('updated_at', 'desc')->first();//->where('create_month',$this->pay_month)->get();      
+        $setting=DelayTime::select('money')->where('month',$this->pay_month)->orderBy('updated_at', 'desc')->get();//->where('create_month',$this->pay_month)->get();      
 
         if($setting->isEmpty()){
             $setting=$global;    
