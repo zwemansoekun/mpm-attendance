@@ -218,7 +218,7 @@ class SalaryController extends Controller
     {
         $salary='';
         if($request->pay_month){
-            $salary=Salary::with('ssbval')->where('pay_month',$request->pay_month)->get()->toArray();          
+            $salary=Salary::with('ssbval')->where('pay_month',$request->pay_month)->get();//->toArray();          
         }
       
        return $salary;
