@@ -17,8 +17,9 @@ use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithStrictNullComparison;
 use App\Http\Resources\EmployeeDetail as EmployeeDetailResource;
+use Maatwebsite\Excel\Concerns\WithTitle;
 
-class EngineerExport implements FromCollection,WithEvents,WithStrictNullComparison
+class EngineerExport implements FromCollection,WithEvents,WithStrictNullComparison,WithTitle
 {
     //FromCollection,ShouldAutoSize,WithStrictNullComparison,
     use Exportable;
@@ -411,4 +412,9 @@ class EngineerExport implements FromCollection,WithEvents,WithStrictNullComparis
         $sheet->getStyle($val)->getAlignment()
         ->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
     }  
+
+    public function title(): string
+    {
+        return '海外エンジニアコスト一覧表_'.$this->pay_month;
+    }
 }
