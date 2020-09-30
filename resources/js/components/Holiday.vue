@@ -31,12 +31,12 @@
                 </div>
             </div> 
             
-            <table class="table table-bordered mt-3">
+            <table class="table table-bordered mt-3" style="width: 73.5%;">
                 <thead>
                     <tr>
-                        <th scope="col"></th>
-                        <th scope="col">date</th>
-                        <th scope="col">description</th>
+                        <th scope="col" style="width: 10%;"></th>
+                        <th scope="col" style="width: 40%;">date</th>
+                        <th scope="col" style="width: 50%;">description</th>
                     </tr>
                 </thead>
                 <tbody v-sortable.tr="holidays" v-if="isRowOne">
@@ -227,7 +227,11 @@ var moment = require('moment');
                 },
             select_all_via_check_box: function(id){
                     this.deleteItems.push(id)
-                    this.btnDelete = true
+                    if(this.btnDelete == true){
+                        this.btnDelete = false;
+                    }else{
+                        this.btnDelete = true
+                    }                  
                },
             loadingAlert:function(){
                   let that=this;
