@@ -3,17 +3,18 @@
 namespace App\Exports;
 
 use App\AttendDetail;
-use Maatwebsite\Excel\Concerns\FromCollection;
-use Maatwebsite\Excel\Concerns\WithEvents;
-use Maatwebsite\Excel\Events\BeforeExport;
-use Maatwebsite\Excel\Events\AfterSheet;
+use Maatwebsite\Excel\Sheet;
 use Illuminate\Support\Facades\DB;
-use Maatwebsite\Excel\Concerns\WithCustomStartCell;
-use Maatwebsite\Excel\Concerns\Exportable;
-use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
-use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Events\AfterSheet;
 use Barryvdh\Debugbar\Facade as Debugbar;
 use Maatwebsite\Excel\Concerns\WithTitle;
+use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Events\BeforeExport;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\FromCollection;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
+use Maatwebsite\Excel\Concerns\WithCustomStartCell;
 
 class AttendDetailsExport implements FromCollection,WithEvents, WithCustomStartCell ,WithHeadings,WithTitle
 
@@ -302,7 +303,6 @@ class AttendDetailsExport implements FromCollection,WithEvents, WithCustomStartC
             array_push($empSubArray,  $monthArray[$i][0]);
             array_push($this->csvArray, $empSubArray);
         }
-
        return collect($this->csvArray);
     }
 
@@ -312,7 +312,8 @@ class AttendDetailsExport implements FromCollection,WithEvents, WithCustomStartC
     public function registerEvents(): array
     {
         return [
-            BeforeExport::class    => function(BeforeExport $event) {
+            BeforeExport::class    => function(BeforeExport $event) { 
+
                 // 一番目見出し
                 array_push($this->workdays, " ");
                 array_push($this->workdays, "");
@@ -352,6 +353,31 @@ class AttendDetailsExport implements FromCollection,WithEvents, WithCustomStartC
                 array_push($this->namedays, "欠勤数日");
             },
             AfterSheet::class    => function(AfterSheet $event) {
+
+                Sheet::macro('styleCells', function (Sheet $sheet, string $cellRange, array $style) {
+                    $sheet->getDelegate()->getStyle($cellRange)->applyFromArray($style);
+                });            
+                $event->sheet->styleCells(
+                    'D2',
+                    [
+                        'font' => [
+                            'name' =>  'ＭＳ Ｐゴシック',
+                            'size' =>  11,
+                            'bold' =>  true  
+                        ],                      
+                    ]
+                ); 
+                $event->sheet->styleCells(
+                    'A6:AK7',
+                    [
+                        'font' => [
+                            'name' =>  'ＭＳ Ｐゴシック',
+                            'size' =>  9
+                        ],                      
+                    ]
+                ); 
+         
+                
                 $this->csvArray = json_decode(json_encode($this->csvArray),true);
                 
                 // 勤怠管理表
@@ -371,48 +397,6 @@ class AttendDetailsExport implements FromCollection,WithEvents, WithCustomStartC
                 
                 $event->sheet->getDelegate()->setCellValue('D2', substr_replace((string)$this->printY, '/', 4, 0) .' 勤怠管理表');
 
-                if(count($this->namedays) == 37)
-                {
-                    $event->sheet->mergeCells('AI4:AJ4');
-                    $event->sheet->getDelegate()->setCellValue('AI4', '労働数日');
-
-                    $event->sheet->getDelegate()->setCellValue('AK4', count($this->namedays)-6);
-                    $event->sheet->getDelegate()->getStyle('AK4')->getFill()
-                    ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
-                    ->getStartColor()->setARGB('FF989898');
-
-                    
-                }
-                else if(count($this->namedays) == 36)
-                {
-                    $event->sheet->mergeCells('AH4:AI4');
-                    $event->sheet->getDelegate()->setCellValue('AH4', '労働数日');
-
-                    $event->sheet->getDelegate()->setCellValue('AJ4', count($this->namedays)-6);
-                    $event->sheet->getDelegate()->getStyle('AJ4')->getFill()
-                    ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
-                    ->getStartColor()->setARGB('FF989898');
-                }
-                else if(count($this->namedays) == 35)
-                {
-                    $event->sheet->mergeCells('AG4:AH4');
-                    $event->sheet->getDelegate()->setCellValue('AG4', '労働数日');
-
-                    $event->sheet->getDelegate()->setCellValue('AI4', count($this->namedays)-6);
-                    $event->sheet->getDelegate()->getStyle('AI4')->getFill()
-                    ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
-                    ->getStartColor()->setARGB('FF989898');
-                }
-                else if(count($this->namedays) == 34)
-                {
-                    $event->sheet->mergeCells('AF4:AH4');
-                    $event->sheet->getDelegate()->setCellValue('AF4', '労働数日');
-
-                    $event->sheet->getDelegate()->setCellValue('AH4', count($this->namedays)-6);
-                    $event->sheet->getDelegate()->getStyle('AH4')->getFill()
-                    ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
-                    ->getStartColor()->setARGB('FF989898');
-                }
 
                 // （土、日）曜日場合色付け
                 $z = 0; $y =0;  $printCell = 0;
@@ -461,15 +445,30 @@ class AttendDetailsExport implements FromCollection,WithEvents, WithCustomStartC
                     
                 $event->sheet->getDelegate()->getStyle('A6:'.$printCell.'6')->getFill()
                     ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
-                    ->getStartColor()->setARGB('FF4169E1');
+                    ->getStartColor()->setARGB('9DC3E6');
                 $event->sheet->getDelegate()->getStyle('A7:'.$printCell.'7')->getFill()
                     ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
-                    ->getStartColor()->setARGB('FF4169E1');
+                    ->getStartColor()->setARGB('9DC3E6');
                     
                 $event->sheet->getDelegate()->getStyle('D8:'.$printCell.(count($this->csvArray) + 7))->getNumberFormat()
                     ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER_00);
 
-                $event->sheet->getColumnDimension('C')->setWidth(30);
+                $event->sheet->getColumnDimension('A')->setWidth(3.2);
+                $event->sheet->getColumnDimension('B')->setWidth(7);
+                $event->sheet->getColumnDimension('C')->setWidth(27);           
+                
+                if(count($this->namedays)==37){
+                    //  d-ah
+                    foreach(range('D','Z') as $v){
+                        $event->sheet->getColumnDimension($v)->setWidth(5.8);
+                    }
+                    foreach(['AA','AB','AC','AD','AE','AF','AG','AH'] as $v ){
+                        $event->sheet->getColumnDimension($v)->setWidth(5.8);
+                    }                 
+
+                }
+                // $event->sheet->getColumnDimension('D8:F8')->setWidth(20);
+
                     
                 $font_color_start = 8;
                 for ($i = 0; $i < count($this->csvArray); $i++)
@@ -501,9 +500,9 @@ class AttendDetailsExport implements FromCollection,WithEvents, WithCustomStartC
                             {
                                 if($printCell === "AI" || $printCell === "AJ" || $printCell === "AK")
                                 {
-                                    $event->sheet->getColumnDimension('AI')->setWidth(9);
-                                    $event->sheet->getColumnDimension('AJ')->setWidth(9);
-                                    $event->sheet->getColumnDimension('AK')->setWidth(9);
+                                    $event->sheet->getColumnDimension('AI')->setWidth(8);
+                                    $event->sheet->getColumnDimension('AJ')->setWidth(8);
+                                    $event->sheet->getColumnDimension('AK')->setWidth(8);
                                     $event->sheet->getDelegate()->getStyle($printCell.$font_color_start)
                                         ->getNumberFormat()
                                         ->setFormatCode('0.0');
@@ -515,9 +514,9 @@ class AttendDetailsExport implements FromCollection,WithEvents, WithCustomStartC
                             {
                                 if($printCell === "AH" || $printCell === "AI" || $printCell === "AJ")
                                 {
-                                    $event->sheet->getColumnDimension('AH')->setWidth(9);
-                                    $event->sheet->getColumnDimension('AI')->setWidth(9);
-                                    $event->sheet->getColumnDimension('AJ')->setWidth(9);
+                                    $event->sheet->getColumnDimension('AH')->setWidth(8);
+                                    $event->sheet->getColumnDimension('AI')->setWidth(8);
+                                    $event->sheet->getColumnDimension('AJ')->setWidth(8);
                                     $event->sheet->getDelegate()->getStyle($printCell.$font_color_start)
                                         ->getNumberFormat()
                                         ->setFormatCode('0.0');
@@ -529,9 +528,9 @@ class AttendDetailsExport implements FromCollection,WithEvents, WithCustomStartC
                             {
                                 if($printCell === "AG" || $printCell === "AH" || $printCell === "AI")
                                 {
-                                    $event->sheet->getColumnDimension('AG')->setWidth(9);
-                                    $event->sheet->getColumnDimension('AH')->setWidth(9);
-                                    $event->sheet->getColumnDimension('AI')->setWidth(9);
+                                    $event->sheet->getColumnDimension('AG')->setWidth(8);
+                                    $event->sheet->getColumnDimension('AH')->setWidth(8);
+                                    $event->sheet->getColumnDimension('AI')->setWidth(8);
                                     $event->sheet->getDelegate()->getStyle($printCell.$font_color_start)
                                         ->getNumberFormat()
                                         ->setFormatCode('0.0');
@@ -543,9 +542,9 @@ class AttendDetailsExport implements FromCollection,WithEvents, WithCustomStartC
                             {
                                 if($printCell === "AF" || $printCell === "AG" || $printCell === "AH")
                                 {
-                                    $event->sheet->getColumnDimension('AF')->setWidth(9);
-                                    $event->sheet->getColumnDimension('AG')->setWidth(9);
-                                    $event->sheet->getColumnDimension('AH')->setWidth(9);
+                                    $event->sheet->getColumnDimension('AF')->setWidth(8);
+                                    $event->sheet->getColumnDimension('AG')->setWidth(8);
+                                    $event->sheet->getColumnDimension('AH')->setWidth(8);
                                     $event->sheet->getDelegate()->getStyle($printCell.$font_color_start)
                                         ->getNumberFormat()
                                         ->setFormatCode('0.0');
@@ -577,6 +576,166 @@ class AttendDetailsExport implements FromCollection,WithEvents, WithCustomStartC
                     ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT);
                 $event->sheet->getStyle('A8:C'.(count($this->csvArray) + 7))->getAlignment()
                     ->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_TOP);
+
+                
+                    if(count($this->namedays) == 37)
+                    {
+                        $event->sheet->mergeCells('AI4:AJ4');
+                        $event->sheet->getDelegate()->setCellValue('AI4', '労働数日');
+                        $event->sheet->getDelegate()->getStyle('AI4')->applyFromArray([
+                            'font' => [
+                                'name' =>  'ＭＳ Ｐゴシック',
+                                'size' =>  11,
+                            ]
+                        ]);
+    
+                        $event->sheet->mergeCells('AK3:AK4');
+                        $event->sheet->getDelegate()->setCellValue('AK3', count($this->namedays)-6);
+                        $event->sheet->getDelegate()->getStyle('AK3')->getFill()
+                        ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                        ->getStartColor()->setARGB('BFBFBF');
+                                
+                     
+                        $event->sheet->getStyle('AL8:AL'.(count($this->csvArray) + 7))->getAlignment()
+                        ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
+                        $event->sheet->getStyle('AL8:AL'.(count($this->csvArray) + 7))->getAlignment()
+                        ->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+                        
+                    }
+                    else if(count($this->namedays) == 36)
+                    {
+                        $event->sheet->mergeCells('AH4:AI4');
+                        $event->sheet->getDelegate()->setCellValue('AH4', '労働数日');
+                        $event->sheet->getDelegate()->getStyle('AH4')->applyFromArray([
+                            'font' => [
+                                'name' =>  'ＭＳ Ｐゴシック',
+                                'size' =>  11,
+                            ]
+                        ]);
+    
+                        $event->sheet->mergeCells('AJ3:AJ4');             
+                        $event->sheet->getDelegate()->setCellValue('AJ3', count($this->namedays)-6);
+                        $event->sheet->getDelegate()->getStyle('AJ3')->getFill()
+                        ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                        ->getStartColor()->setARGB('BFBFBF');
+    
+                        $event->sheet->getStyle('AK8:AK'.(count($this->csvArray) + 7))->getAlignment()
+                        ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
+                        $event->sheet->getStyle('AK8:AK'.(count($this->csvArray) + 7))->getAlignment()
+                        ->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+    
+                    }
+                    else if(count($this->namedays) == 35)
+                    {
+                        $event->sheet->mergeCells('AG4:AH4');
+                        $event->sheet->getDelegate()->setCellValue('AG4', '労働数日');
+                        $event->sheet->getDelegate()->getStyle('AG4')->applyFromArray([
+                            'font' => [
+                                'name' =>  'ＭＳ Ｐゴシック',
+                                'size' =>  11,
+                            ]
+                        ]);
+                               
+                        $event->sheet->mergeCells('AI3:AI4'); 
+                        $event->sheet->getDelegate()->setCellValue('AI3', count($this->namedays)-6);
+                        $event->sheet->getDelegate()->getStyle('AI3')->getFill()
+                        ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                        ->getStartColor()->setARGB('BFBFBF');
+    
+                        $event->sheet->getStyle('AJ8:AJ'.(count($this->csvArray) + 7))->getAlignment()
+                        ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
+                        $event->sheet->getStyle('AJ8:AJ'.(count($this->csvArray) + 7))->getAlignment()
+                        ->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+                    }
+                    else if(count($this->namedays) == 34)
+                    {
+                        $event->sheet->mergeCells('AF4:AH4');
+                        $event->sheet->getDelegate()->setCellValue('AF4', '労働数日');
+                        $event->sheet->getDelegate()->getStyle('AF4')->applyFromArray([
+                            'font' => [
+                                'name' =>  'ＭＳ Ｐゴシック',
+                                'size' =>  11,
+                            ]
+                        ]);
+    
+                        $event->sheet->mergeCells('AH3:AH4'); 
+                        $event->sheet->getDelegate()->setCellValue('AH3', count($this->namedays)-6);
+                        $event->sheet->getDelegate()->getStyle('AH3')->getFill()
+                        ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                        ->getStartColor()->setARGB('BFBFBF');
+    
+                        $event->sheet->getStyle('AI8:AI'.(count($this->csvArray) + 7))->getAlignment()
+                        ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
+                        $event->sheet->getStyle('AI8:AI'.(count($this->csvArray) + 7))->getAlignment()
+                        ->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+                    }    
+
+                    $event->sheet->getStyle('C'.(count($this->csvArray) + 9).':F'.(count($this->csvArray) + 13))->applyFromArray($styleArray);
+                    $event->sheet->mergeCells('C'.(count($this->csvArray) + 9).':F'.(count($this->csvArray) + 9));
+                    $event->sheet->mergeCells('D'.(count($this->csvArray) + 10).':F'.(count($this->csvArray) + 10));
+                    $event->sheet->mergeCells('D'.(count($this->csvArray) + 11).':F'.(count($this->csvArray) + 11));
+                    $event->sheet->mergeCells('D'.(count($this->csvArray) + 12).':F'.(count($this->csvArray) + 12));
+                    $event->sheet->mergeCells('D'.(count($this->csvArray) + 13).':F'.(count($this->csvArray) + 13));
+
+
+                    $event->sheet->styleCells(
+                        'C'.(count($this->csvArray) + 9).':F'.(count($this->csvArray) + 13),
+                        [
+                            'font' => [
+                                'name' =>  'ＭＳ Ｐゴシック',
+                                'size' =>  9
+                            ],                      
+                        ]
+                    ); 
+                    $event->sheet->styleCells(
+                        'D'.(count($this->csvArray) + 10).':F'.(count($this->csvArray) + 13),
+                        [
+                            'font' => [
+                                'name' =>  'ＭＳ Ｐゴシック',
+                                'size' =>  11,
+                                'bold' => true
+                            ],                      
+                        ]
+                    ); 
+                    $event->sheet->getStyle( 'C'.(count($this->csvArray) + 9).':F'.(count($this->csvArray) + 9))->getAlignment()
+                    ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+                    $event->sheet->getStyle( 'C'.(count($this->csvArray) + 9).':F'.(count($this->csvArray) + 9))->getAlignment()
+                    ->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+                    $event->sheet->getStyle( 'D'.(count($this->csvArray) + 10).':F'.(count($this->csvArray) + 13))->getAlignment()
+                    ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+                    $event->sheet->getStyle( 'D'.(count($this->csvArray) + 10).':F'.(count($this->csvArray) + 13))->getAlignment()
+                    ->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+
+
+                    $event->sheet->getStyle( 'C'.(count($this->csvArray) + 10).':C'.(count($this->csvArray) + 13))->getAlignment()
+                    ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT);
+                    $event->sheet->getStyle( 'C'.(count($this->csvArray) + 10).':C'.(count($this->csvArray) + 13))->getAlignment()
+                    ->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+
+                
+                    $event->sheet->getDelegate()->getStyle('C'.(count($this->csvArray) + 9))->getFill()
+                    ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                    ->getStartColor()->setARGB('BFBFBF');
+
+                    $event->sheet->getCell('C'.(count($this->csvArray) + 9))->setValue("記号");
+
+                    $event->sheet->getCell('C'.(count($this->csvArray) + 10))->setValue("出勤");
+                    $event->sheet->getCell('C'.(count($this->csvArray) + 11))->setValue("半日出勤");
+                    $event->sheet->getCell('C'.(count($this->csvArray) + 12))->setValue("欠勤");
+                    $event->sheet->getCell('C'.(count($this->csvArray) + 13))->setValue("有給休暇");
+
+                    $event->sheet->getCell('D'.(count($this->csvArray) + 10))->setValue("1");
+                    $event->sheet->getCell('D'.(count($this->csvArray) + 11))->setValue("出勤時間/8");
+                    $event->sheet->getCell('D'.(count($this->csvArray) + 12))->setValue("X");
+                    $event->sheet->getDelegate()->getStyle('D'.(count($this->csvArray) + 12))->getFont()->
+                    getColor()->setARGB(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_RED);
+                    $event->sheet->getCell('D'.(count($this->csvArray) + 13))->setValue("Ｐ");
+
+
+
+
+                    $event->sheet->setSelectedCells('D2');
+                    return;
                    
             },
         ];
