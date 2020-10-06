@@ -1,23 +1,23 @@
 <?php
-
 namespace App\Exports;
 
 use DateTime;
 use App\Salary;
 use App\Setting;
 use App\DelayTime;
-use App\EmployeeDetail;
+use App\Api_Employees;
 
+use App\EmployeeDetail;
 use Maatwebsite\Excel\Sheet;
 use Maatwebsite\Excel\Events\AfterSheet;
+use Maatwebsite\Excel\Concerns\WithTitle;
+// use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Events\BeforeSheet;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\WithEvents;
-// use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithStrictNullComparison;
 use App\Http\Resources\EmployeeDetail as EmployeeDetailResource;
-use Maatwebsite\Excel\Concerns\WithTitle;
 
 class EngineerExport implements FromCollection,WithEvents,WithStrictNullComparison,WithTitle
 {
@@ -34,9 +34,12 @@ class EngineerExport implements FromCollection,WithEvents,WithStrictNullComparis
 
     public function collection()
     {
-        $setting='';
-     
-        $employee =  file_get_contents(env("MIX_APP_API_URL")."/employees");
+        $setting='';       
+        //that is temporary code for nishimura's testing  
+        //it will be use when stay at home is over.
+        // $employee =  file_get_contents(env('MIX_APP_API_URL')."/employees");
+        $employee=Api_Employees::all();
+
         $empArray = json_decode($employee, true);
         $tem_emp=[];$tem_salary=[];      
         $global=Setting::select('money')->orderBy('updated_at', 'desc')->get();//config('global');   //repair   

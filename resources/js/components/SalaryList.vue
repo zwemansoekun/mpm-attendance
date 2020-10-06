@@ -510,6 +510,12 @@
             })
             .catch(function (error) {
             });
+            
+            this.axios
+                .get(process.env.MIX_APP_API_URL+'/attendances/all/date')
+                .then(response => {
+                    this.dates=response.data;
+            }); 
 
             this.axios({
                 url:process.env.MIX_APP_URL+"/delayTimes",//(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/delayTimes",
@@ -521,16 +527,10 @@
             })
             .catch(function (error) {
             });
-
-            this.axios
-                .get(process.env.MIX_APP_API_URL+'/attendances/all/date')
-                .then(response => {
-                    this.dates=response.data;
-            }); 
+       
             this.axios
                 .get(process.env.MIX_APP_API_URL+'/employees')
                 .then(response => {
-                
                     that.emps=response.data;
                    if(that.emps){
                   
@@ -564,8 +564,7 @@
             engineerCost:function(event,monthly=''){
                     let that=this;
                     let eachmonth='',eachyear='',splitdate='';
-                    if(monthly!=''){
-                        console.log(monthly);
+                    if(monthly!=''){                
                         splitdate=monthly.split("/");
                         eachyear=splitdate[0];
                         eachmonth=splitdate[1];
@@ -683,12 +682,11 @@
                 .catch(function (error) {
                 });
             },
-            delayDataCalculate(){
+            delayDataCalculate(){             
                 this.attendDelays = [];
                 this.temp = [];
                 let results = [];
-                if(this.delays.length == 0){
-                    
+                if(this.delays.length == 0){              
                     this.dates.forEach(d => {
                         let tempSetting  = this.settings.filter(s => s.create_month < d.recordedDateTime);
                         tempSetting.sort(compareSetting);
@@ -1010,8 +1008,7 @@
                       data:up_data,
                     })                  
                     .then(response=>{                                        
-                        that.get_salary_data=response.data;    
-                        console.log('that.get_salary_data',that.get_salary_data);              
+                        that.get_salary_data=response.data;
                         that.salaryList(that.get_salary_data);                  
                     })
                     .catch(function (error) {

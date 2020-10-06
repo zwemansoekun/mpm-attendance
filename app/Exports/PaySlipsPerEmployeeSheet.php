@@ -5,6 +5,7 @@ namespace App\Exports;
 use App\User;
 use App\Salary;
 use Carbon\Carbon;
+use App\Api_Employees;
 use App\EmployeeDetail;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Events\AfterSheet;
@@ -31,7 +32,9 @@ class PaySlipsPerEmployeeSheet implements WithTitle,WithEvents
         $this->salaryData = Salary::select("*")->where("pay_month",$ym)->where('employee_id',$this->employee->emp_id)->first();
         $this->trans_money = EmployeeDetail::where("pay_month",$ym)->where('emp_id',$this->employee->emp_id)->first()->trans_money;
 
-        $content =  file_get_contents(env("MIX_APP_API_URL")."/employees/".$this->employee->emp_id);
+        //that is temporary code for nishimura's testing  
+        //it will be use when stay at home is over.
+        $content =  Api_Employees::where('id',$this->employee->emp_id)->firstOrFail(); //file_get_contents(env("MIX_APP_API_URL")."/employees/".$this->employee->emp_id);
         $empApiArray = json_decode($content, true);
 
         $this->empId = $empApiArray['employeeId'];

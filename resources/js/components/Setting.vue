@@ -132,6 +132,12 @@
             .catch(function (error) {
             });
 
+            this.axios
+                .get(process.env.MIX_APP_API_URL+'/attendances/all/date')
+                .then(response => {
+                    this.dates=response.data;
+            });
+
             this.axios({
                 url:process.env.MIX_APP_URL+"/delayTimes",//(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/delayTimes",
                 method: 'get'
@@ -141,13 +147,7 @@
                 that.delayDataCalculate();
             })
             .catch(function (error) {
-            });
-
-            this.axios
-                .get(process.env.MIX_APP_API_URL+'/attendances/all/date')
-                .then(response => {
-                    this.dates=response.data;
-            });
+            });          
            
         },
         methods: {
