@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\AttendDetail;
+use App\Api_Employees;
 use Maatwebsite\Excel\Sheet;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Events\AfterSheet;
@@ -44,7 +45,9 @@ class AttendDetailsExport implements FromCollection,WithEvents, WithCustomStartC
 
     public function collection()
     {
-        $content =  file_get_contents(env("MIX_APP_API_URL")."/employees");
+        //that is temporary code for nishimura's testing  
+        //it will be use when stay at home is over.
+        $content = Api_Employees::all();// file_get_contents(env("MIX_APP_API_URL")."/employees");
         $empApiArray = json_decode($content, true);
        
         // APIから取得する社員情報

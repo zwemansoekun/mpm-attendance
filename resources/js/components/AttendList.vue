@@ -866,8 +866,7 @@
                     this.dayCount=new Date(this.year,this.month, 0).getDate();
                     this.axios
                     .get(process.env.MIX_APP_API_URL+"/attendances/ampm/"+this.emp_no+"/"+this.year+this.month)                 
-                    .then(response => {
-
+                    .then(response => {                     
                         if(response.data.length===0){
                             this.form_open=false;
                             this.data_check_messg = true

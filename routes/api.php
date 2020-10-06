@@ -23,6 +23,9 @@ use Illuminate\Support\Facades\Route;
 // Route::post('/setting/updateAm/{id}',  'SettingController@updateAm');
 // Route::post('/setting/updatePm/{id}',  'SettingController@updatePm');
 // Route::get('/setting/all', 'SettingController@all');
+
+// Route::group(['middleware' => 'auth'], function()
+// {
 Route::get('/setting/delayTime/{year}/{month}','SettingController@delayTime')->where(['year' => '[0-9]+', 'month' =>'[0-9]+']);
 
 
@@ -48,7 +51,14 @@ Route::post('/holidays/deleteRow/{id}/{year}', 'HolidayController@deleteRow');
 Route::get('/attendManage', 'AttendManageController@index');
 Route::post('/attendManage/csvOutput/{year}', 'AttendManageController@csvOutput');
 
+// //temporary API
+Route::get('/employees', 'Api_EmployeesController@index');
+Route::get('/employees/{id}', 'Api_EmployeesController@show')->where('id', '[0-9]+');
+
+Route::get('/attendances/all/date', 'Api_AttendController@index');
+Route::get('/attendances/ampm/{emp_no}/{date}', 'Api_AttendController@show')->where('emp_no', '[0-9]+')->where('date', '[0-9]+');
+// });
 
 
 
-
+       
