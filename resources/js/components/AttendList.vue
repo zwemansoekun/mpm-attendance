@@ -469,10 +469,7 @@
                 .get(process.env.MIX_APP_URL+'/holiday/'+that.year+that.month)
                 .then(response => {
                     
-                    holiday=response.data;
-                    console.log('holidays',holiday);
-
-                  
+                    holiday=response.data;                  
                    if(holiday){
                   
                        for(let v in holiday){                        
@@ -1104,91 +1101,60 @@
               let ap_split4=pm2!==''?pm2.split(":"):'';
               
            
-              let auto_am1,auto_am2,auto_pm1,auto_pm2='';
+              let auto_am1,auto_am2,auto_pm1,auto_pm2;
 
                 if(day_leave==''){
                         if(!jQuery("."+sec_index).find(".am1").hasClass('checkColumn') && !jQuery("."+sec_index).find(".am2").hasClass('checkColumn')
                         && !jQuery("."+sec_index).find(".pm1").hasClass('checkColumn') && !jQuery("."+sec_index).find(".pm2").hasClass('checkColumn')){   
-                         auto_am1=this.ampm_time_check(ap_split1,".am1",sec_index);     
-                         auto_am2=this.ampm_time_check(ap_split2,".am2",sec_index);   
-                         auto_pm1=this.ampm_time_check(ap_split3,".pm1",sec_index);   
-                         auto_pm2=this.ampm_time_check(ap_split4,".pm2",sec_index); 
+                            auto_am1=this.ampm_time_check(ap_split1,".am1",sec_index);     
+                            auto_am2=this.ampm_time_check(ap_split2,".am2",sec_index);   
+                            auto_pm1=this.ampm_time_check(ap_split3,".pm1",sec_index);   
+                            auto_pm2=this.ampm_time_check(ap_split4,".pm2",sec_index);                            
+                       }else{
+                                if(jQuery("."+sec_index).find(".am1").hasClass('checkColumn')){
+                                        auto_am1=this.ampm_time_check(ap_split1,".am1",sec_index);   
+                                    
+                                    }
+                                if(jQuery("."+sec_index).find(".am2").hasClass('checkColumn')){
+                                    auto_am2=this.ampm_time_check(ap_split2,".am2",sec_index);   
+                                
+                                }
+                                if(jQuery("."+sec_index).find(".pm1").hasClass('checkColumn')){
+                                    auto_pm1=this.ampm_time_check(ap_split3,".pm1",sec_index);   
+                                
+                                }
+                                if(jQuery("."+sec_index).find(".pm2").hasClass('checkColumn') ){
+                                    auto_pm2=this.ampm_time_check(ap_split4,".pm2",sec_index); 
+                                
+                                } 
                        }
-
-                        if(jQuery("."+sec_index).find(".am1").hasClass('checkColumn')){
-                                auto_am1=this.ampm_time_check(ap_split1,".am1",sec_index);   
-                            
-                            }
-                            if(jQuery("."+sec_index).find(".am2").hasClass('checkColumn')){
-                                auto_am2=this.ampm_time_check(ap_split2,".am2",sec_index);   
-                            
-                            }
-                            if(jQuery("."+sec_index).find(".pm1").hasClass('checkColumn')){
-                                auto_pm1=this.ampm_time_check(ap_split3,".pm1",sec_index);   
-                            
-                            }
-                            if(jQuery("."+sec_index).find(".pm2").hasClass('checkColumn') ){
-                                auto_pm2=this.ampm_time_check(ap_split4,".pm2",sec_index); 
-                            
-                            }
-
                 }
                
                 if(day_leave==''){
-                // karanotokoro
+                // karanotokoro                 
                     if( auto_am1==undefined || auto_am2==undefined || auto_pm1==undefined || auto_pm2==undefined ){
-                            
+                               
                                 if(auto_am1==undefined ){
-                                    name=".am1";
-                            
-                                }else if(auto_am2==undefined ){
-                                    name=".am2";
-                            
-                                }else if(auto_pm1==undefined ){
-                                    name=".pm1";
-                                
-                                }else if(auto_pm2==undefined ){
-                                    name=".pm2";
-                                
+                                   let name1=".am1";
+                                   let split_ap1=jQuery("."+sec_index).find(name1).val()!=undefined?jQuery("."+sec_index).find(name1).val().split(":"):'';
+                                       auto_am1=this.split_amppm(split_ap1,name1);
                                 }
-                            
-                                let split_ap=jQuery("."+sec_index).find(name).val()!=undefined?jQuery("."+sec_index).find(name).val().split(":"):'';
-                                if(split_ap!=''){
-                                    let h1,m1='';
-                                
-                                    h1=split_ap[0]<10?"0"+parseInt(split_ap[0]):split_ap[0];
-                                    m1=split_ap[1]<10?"0"+parseInt(split_ap[1]):split_ap[1];
-                            
-                                
-                                    if( ((h1+":"+m1).search(/^\d{2}:\d{2}$/) != -1) &&
-                                        ((h1+":"+m1).substr(0,2) >= 0 && (h1+":"+m1).substr(0,2) <= 24) &&
-                                        ((h1+":"+m1).substr(3,2) >= 0 && (h1+":"+m1).substr(3,2) <= 59) ){
-                                            // auto_am1=[];auto_am2=[];auto_pm1=[];auto_pm2=[];
-                                        if(name==".am1"){
-                                            auto_am1=[];
-                                            
-                                            auto_am1[0]=h1;      //this.ampm_time_check(split_ap,"am1",sec_index);   
-                                            auto_am1[1]=m1;
-                                        }else if(name==".am2"){
-                                            auto_am2=[];
-                                        
-                                            auto_am2[0]=h1;           //this.ampm_time_check(split_ap,"am2",sec_index);   
-                                            auto_am2[1]=m1;  
-                                        }else if(name==".pm1"){
-                                                auto_pm1=[];
-                                        
-                                                auto_pm1[0]=h1;            //this.ampm_time_check(split_ap,"pm1",sec_index);  
-                                                auto_pm1[1]=m1;  
-                                        }else if(name==".pm2"){
-                                            auto_pm2=[];
-                                        
-                                                auto_pm2[0]=h1;            //this.ampm_time_check(split_ap,"pm2",sec_index);  
-                                                auto_pm2[1]=m1;  
-                                        }       
-                                    }
-                                }                 
-                    }
-                             
+                                if(auto_am2==undefined ){
+                                   let name2=".am2";
+                                   let split_ap2=jQuery("."+sec_index).find(name2).val()!=undefined?jQuery("."+sec_index).find(name2).val().split(":"):'';
+                                       auto_am2=this.split_amppm(split_ap2,name2);
+                                }
+                                if(auto_pm1==undefined ){
+                                  let name3=".pm1";
+                                  let split_ap3=jQuery("."+sec_index).find(name3).val()!=undefined?jQuery("."+sec_index).find(name3).val().split(":"):'';
+                                      auto_pm1=this.split_amppm(split_ap3,name3);
+                                }
+                                if(auto_pm2==undefined ){
+                                  let  name4=".pm2";
+                                  let split_ap4=jQuery("."+sec_index).find(name4).val()!=undefined?jQuery("."+sec_index).find(name4).val().split(":"):'';  
+                                      auto_pm2=this.split_amppm(split_ap4,name4);
+                                }
+                    }                          
                     let total_am=0;let total_pm=0; 
                     const {t_hr, t_min,late_coming,leaving_early}=this.totalHourCal(auto_am1,auto_am2,auto_pm1,auto_pm2,total_am,total_pm,t_am,p_am);               
               
@@ -1204,7 +1170,50 @@
                 }
             }
         },
-                
+            split_amppm(split_ap,name){
+                       if(split_ap!=''){
+                            let h1,m1='';
+                        
+                            h1=split_ap[0]<10?"0"+parseInt(split_ap[0]):split_ap[0];
+                            m1=split_ap[1]<10?"0"+parseInt(split_ap[1]):split_ap[1];
+                    
+                        
+                            if( ((h1+":"+m1).search(/^\d{2}:\d{2}$/) != -1) &&
+                                ((h1+":"+m1).substr(0,2) >= 0 && (h1+":"+m1).substr(0,2) <= 24) &&
+                                ((h1+":"+m1).substr(3,2) >= 0 && (h1+":"+m1).substr(3,2) <= 59) ){
+                                    // auto_am1=[];auto_am2=[];auto_pm1=[];auto_pm2=[];
+                                if(name==".am1"){
+                                   let auto_am1=[];
+                                    
+                                    auto_am1[0]=h1;      //this.ampm_time_check(split_ap,"am1",sec_index);   
+                                    auto_am1[1]=m1;
+                                    return auto_am1;
+                                }
+                                if(name==".am2"){
+                                   let auto_am2=[];
+                                
+                                    auto_am2[0]=h1;           //this.ampm_time_check(split_ap,"am2",sec_index);   
+                                    auto_am2[1]=m1;  
+                                    return auto_am2;
+                                }
+                                if(name==".pm1"){
+                                    let auto_pm1=[];
+                                
+                                    auto_pm1[0]=h1;            //this.ampm_time_check(split_ap,"pm1",sec_index);  
+                                    auto_pm1[1]=m1;  
+                                    return auto_pm1;                            
+                                }
+                                if(name==".pm2"){
+                                   let auto_pm2=[];
+                                
+                                    auto_pm2[0]=h1;            //this.ampm_time_check(split_ap,"pm2",sec_index);  
+                                    auto_pm2[1]=m1;  
+                                    return auto_pm2;
+                                }       
+                            }
+                        } 
+                        return '';
+            },  
             totalHourCal(auto_am1,auto_am2,auto_pm1,auto_pm2,total_am,total_pm,t_am,p_am){
 
                 let late_coming=0,leaving_early=0;
