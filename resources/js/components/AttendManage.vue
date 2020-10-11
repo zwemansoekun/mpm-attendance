@@ -13,7 +13,7 @@
             </div>
              <div class="row">
                  <span v-if="dataError" class="text-danger">
-                        CSV出力ため、データ作成にはデータエラーがあります。
+                      There is a data error in data creation. <!--  CSV出力ため、データ作成にはデータエラーがあります。-->
                     </span>
             </div>
         </div>   

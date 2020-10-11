@@ -3,19 +3,19 @@
             
         <div class="container">
             <div class="alert alert-success" role="alert" v-if="data_check_messg">
-                 <strong >データは成功しました。</strong> 
+                 <strong >Data is Successfully Saved!</strong> 
             </div>
             <!-- //form -->
             <form @submit.prevent="updateMoney">
             <table class="table table-bordered">
                 <tr class="d-flex">
-                    <td class="col-6">為替レートデフォルト値(JPN/MMK)</td>
+                    <td class="col-6">Exchange rate default value (JPN / MMK)</td><!--為替レートデフォルト値(JPN/MMK)-->
                     <td class="col-3">
                         <label class="text-danger" v-if="errorMoney">{{ errorMoney }}</label>
                         <input class="form-control" v-model.number="setting.money">
                     </td>
                     <td class="col-3 text-center">
-                        <button type="submit" class="btn btn-primary" onclick="this.blur();">編集</button>
+                        <button type="submit" class="btn btn-primary" onclick="this.blur();">Edit</button>
                     </td>
                 </tr>
             </table>
@@ -24,23 +24,23 @@
             <table class="table table-bordered">
 
                 <tr class="d-flex">
-                    <td class="col-6">AM遅刻許容時間デフォルト値（分)</td>
+                    <td class="col-6">AM late allowance time default value (minutes)</td><!--AM遅刻許容時間デフォルト値（分)-->
                      <td class="col-3">
                         <label class="text-danger" v-if="errorAm">{{ errorAm }}</label> 
                         <input type="text" class="form-control" v-model="setting.am">
                     </td>
                     <td class="col-3 text-center">
-                        <button class="btn btn-primary" @click="updateAm" onclick="this.blur();">編集</button>
+                        <button class="btn btn-primary" @click="updateAm" onclick="this.blur();">Edit</button>
                     </td>
                 </tr>
                 <tr class="d-flex">
-                    <td class="col-6">PM遅刻許容時間デフォルト値（分）</td>
+                    <td class="col-6">PM late allowance time default value (minutes)</td><!--PM遅刻許容時間デフォルト値（分）-->
                      <td class="col-3">
                          <label class="text-danger" v-if="errorPm">{{ errorPm }}</label>
                         <input type="text" class="form-control" v-model="setting.pm">
                     </td>
                     <td class="col-3 text-center">
-                        <button class="btn btn-primary" @click="updatePm" onclick="this.blur();">編集</button>
+                        <button class="btn btn-primary" @click="updatePm" onclick="this.blur();">Edit</button>
                     </td>
                 </tr>
                 
@@ -49,9 +49,9 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th scope="col">年月</th>
-                        <th scope="col">AM遅刻許容時間（分)</th>
-                        <th scope="col">PM遅刻許容時間（分）</th>
+                        <th scope="col">Year/Month</th><!--年月-->
+                        <th scope="col">AM late allowance time (minutes)</th><!-- AM遅刻許容時間（分)-->
+                        <th scope="col">PM late allowance time (minutes)</th><!-- PM遅刻許容時間（分）-->
                     </tr>
                 </thead>
                 <tbody>
@@ -67,7 +67,7 @@
                                 <div class="col">
                                     <input type="text" class="form-control" v-model="d.am">
                                 </div>
-                                <div class="col"><button class="btn btn-primary" @click="updateDelayAm(d.id ,d)" onclick="this.blur();">編集</button></div>
+                                <div class="col"><button class="btn btn-primary" @click="updateDelayAm(d.id ,d)" onclick="this.blur();">Edit</button></div>
                             </div>
                             
                         </td>
@@ -79,7 +79,7 @@
                                 <div class="col">
                                     <input type="text" class="form-control" v-model="d.pm">
                                 </div>
-                                <div class="col"><button class="btn btn-primary" @click="updateDelayPm(d.id ,d)" onclick="this.blur();">編集</button></div>
+                                <div class="col"><button class="btn btn-primary" @click="updateDelayPm(d.id ,d)" onclick="this.blur();">Edit</button></div>
                             </div>
                         </td>
                     </tr>
@@ -154,9 +154,9 @@
             updateMoney(){
                 this.errorMoney = null;
                 if(this.setting.money == 0){
-                   return this.errorMoney = '為替レートデフォルト値を入力してください。';
+                   return this.errorMoney = 'Please enter the Exchange rate default value.';//為替レートデフォルト値を入力してください。
                 }else if(!this.validateDecimal(this.setting.money) ){
-                    return this.errorMoney = '為替レートデフォルト値を数式で入力してください。';
+                    return this.errorMoney = 'Please Enter the exchange rate default value in the formula.';//為替レートデフォルト値を数式で入力してください。
                 }
 
                 let that=this;
@@ -181,9 +181,9 @@
             updateAm(){
                 this.errorAm = null;
                 if(this.setting.am == 0){
-                   return this.errorAm = 'AM遅刻許容時間デフォルト値を入力してください。';
+                   return this.errorAm = 'Please Enter the  AM Late Allowance Time default value.';//AM遅刻許容時間デフォルト値を入力してください。
                 }else if(!this.validateNumber(this.setting.am) ){
-                    return this.errorAm = 'AM遅刻許容時間デフォルト値を数式で入力してください。';
+                    return this.errorAm = 'Please Enter the  AM Late Allowance Time default value in the formula.';//AM遅刻許容時間デフォルト値を数式で入力してください。
                 }
 
                 let that=this;
@@ -208,9 +208,9 @@
             updatePm(){
                 this.errorPm = null;
                 if(this.setting.pm == 0){
-                    return this.errorPm = 'PM遅刻許容時間デフォルト値を入力してください。';
+                    return this.errorPm =  'Please Enter the  PM Late Allowance Time default value in the formula.'; //'PM遅刻許容時間デフォルト値を入力してください。';
                 }else if(!this.validateNumber(this.setting.pm) ){
-                    return this.errorPm = 'PM遅刻許容時間デフォルト値を数式で入力してください。';
+                    return this.errorPm =  'Please Enter the  PM Late Allowance Time default value in the formula.';//'PM遅刻許容時間デフォルト値を数式で入力してください。';
                 }
 
                 let that=this;
@@ -234,11 +234,11 @@
             },
             updateDelayAm(id , delayTime){
                 if(delayTime.am == 0){
-                    Vue.set(delayTime,"amDelayErrorMsg", "AM遅刻許容時間を入力してください。");
+                    Vue.set(delayTime,"amDelayErrorMsg", "Please enter the AM late allowance time.");//AM遅刻許容時間を入力してください。
                     Vue.set(delayTime,"amDelayError",true);
                     return ;
                 }else if(!this.validateNumber(delayTime.am) ){
-                    Vue.set(delayTime,"amDelayErrorMsg", "AM遅刻許容時間を数式で入力してください。");
+                    Vue.set(delayTime,"amDelayErrorMsg", "Please enter the AM late allowance time in the formula.");//AM遅刻許容時間を数式で入力してください。
                     Vue.set(delayTime,"amDelayError",true);
                     return ;
                 }
@@ -263,11 +263,11 @@
             },
             updateDelayPm(id , delayTime){
                  if(delayTime.pm == 0){
-                    Vue.set(delayTime,"pmDelayErrorMsg", "PM遅刻許容時間を入力してください。");
+                    Vue.set(delayTime,"pmDelayErrorMsg", "Please enter the PM late allowance time.");//PM遅刻許容時間を入力してください。
                     Vue.set(delayTime,"pmDelayError",true); 
                     return ;
                 }else if(!this.validateNumber(delayTime.pm) ){
-                    Vue.set(delayTime,"pmDelayErrorMsg", "PM遅刻許容時間を数式で入力してください。");
+                    Vue.set(delayTime,"pmDelayErrorMsg", "Please enter the PM late allowance time in the formula.");//PM遅刻許容時間を数式で入力してください。
                     Vue.set(delayTime,"pmDelayError",true);
                    return ;
                 }

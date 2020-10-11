@@ -11,15 +11,15 @@
             </div>
 
             <div class="alert alert-success mt-5" role="alert" v-if="data_check_messg">
-                 <strong >データは成功しました。</strong> 
+                 <strong >Data is Successfully Saved!</strong> 
             </div>
             <div class="row">
                 <div class="container-fluid">
                     <table class="table table-md table-bordered mt-5" v-if="formChange" style="width:85%;">
                         <thead>
                             <tr>
-                                <th scope="col" class="align-middle text-center" style="width: 25%;">年月</th>
-                                <th scope="col" class="align-middle text-center" style="width: 25%;">支給日</th>
+                                <th scope="col" class="align-middle text-center" style="width: 25%;">Year/Month</th><!--年月-->
+                                <th scope="col" class="align-middle text-center" style="width: 25%;">Payment date</th><!--支給日-->
                                 <th scope="col" class="align-middle text-center" style="width: 50%;">JPN/MMK</th>
                             </tr>
                         </thead>
@@ -39,10 +39,10 @@
                                         <div class="col-sm-3">
                                             <input type="text" class="form-control" v-model="d.money">
                                         </div>
-                                        <div class="col-sm-3"><button type="button" class="btn btn-primary" @click="updateDelayMoney(d.id ,d)" onclick="this.blur();">編集</button></div>                                   
+                                        <div class="col-sm-3"><button type="button" class="btn btn-primary" @click="updateDelayMoney(d.id ,d)" onclick="this.blur();">Edit</button></div>                                   
                                         <div class="col-sm-6">
                                             <input type="hidden" class="monthly" :value="`${d.month}`">
-                                            <button type="button" class="btn btn-primary"  style="font-size: 15px;" @click="eachEngineerCost($event)" onclick="this.blur();">エンジニアコスト一覧表</button>
+                                            <button type="button" class="btn btn-primary"  style="font-size: 15px;" @click="eachEngineerCost($event)" onclick="this.blur();">エンジニアコスト一覧表</button><!-- Engineer cost list -->
                                         </div>
                                     </div>
                                 </td>
@@ -58,21 +58,21 @@
         <div class="container-fluid" v-if="!formChange">
                 <div class="row" >
                     <div class="col-md-4 mt-4"> 
-                        <h4><strong>給与手当一覧　{{this.select_date}}分</strong></h4>      
+                        <h4><strong>Salary allowance list　{{this.select_date}}</strong></h4>       <!--給与手当一覧 ~~ 分--> 
                     </div>
                 </div>
                 <!-- <form id="form" class="" @submit.prevent="SalarySave"  autocomplete="on"> -->
                 <div class="row justify-content-md-center mt-4"> 
-                    <button type="button" @click="engineerCost" style="background-color:#E7E6E6" class="btn  mr-3" onclick="this.blur();">エンジニアコスト一覧表</button>
+                    <button type="button" @click="engineerCost" style="background-color:#E7E6E6" class="btn  mr-3" onclick="this.blur();">エンジニアコスト一覧表</button><!-- Engineer cost list -->
                       
                     <button data-toggle="modal" v-if="!payslipBtnDisable" data-target="#payslip" class="btn mr-3" style="background-color:#E7E6E6" onclick="this.blur();">
-                        給与明細作成
+                       Pay slip create <!-- 給与明細作成 -->
                     </button>
                     <button type="button" @click="errorAlet" v-if="payslipBtnDisable" class="btn mr-3" style="background-color:#E7E6E6" onclick="this.blur();">
-                        給与明細作成
+                        Pay slip create <!-- 給与明細作成 -->
                     </button>
                         
-                    <button type="submit" form="form" style="background-color:#E7E6E6" class="btn  mr-3" onclick="this.blur();">編集</button>
+                    <button type="submit" form="form" style="background-color:#E7E6E6" class="btn  mr-3" onclick="this.blur();">Edit</button>
 
                 </div>
                  <form id="form" class="" @submit.prevent="SalarySave"  autocomplete="on">
@@ -91,7 +91,7 @@
 
                 <div class="alert alert-danger" role="alert" v-if="data_check_messg1"  id="check-alert"   style="text-align: center">
                      <button type="button" class="close" data-dismiss="alert">x</button>
-                    <strong >データはありませんでした。</strong> 
+                    <strong >No data to display.</strong> <!--データはありませんでした。-->
                 </div>
             
                 <!-- Modal -->
@@ -106,10 +106,10 @@
                                                 <input class="align-middle text-center check-all" style="width:1.5em;height:1.5em;" type='checkbox' @click='checkAll()' v-model='isCheckAll'> 
                                             </th>
                                             <th class="align-middle text-center">
-                                                社員番号
+                                                Employee number
                                             </th>
                                             <th class="align-middle text-center">
-                                                名前
+                                                Name
                                             </th>                        
                                         </thead>    
                                         <tbody>             
@@ -130,8 +130,8 @@
                                     </table>   
 
                                     <footer class="col-sm-9 offset-sm-2 text-center mt-5">
-                                        <button type="button" @click="payslipSubmit" class="btn btn-primary">生成</button>
-                                        <button type="button" id="cancel" class="btn btn-secondary"  style="margin-left: 1em;margin-right: -5em;" data-dismiss="modal">キャンセル</button>
+                                        <button type="button" @click="payslipSubmit" class="btn btn-primary">Generate</button><!--生成 -->
+                                        <button type="button" id="cancel" class="btn btn-secondary"  style="margin-left: 1em;margin-right: -5em;" data-dismiss="modal">Cancel</button><!--キャンセル-->
                                         <!-- <button @click="dialogClose()" type="button" class="btn btn-secondary" style="margin-left: 2em;margin-right: -4em;">キャンセル</button> -->
                                     </footer>
                                  </div> 
@@ -151,58 +151,58 @@
                                             {{this.paymentDate(this.select_date,1)}}     
                                     </span>
                                     <span class="col-md-2 mt-4 table-borderless"> 
-                                            支給
+                                            payment
                                     </span>  
                                     <tr>
                                         <th  class="border-bottom-0">
                                         
                                         </th>
                                         <th rowspan="3"  class="align-middle text-center">
-                                            名前
+                                            Name
                                         </th>
                                         <th rowspan="3" class="align-middle text-center">
 
                                         </th>
                                         <th colspan="5"  style="background-color:#FBE5D6" class="align-middle text-center">
-                                            控除前
+                                          Before deduction <!-- 控除前 -->
                                         </th>
                                         <th colspan="3"   style="background-color:#D9D9D9" class="align-middle text-center">
-                                            控除額
+                                          Deduction amount<!--控除額-->
                                         </th>
                                         <th colspan="3"  style="background-color:#D9D9D9" class="align-middle text-center">
-                                            その他調整(控除の場合-)
+                                          Other adjustments (in case of deduction-)<!-- その他調整(控除の場合-) -->
                                         </th>
                                         <th rowspan="2" style="text-align: center;background-color:#DAE3F3"  class="align-middle text-center border-bottom-0">
-                                            支給額
+                                           <!-- 支給額 -->Payment amount
                                         </th>
                                     </tr>
                                     <tr>  
                                         <th   class="align-middle text-center border-bottom-0 border-top-0">
-                                            従業員番号
+                                          Employee number  <!-- 従業員番号 -->
                                         </th>
                                         <th  rowspan="2"  class="text-center align-middle"  style="background-color:#FBE5D6;">
-                                            基本給
+                                          Basic salary<!--  基本給-->
                                         </th>
                                         <th   rowspan="2" class="text-center align-middle"  style="background-color:#FBE5D6;">
-                                            通勤交通費
+                                            Commuting expenses<!--通勤交通費-->
                                         </th>
                                         <th   rowspan="2" class="text-center align-middle"  style="background-color:#FBE5D6;">
                                             JLPT
                                         </th>
                                         <th  rowspan="2" class="text-center align-middle"  style="background-color:#FBE5D6;">
-                                            ボーナス
+                                           Bonus<!-- ボーナス-->
                                         </th>
                                         <th   rowspan="2" class="text-center align-middle"  style="background-color:#FBE5D6;">
-                                            合計
+                                           Total<!--合計-->
                                         </th>
                                         <th   rowspan="2" class="text-center align-middle" style="background-color:#D9D9D9;">
-                                            所得税
+                                           Income tax <!-- 所得税 -->
                                         </th>
                                         <th   rowspan="2" class="text-center align-middle" style="background-color:#D9D9D9;">
                                             SSB
                                         </th>
                                         <th   rowspan="2" class="text-center align-middle" style="background-color:#D9D9D9;">
-                                            遅刻欠勤早退
+                                            Late absent early leave<!--遅刻欠勤早退-->
                                         </th> 
                                         <th  rowspan="2" class="text-center" style="background-color:#D9D9D9;">
 
@@ -228,7 +228,7 @@
                                                     <tr v-bind:key="key">
                                                         <td rowspan="2"  class="text-center align-middle">{{emp_arr[salaries[key].emp_id]}}</td>
                                                         <td rowspan="2" class="text-center align-middle">{{name_arr[salaries[key].emp_id]}}<div>({{salaries[key].kana_name}})</div></td>
-                                                        <td style="background-color:#D9D9D9" class="text-center align-middle">計算値</td>
+                                                        <td style="background-color:#D9D9D9" class="text-center align-middle">Calculate value</td><!--計算値-->
                                                         <td style="background-color:#D9D9D9" class="text-right align-middle income1">{{Math.trunc(salaries[key].salary_amount).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")}}</td>
                                                         <td style="background-color:#D9D9D9" class="text-right align-middle trans_money1">{{(salaries[key].trans_money).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")}}</td>
                                                         <td style="background-color:#D9D9D9" class="text-right align-middle jlpt1">{{(salaries[key].jlpt).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")}}</td>
@@ -249,17 +249,17 @@
                                                         </td>
                                                     </tr>
                                                     <tr v-bind:key="'A'+key" :class="`index_${key}`">
-                                                        <td class="text-center align-middle">実際 
+                                                        <td class="text-center align-middle">Actual  <!--実際-->
                                                             <input name="pay_month[]"  class="pay_month" style="text-align:right;width:100px;" type="hidden" :value="`${year}/${month}`">
                                                             <input name="employee_id[]"  class="employee_id" style="text-align:right;width:100px;" type="hidden" :value="`${salaries[key].emp_id}`">
                                                         </td>
                                                         <template v-if="get_salary_data.length==0">
                                                             <td class="text-right align-middle" style="padding: 0px;">
                                                                 <!-- @value="`${old(income)}`" -->
-                                                            <input name="income[]" @change="updateInput" class="income" style="text-align:right;width:100px;padding-right: 3px;" type="text"  :value="`${salaries[key]}`!=undefined?Math.trunc(salaries[key].salary_amount).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,'):'' ">
+                                                            <input name="income[]" @change="updateInput" class="income" style="text-align:right;padding-right: 3px;" type="text"  :value="`${salaries[key]}`!=undefined?Math.trunc(salaries[key].salary_amount).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,'):'' ">
                                                             </td>
                                                             <td class="text-right align-middle" style="padding: 0px;">
-                                                                <input name="trans_money[]" @change="updateInput" class="trans_money" style="text-align:right;width:100px;padding-right: 3px;" type="text" :value="`${salaries[key]}`!=undefined?(salaries[key].trans_money).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,'):'' ">
+                                                                <input name="trans_money[]" @change="updateInput" class="trans_money" style="text-align:right;padding-right: 3px;" type="text" :value="`${salaries[key]}`!=undefined?(salaries[key].trans_money).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,'):'' ">
                                                             </td>
                                                             <td class="text-right align-middle" style="padding: 0px;">
                                                                 <input name="jlpt[]"  @change="updateInput" class="jlpt" style="text-align:right;width:100px;padding-right: 3px;" type="text" :value="`${salaries[key]}`!=undefined?(salaries[key].jlpt).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,'):'' ">
@@ -283,7 +283,7 @@
                                                                 ">
                                                             </td>
                                                             <td class="text-right align-middle" style="padding: 0px;">
-                                                                <input name="leave_late[]" @change="updateInput" class="leave_late" style="text-align:right;width:100px;padding-right: 3px;" type="text" :value="`${salaries[key].late_leave_money!=(undefined || 0)?(salaries[key].late_leave_money).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,'):''}`">
+                                                                <input name="leave_late[]" @change="updateInput" class="leave_late" style="text-align:right;padding-right: 3px;" type="text" :value="`${salaries[key].late_leave_money!=(undefined || 0)?(salaries[key].late_leave_money).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,'):''}`">
                                                             </td>
 
                                                             <td class="text-right align-middle" style="padding: 0px;">
@@ -306,10 +306,10 @@
                                                                                                                     
                                                                 <td class="text-right align-middle" style="padding: 0px;">
                                                                 <input name="id[]" class="form-control input-sm idx1" style="text-align: center;" type="hidden" :value="`${get_salary_data[key]}`!=undefined?get_salary_data[key].id:'' ">   
-                                                                <input name="income[]" @change="updateInput" class="income" :style="`background-color:${checkBgColor(get_salary_data[key].income,salaries[key].salary_amount)};text-align:right;width:100px;padding-right: 3px;`" type="text" :value="`${get_salary_data[key]}`!=undefined?Math.trunc(get_salary_data[key].income).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,') :'' ">
+                                                                <input name="income[]" @change="updateInput" class="income" :style="`background-color:${checkBgColor(get_salary_data[key].income,salaries[key].salary_amount)};text-align:right;padding-right: 3px;`" type="text" :value="`${get_salary_data[key]}`!=undefined?Math.trunc(get_salary_data[key].income).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,') :'' ">
                                                             </td>
                                                             <td class="text-right align-middle" style="padding: 0px;">
-                                                                <input name="trans_money[]" @change="updateInput" class="trans_money" :style="`background-color:${checkBgColor(get_salary_data[key].trans_money,salaries[key].trans_money)};text-align:right;width:100px;padding-right: 3px;`" type="text" :value="`${get_salary_data[key]}`!=undefined?Math.trunc(get_salary_data[key].trans_money).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,'):'' ">
+                                                                <input name="trans_money[]" @change="updateInput" class="trans_money" :style="`background-color:${checkBgColor(get_salary_data[key].trans_money,salaries[key].trans_money)};text-align:right;padding-right: 3px;`" type="text" :value="`${get_salary_data[key]}`!=undefined?Math.trunc(get_salary_data[key].trans_money).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,'):'' ">
                                                             </td>
                                                             <td class="text-right align-middle" style="padding: 0px;">
                                                                 <input name="jlpt[]"  @change="updateInput" class="jlpt" :style="`background-color:${checkBgColor(get_salary_data[key].jlpt,salaries[key].jlpt)};text-align:right;width:100px;padding-right: 3px;`" type="text" :value="`${get_salary_data[key]}`!=undefined?Math.trunc(get_salary_data[key].jlpt).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,'):'' ">
@@ -330,7 +330,7 @@
                                                                 <input name="ssb[]" @change="updateInput" class="ssb" style="text-align:right;width:100px;padding-right: 3px;" type="text" :value="`${get_salary_data[key]}`!=undefined?Math.trunc(get_salary_data[key].ssb).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,'):'' ">
                                                             </td>
                                                             <td class="text-right align-middle" style="padding: 0px;">
-                                                                <input name="leave_late[]" @change="updateInput" class="leave_late" style="text-align:right;width:100px;padding-right: 3px;" type="text" :value="`${get_salary_data[key]}`!=undefined?Math.trunc(get_salary_data[key].leave_late).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,'):'' ">
+                                                                <input name="leave_late[]" @change="updateInput" class="leave_late" style="text-align:right;padding-right: 3px;" type="text" :value="`${get_salary_data[key]}`!=undefined?Math.trunc(get_salary_data[key].leave_late).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,'):'' ">
                                                             </td>
 
                                                             <td class="text-right align-middle" style="padding: 0px;">
@@ -366,15 +366,15 @@
                                                 SSB
                                         </th>
                                         <th  rowspan="3" class="align-middle text-center">
-                                                備考
+                                              Remarks<!--  備考 -->
                                         </th>
                                     </tr>
                                     <tr>
                                         <th rowspan="2" class="align-middle text-center" style="text-align: center;">
-                                                総額
+                                                Amount<!--総額-->
                                         </th>
                                         <th   class="align-middle text-center border-bottom-0" style="background-color:yellow">
-                                                会社負担分
+                                                Company's Charge<!--会社負担分-->
                                         </th>
                                     </tr>
                                     <tr>
@@ -406,7 +406,7 @@
                                                             <input name="ssb_total[]" @change="ssbCalc" class="ssb_total" style="text-align:right;width:100%;" type="text" :value="`${SsbPaid.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,')}`">
                                                     </td>
                                                     <td style="padding: 0px;width: 30%;text-align: right;height: 10%;">
-                                                            <input name="ssb_c_paid[]" @change="ssbCalc"  class="ssb_c_paid" :style="`background-color:${checkBgColor(SsbPaid,(SsbMax*(5-salaries[key-1].ssb)/100))};text-align:right;width:100px;`"  type="text" :value="`${(SsbMax*(5-salaries[key-1].ssb)/100).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,')}`">
+                                                            <input name="ssb_c_paid[]" @change="ssbCalc"  class="ssb_c_paid" :style="`background-color:${checkBgColor(SsbPaid,(SsbMax*(5-salaries[key-1].ssb)/100))};text-align:right;`"  type="text" :value="`${(SsbMax*(5-salaries[key-1].ssb)/100).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,')}`">
                                                     </td>
                                                 </tr>     
                                             </template>
@@ -417,7 +417,7 @@
                                                             <input name="ssb_total[]" @change="ssbCalc" class="ssb_total" :style="`background-color:${checkBgColor(get_salary_data[key-1].ssbval.total_amount,SsbPaid)};text-align:right;width:100px;`"  type="text" :value="`${get_salary_data[key-1].ssbval}`!=undefined?Math.trunc(get_salary_data[key-1].ssbval.total_amount).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,'):'' ">
                                                     </td>
                                                     <td style="padding: 0px;width: 30%;text-align: right;height: 10%;">                                             
-                                                            <input name="ssb_c_paid[]" @change="ssbCalc"  class="ssb_c_paid" :style="`background-color:${checkBgColor(get_salary_data[key-1].ssbval.c_paid,SsbPaid)};text-align:right;width:100px;`"  type="text" :value="`${get_salary_data[key-1].ssbval}`!=undefined?Math.trunc(get_salary_data[key-1].ssbval.c_paid).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,'):'' ">
+                                                            <input name="ssb_c_paid[]" @change="ssbCalc"  class="ssb_c_paid" :style="`background-color:${checkBgColor(get_salary_data[key-1].ssbval.c_paid,SsbPaid)};text-align:right;`"  type="text" :value="`${get_salary_data[key-1].ssbval}`!=undefined?Math.trunc(get_salary_data[key-1].ssbval.c_paid).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,'):'' ">
                                                     </td>
                                                 </tr>     
                                             </template>
@@ -547,8 +547,8 @@
             errorAlet:function(){
                 let that=this;
                 that.$fire({
-                                title: "失敗！！",
-                                text: "データはありませんでした。",
+                                title: "Fail！！",
+                                text: "No data to display.",//データはありませんでした。
                                 type: "error",
                                 timer: 3500,
                                 showCancelButton: false,
@@ -556,12 +556,13 @@
                                 }).then(r => {                             
                                 }); 
             },
-            eachEngineerCost:function(){
+            eachEngineerCost:function(event){
                 this.select_date='';
-                let monthly=jQuery(event.target).closest('div').find('.monthly').val();              
-                this.engineerCost(monthly);
+                let monthly=jQuery(event.target).closest('div').find('.monthly').val();                            
+                this.engineerCost(event,monthly);
             },  
-            engineerCost:function(event,monthly=''){
+            engineerCost:function(event,monthly=''){    
+                alert(event);  alert(monthly);
                     let that=this;
                     let eachmonth='',eachyear='',splitdate='';
                     if(monthly!=''){                
@@ -587,8 +588,8 @@
                             link.click()
                         }else{
                                 that.$fire({
-                                title: "失敗！！",
-                                text: "データはありませんでした。",
+                                title: "Fail！！",
+                                text: "No data to display.",//データはありませんでした。
                                 type: "error",
                                 timer: 3500,
                                 showCancelButton: false,
@@ -655,11 +656,11 @@
             },
             updateDelayMoney(id , delayTime){
                 if(delayTime.money == 0){
-                    Vue.set(delayTime,"moneyDelayErrorMsg", "JPN/MMKを入力してください。");
+                    Vue.set(delayTime,"moneyDelayErrorMsg", "Please enter JPN / MMK.");//JPN/MMKを入力してください。
                     Vue.set(delayTime,"moneyDelayError",true);
                     return ;
                 }else if(!this.validateDecimal(delayTime.money) ){
-                    Vue.set(delayTime,"moneyDelayErrorMsg", "JPN/MMKを数式で入力してください。");
+                    Vue.set(delayTime,"moneyDelayErrorMsg", "Please enter JPN / MMK as a formula.");//JPN/MMKを数式で入力してください。
                     Vue.set(delayTime,"moneyDelayError",true);
                     return ;
                 }
@@ -901,8 +902,8 @@
 
                 }else{
                      that.$fire({
-                        title: "失敗！！",
-                        text: "データを記入してください。",
+                        title: "Fail！！",
+                        text: "Please fill in the data.",//データを記入してください。
                         type: "warning",
                         timer: 3000,
                         showCancelButton: false,
@@ -927,8 +928,8 @@
                                 that.get_salary_data=[];                            
                                 that.update_call();  
                                 that.$fire({
-                                    title: "成功しました",
-                                    text: "データの登録は成功しました。",
+                                    title: "Success",
+                                    text: "Data registration is successfully saved.",
                                     type: "success",
                                     timer: 3000,
                                     showCancelButton: false,
@@ -938,8 +939,8 @@
                                 });
                             }else{
                                 that.$fire({
-                                title: "失敗！！",
-                                text: "データの登録は出来ません。",
+                                title: "Fail！！",
+                                text: "Data cannot be registered.",
                                 type: "error",
                                 timer: 1500,
                                 showCancelButton: false,
@@ -962,7 +963,7 @@
 
                    
                         that.$swal({
-                        title: 'お待ちください!',
+                        title: 'Please wait!',
                         // add a custom html tags by defining a html method.
                         html: 'Loading......',
                         // timer: 3000,
