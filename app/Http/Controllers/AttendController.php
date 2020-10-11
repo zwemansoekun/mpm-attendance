@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\AttendDetail;
+use App\Api_Employees;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\AttendForMonthExport;
@@ -41,7 +42,7 @@ class AttendController extends Controller
                     ],[
                         'date.required'=> '日付は必要です。', // custom message
                         'date.date_format'=> '日付の形式をチェックして下さい！', 
-                        'total_hours.numeric'=> '合計時間をチェックして下さい！', 
+                        'total_hours.numeric'=> 'Check the total time!', //合計時間をチェックして下さい！
                         'am1.date_format'=> 'AM1をチェックして下さい！',
                         'am2.date_format'=> 'AM2をチェックして下さい！',
                         'pm1.date_format'=> 'PM1をチェックして下さい！',
@@ -117,7 +118,9 @@ class AttendController extends Controller
      */
 
     public function csvOutput($employee,$date)
-    {        
-        return Excel::download(new AttendForMonthExport($employee,$date), '出勤簿生成.xlsx');     
+    {   
+     
+        $name=Api_Employees::select('name')->where('id',substr($employee,0,1))->firstOrFail();    //testing code  
+        return Excel::download(new AttendForMonthExport($employee,$date), $name->name."_".$date."_出勤簿生成.xlsx"); //   Attendance_book_generation 
     }
 }

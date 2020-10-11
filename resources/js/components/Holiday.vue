@@ -27,7 +27,7 @@
                 </div>
                 <div class="col-md-4 mt-3">
                     <button type="button" class="btn btn-primary" :disabled="!btnDelete" 
-                        @click="deleteRow(deleteItems,customFormatter(customDate))">削除</button>
+                        @click="deleteRow(deleteItems,customFormatter(customDate))">Delete</button><!--削除-->
                 </div>
             </div> 
             
@@ -35,8 +35,8 @@
                 <thead>
                     <tr>
                         <th scope="col" style="width: 10%;"></th>
-                        <th scope="col" style="width: 40%;">date</th>
-                        <th scope="col" style="width: 50%;">description</th>
+                        <th scope="col" style="width: 40%;">Date</th>
+                        <th scope="col" style="width: 50%;">Description</th>
                     </tr>
                 </thead>
                 <tbody v-sortable.tr="holidays" v-if="isRowOne">
@@ -45,17 +45,17 @@
                             <input type="checkbox" @click="select_all_via_check_box(holiday.id)" v-model="holiday.selected">
                         </td>
                         <td>
-                            <span v-if="holiday.dtError" class="text-danger">日付を入力してください</span>
-                            <span v-if="holiday.dtDuplicateError" class="text-danger">日付は重複しています</span>
+                            <span v-if="holiday.dtError" class="text-danger">Please enter the date</span><!--日付を入力してください-->
+                            <span v-if="holiday.dtDuplicateError" class="text-danger">Duplicate dates</span><!--日付は重複しています -->
                             <span v-if="holiday.yearError" class="text-danger">
-                                {{customFormatter(customDate)}}の休日を入力してください
+                                {{customFormatter(customDate)}} Please enter your holiday <!--の休日を入力してください-->
                             </span>
                             <datepicker class="datepicker1" :minimumView="'day'" :maximumView="'month'" v-model="holiday.date" 
                                 :format="dayMonthFormatter" :typeable="true"></datepicker>
                         </td>
                         <td>
-                            <span v-if="holiday.desError" class="text-danger">名称を入力してください</span>
-                            <span v-if="holiday.desDuplicateError" class="text-danger">名称は重複しています</span>
+                            <span v-if="holiday.desError" class="text-danger">Please enter a name</span><!--名称を入力してください-->
+                            <span v-if="holiday.desDuplicateError" class="text-danger">The name is duplicated</span><!--名称は重複しています-->
                             <input class="form-control" v-model="holiday.description" type="text"/>
                         </td>
                     </tr>
@@ -101,7 +101,7 @@ var moment = require('moment');
         data: function () {
             
             return {
-                customDate: new Date(),holidays: [],seen: true, btnText: {text:'編集'},
+                customDate: new Date(),holidays: [],seen: true, btnText: {text:'Edit'},//編集
                 isBtnHidden:false, isRowOne:true, isRowTwo: false, btnEnabled:true,
                 btnDelete:false, deleteItems: []
                
@@ -122,10 +122,10 @@ var moment = require('moment');
             },
             addRow: function (holidays) {
                 try {                                         
-                    if(this.$refs.btnToggle.innerText !=='保存'){
+                    if(this.$refs.btnToggle.innerText !=='Save'){//保存
                         this.holidays.splice(holidays.length + 1, 0, {});
                         this.seen =  !this.seen;
-                        this.$refs.btnToggle.innerText = this.show?'編集': '保存';
+                        this.$refs.btnToggle.innerText = this.show?'Edit': 'Save';//保存
                     }else{
                         for(let i=0; i <this.holidays.length; i++){
                             Vue.set(holidays[i],"dtDuplicateError",false);
@@ -171,7 +171,7 @@ var moment = require('moment');
                         this.axios
                         .post(process.env.MIX_APP_URL+'/api/holidays', Object.values(this.holidays))
                         .then(response => (
-                            this.$refs.btnToggle.innerText = '編集',
+                            this.$refs.btnToggle.innerText = 'Edit',
                             this.holidays =[],
                             this.axios
                                 .get(process.env.MIX_APP_URL+'/api/holidays/findYear/'+ moment(this.customDate).format("yyyy"))
@@ -202,7 +202,7 @@ var moment = require('moment');
                     .then(response => {
                         this.holidays = response.data;
                        if(moment(this.customDate).format("yyyy") !== moment(new Date()).format("yyyy")){
-                            this.$refs.btnToggle.innerText = '編集';
+                            this.$refs.btnToggle.innerText = 'Edit';
                             this.isBtnHidden = true;
                             if(this.holidays.length != 0){
                                 this.isRowOne = true;
@@ -253,7 +253,7 @@ var moment = require('moment');
             loadingAlert:function(){
                   let that=this;
                    that.$swal({
-                        title: 'お待ちください!',
+                        title: 'Please wait!',
                         // add a custom html tags by defining a html method.
                         html: 'Loading......',
                          timer: 60,

@@ -31,26 +31,26 @@
 
         <div class="alert alert-danger" role="alert" v-if="data_check_messg"  id="check-alert"   style="text-align: center">
                 <button type="button" class="close" data-dismiss="alert">x</button>
-                <strong >データはありませんでした。</strong> 
+                <strong >No data to display.</strong> <!--データはありませんでした。-->
         </div>
 
         <div class="container-fluid mt-5" v-if="form_open">
             <table class="table table-borderless">
                 <tr>
                     <td class="bg-danger"></td>
-                    <td>遅刻・早退</td>
+                    <td>Late / early leave</td> <!-- 遅刻・早退-->
                 </tr>
                 <tr>
                     <td class="bg-warning"></td>
-                    <td>遅刻(許容範囲か要確認)</td>
+                    <td>Late (check if it is acceptable)</td><!-- 遅刻(許容範囲か要確認) -->
                 </tr>
                 <tr>
                     <td style="background-color:#FBE5D6"></td>
-                    <td>打刻なし</td>
+                    <td>No stamp</td><!-- 打刻なし-->
                 </tr>
                 <tr>
                     <td class="table-success"></td>
-                    <td>休日</td>
+                    <td>holiday</td><!--休日 -->
                 </tr>
             </table>
         </div>
@@ -59,20 +59,20 @@
                             
             <div class="row">
                 <div class="col-md-4">
-                    <button type="button" class="btn" style="background-color:#E7E6E6" onclick="this.blur();" @click="csvOutput(select_employee,select_date)">出勤簿生成</button>
+                    <button type="button" class="btn" style="background-color:#E7E6E6" onclick="this.blur();" @click="csvOutput(select_employee,select_date)">出勤簿生成</button><!--Attendance book generation-->
                 </div>
                 <div class="col-md-4 offset-md-2">
-                    <button type="button" class="btn" style="width: 220px;background-color:#E7E6E6;" onclick="this.blur();" @click="allButtonClick()">全て自動計算</button>
+                    <button type="button" class="btn" style="width: 220px;background-color:#E7E6E6;" onclick="this.blur();" @click="allButtonClick()">All automatic calculation</button><!--全て自動計算-->
                 </div> 
             </div>                 
                 <form id="form" class="" @submit.prevent="attendSave"  autocomplete="on">
                     <div class="row mt-3">
                         <div class="col-md-4">
                             <input name="emp_no" ref="myButton" class="form-control input-sm date" style="text-align: center;" type="hidden" :value="`${emp_no}`">
-                            <button type="submit" class="btn btn-primary" onclick="this.blur();" >登録</button>
+                            <button type="submit" class="btn btn-primary" onclick="this.blur();" >Register</button><!--登録-->
                         </div>
                         <div class="col-md-4 offset-md-2">
-                            <button type="button" class="btn" onclick="this.blur();" @click="filterInput()" style="width: 220px;color: red;background-color:#E7E6E6">空のところだけ自動計算</button>
+                            <button type="button" class="btn" onclick="this.blur();" @click="filterInput()" style="width: 220px;color: red;background-color:#E7E6E6">Automatic calculation only in the empty</button><!--空のところだけ自動計算-->
                         </div>
                     </div>
              
@@ -191,7 +191,7 @@
                                                         </td>
                                                         <td v-bind:key="'G'+key"  style="padding: 0px;text-align: center;" >
                                                             <input name="id[]" class="form-control input-sm idx" style="text-align: center;" type="hidden" :value="`${date.id?date.id:''}`">
-                                                            <button type="button" onclick="this.blur();" :id="`autobut${dayindex}`" class="btn" style="background-color:#E7E6E6"  @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">自動計算</button>
+                                                            <button type="button" onclick="this.blur();" :id="`autobut${dayindex}`" class="btn" style="background-color:#E7E6E6"  @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">Auto calculate</button><!--自動計算-->
                                                         </td>
                                                     </template>
                                                     <template v-else>
@@ -267,7 +267,7 @@
                                                                 </td>
                                                                 <td v-bind:key="'G'+key"  style="padding: 0px;text-align: center;">
                                                                     <input name="id[]" class="form-control input-sm idx" style="text-align: center;" type="hidden" :value="`${date.id?date.id:''}`">
-                                                                    <button type="button" onclick="this.blur();" :id="`autobut${dayindex}`" class="btn" style="background-color:#E7E6E6"  @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">自動計算</button>
+                                                                    <button type="button" onclick="this.blur();" :id="`autobut${dayindex}`" class="btn" style="background-color:#E7E6E6"  @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">Auto calculate</button>
                                                                 </td>
                                                             
                                                             </template>
@@ -334,7 +334,7 @@
                                                                         </td>
                                                                         <td v-bind:key="'G'+key"  style="padding: 0px;text-align: center;">
                                                                             <!-- <input name="id[]" class="form-control input-sm idx" style="text-align: center;" type="hidden" :value="`${date.id?date.id:''}`"> -->
-                                                                            <button type="button" onclick="this.blur();" :id="`autobut${dayindex}`" class="btn" style="background-color:#E7E6E6"  @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">自動計算</button>
+                                                                            <button type="button" onclick="this.blur();" :id="`autobut${dayindex}`" class="btn" style="background-color:#E7E6E6"  @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">Auto calculate</button>
                                                                         </td>
                                                                     </template> 
                                                     </template>                                                
@@ -374,7 +374,7 @@
                                                         </td>
                                                         <td style="padding: 0px;text-align: center;">
                                                                     <input name="id[]" class="form-control input-sm idx" style="text-align: center;" type="hidden" >
-                                                                    <button type="button" onclick="this.blur();" :id="`autobut${dayindex}`" class="btn" style="background-color:#E7E6E6"  @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">自動計算</button>
+                                                                    <button type="button" onclick="this.blur();" :id="`autobut${dayindex}`" class="btn" style="background-color:#E7E6E6"  @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">Auto calculate</button>
                                                         </td>  
                                                </template>                                   
                                     </tr>  
@@ -483,7 +483,7 @@
             loadingAlert:function(){
                   let that=this;
                    that.$swal({
-                        title: 'お待ちください!',
+                        title: 'Please wait!',
                         // add a custom html tags by defining a html method.
                         html: 'Loading......',
                          timer: 300000,
@@ -628,8 +628,8 @@
                                   those.data_combine=[];
                                   those.update_call();  
                                     those.$fire({
-                                    title: "成功しました",
-                                    text: "データの登録は成功しました。",
+                                    title: "Success",
+                                    text: "Data registration is successfully saved.",
                                     type: "success",
                                     timer: 300000,
                                     showCancelButton: false,
@@ -640,8 +640,8 @@
                             }else{
                                 those.$swal.close();
                                 those.$fire({
-                                title: "失敗！！",
-                                text: "データの登録は出来ません。",
+                                title: "Fail！！",
+                                text: "Data cannot be registered.",
                                 type: "error",
                                 timer: 1500,
                                 showCancelButton: false,
@@ -659,8 +659,8 @@
                 }else{
                   
                      those.$fire({
-                        title: "失敗！！",
-                        text: "データを記入してください。",
+                        title: "Fail！！",
+                        text: "Please fill in the data.",
                         type: "warning",
                         timer: 3000,
                         showCancelButton: false,
@@ -755,7 +755,7 @@
                         },
                         items: {
                             "o": {name: "paid", icon: "fa-circle"},
-                            "-": {name: "leave", icon: "fa-window-minimize"},
+                            "-": {name: "absent", icon: "fa-window-minimize"},
                         }
                     });
                 });
@@ -1310,8 +1310,8 @@
 
                         }else{
                                 that.$fire({
-                                title: "失敗！！",
-                                text: "データはありませんでした。",
+                                title: "Fail！！",
+                                text: "No data to display.",//データはありませんでした。
                                 type: "error",
                                 timer: 3500,
                                 showCancelButton: false,

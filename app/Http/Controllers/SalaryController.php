@@ -54,19 +54,19 @@ class SalaryController extends Controller
                         'leave_late'=>'numeric|nullable',
                         'employee_id'=>'required|numeric',
                 ],[
-                        'income.required'=> '基本給は必要です。', // custom message
-                        'income.numeric'=> '基本給をチェックして下さい！',
-                        'total_salary.required'=> '合計は必要です。',
-                        'total_salary.numeric'=> '合計をチェックして下さい！',
-                        'trans_money.numeric'=> '通勤交通費をチェックして下さい！', 
-                        'jlpt.numeric'=> 'JLPTをチェックして下さい！',
-                        'bonus.numeric'=> 'ボーナスをチェックして下さい！',
-                        'payment_amount.required'=> '支給額は必要です。',
-                        'payment_amount.numeric'=> '支給額をチェックして下さい！',
-                        'income_tax.required'=> '所得税は必要です。',
-                        'income_tax.numeric'=> '所得税をチェックして下さい！',
-                        'ssb.numeric'=> 'SSBをチェックして下さい！',
-                        'leave_late.numeric'=> '遅刻欠勤早退をチェックして下さい！',
+                        'income.required'=> 'Basic salary is required.', // custom message  基本給は必要です。
+                        'income.numeric'=> 'Check your basic salary!',//基本給をチェックして下さい！
+                        'total_salary.required'=> 'total is required.',//合計は必要です。
+                        'total_salary.numeric'=> 'Check the total!',//合計をチェックして下さい！
+                        'trans_money.numeric'=> 'Check your commuting costs!', //通勤交通費をチェックして下さい！
+                        'jlpt.numeric'=> 'Check out the JLPT!',//JLPTをチェックして下さい！
+                        'bonus.numeric'=> 'Check out the bonus!',//ボーナスをチェックして下さい！
+                        'payment_amount.required'=> 'Payment amount is required.',//支給額は必要です。
+                        'payment_amount.numeric'=> 'Check the amount paid!',//支給額をチェックして下さい！
+                        'income_tax.required'=> 'Income tax is required.',//所得税は必要です。
+                        'income_tax.numeric'=> 'Check your income tax!',//所得税をチェックして下さい！
+                        'ssb.numeric'=> 'Check out SSB!',//SSBをチェックして下さい！
+                        'leave_late.numeric'=> 'Check for late absences and early departures!',//遅刻欠勤早退をチェックして下さい！
                 ]);
                 if ($validator->fails()) {
                     return ['errors' => $validator->errors()->all()];                               
@@ -85,10 +85,10 @@ class SalaryController extends Controller
                         'c_paid' => 'required|numeric',
                         'remark'=> 'nullable',
                 ],[
-                        'total_amount.required'=> '総額は必要です。', // custom message
-                        'total_amount.numeric'=> '総額をチェックして下さい！', 
-                        'c_paid.required'=> '会社負担分は必要です。', 
-                        'c_paid.numeric'=> '会社負担分をチェックして下さい！', 
+                        'total_amount.required'=> 'The total amount is required.', // custom message 総額は必要です。
+                        'total_amount.numeric'=> 'Check the total amount!', //総額をチェックして下さい！
+                        'c_paid.required'=> 'The company\'s charge is required.', //会社負担分は必要です。
+                        'c_paid.numeric'=> 'Please check the company\'s charge!', //会社負担分をチェックして下さい！
                 ]);
                 if ($validator->fails()) {
                     return ['errors' => $validator->errors()->all()];                               
@@ -234,7 +234,7 @@ class SalaryController extends Controller
               
          if($yearMonth){    
             libxml_use_internal_errors(true);      
-            return (new EngineerExport($yearMonth))->download('海外エンジニアコスト一覧表_'.$yearmonth.'.xlsx');
+            return (new EngineerExport($yearMonth))->download('海外エンジニアコスト一覧表_'.$yearmonth.'.xlsx');//  Overseas engineer cost list
          }        
    
     }

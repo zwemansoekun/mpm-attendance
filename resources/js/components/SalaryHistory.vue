@@ -16,7 +16,7 @@
                     <label>{{emp_no}}  {{emp_name}}</label>
                 </div>
                 <div class="col-md-4">
-                    <button type="button" class="btn btn-primary float-right" @click="showHistory">閲覧履歴</button>
+                    <button type="button" class="btn btn-primary float-right" @click="showHistory">Inspect history</button><!--閲覧履歴-->
                 </div>
             </div>
 
@@ -24,15 +24,15 @@
                 <div class="col-md-8">
                     <table class="table table-bordered">
                         <tr>
-                            <td>名前(フリガナ)</td>
+                            <td>Name:(Furigana)</td><!-- 名前(フリガナ) -->
                             <td style="width: 250px;"><span>{{empData.kana_name}}</span></td>
                         </tr>
                         <tr>
-                            <td>入社日</td>
+                            <td>Entry Date</td><!--入社日-->
                             <td><span v-if="empData.entry_date">{{ customFormatter(empData.entry_date) }}</span></td>
                         </tr>
                         <tr>
-                            <td>生年月日</td>
+                            <td>Birthday</td><!--生年月日-->
                             <td><span v-if="empData.dob">{{ customFormatter(empData.dob) }}</span></td>
                         </tr>
                     </table>
@@ -43,12 +43,12 @@
                 <div class="col-md-8">
                     <table class="table table-bordered">
                         <tr>
-                            <td colspan="2">基本給</td>
+                            <td colspan="2">Basic salary</td>
                             <td style="width: 250px;">{{ numberFormatter(empDetail.salary_amount) }}</td>
                         </tr>
                         <tr >
-                            <td rowspan="2"> 手当</td>
-                            <td>通勤交通費(片道/回)</td>
+                            <td rowspan="2">Allowance</td><!-- 手当-->
+                            <td>Commuting expenses (one way / time)</td><!--通勤交通費(片道/回)-->
                             <td>{{ numberFormatter(empDetail.trans_money) }}</td>
                         </tr>
                         <tr >
@@ -56,43 +56,43 @@
                             <td>{{ numberFormatter(empDetail.jlpt) }}</td>
                         </tr>
                         <tr>
-                            <td colspan="2">SSB負担割合（0又は2%)</td>
+                            <td colspan="2">SSB charge ratio (0 or 2%)</td><!--SSB負担割合（0又は2%)-->
                             <td>{{ numberFormatter(empDetail.ssb) }}</td>
                         </tr>
                         <tr>
-                            <td colspan="2">ポジション</td>
+                            <td colspan="2">Position</td><!--ポジション-->  
                             <td>{{ empDetail.position }}</td>
                         </tr>
                         <tr>
-                            <td colspan="2">住所</td>
+                            <td colspan="2">Address</td><!--住所-->
                             <td>{{ empDetail.address }}</td>
                         </tr>
                         <tr>
-                            <td colspan="2">電話番号</td>
+                            <td colspan="2">Phone number</td><!--電話番号-->
                             <td>{{ empDetail.phone_no }}</td>
                         </tr>
                         <tr>
-                            <td colspan="2">身分証番号</td>
+                            <td colspan="2">ID number</td><!--身分証番号-->
                             <td>{{ empDetail.nrc_no }}</td>
                         </tr>
                         <tr>
-                            <td colspan="2">給与振込先銀行口座</td>
+                            <td colspan="2">Payroll bank account</td><!--給与振込先銀行口座-->
                             <td>{{ empDetail.bank_account }}</td>
                         </tr>
                         <tr>
-                            <td colspan="2">家族構成</td>
+                            <td colspan="2">Family structure</td><!--家族構成-->
                             <td>{{ empDetail.member }}</td>
                         </tr>
                         <tr>
-                            <td colspan="2">配偶者や子供の有無</td>
+                            <td colspan="2">Spouse or Children?</td><!--配偶者や子供の有無-->
                             <td>{{ empDetail.child }}</td>
                         </tr>
                         <tr>
-                            <td colspan="2">緊急連絡先</td>
+                            <td colspan="2">Emergency contact</td><!--緊急連絡先-->
                             <td>{{ empDetail.emg_ph_no }}</td>
                         </tr>
                         <tr>
-                            <td colspan="2">通勤手段/時間（分）</td>
+                            <td colspan="2">Commuting way / hours (minutes)</td><!--通勤手段/時間（分）-->
                             <td>{{ empDetail.waste_time }}</td>
                         </tr>
                     </table>
@@ -100,8 +100,8 @@
             </div>
 
             <div v-if="form_detail_open" class="mt-5">
-                <button type="button" class="btn btn-primary" @click="newHistoryCreate" v-if="!edit">編集</button>
-                <button type="button" class="btn btn-primary" @click="updateEmpDetail" v-if="edit">編集終了</button>
+                <button type="button" class="btn btn-primary" @click="newHistoryCreate" v-if="!edit">Edit</button>
+                <button type="button" class="btn btn-primary" @click="updateEmpDetail" v-if="edit">Edit finish</button>
 
                 <div class="alert alert-danger mt-3" role="alert" v-if="duplicateErrors.length > 0">
                     <ul v-for="error in duplicateErrors" :key="error">
@@ -110,16 +110,16 @@
                 </div>
 
                 <div class="alert alert-success mt-3" role="alert" v-if="success_msg">
-                    <strong >データは成功しました。</strong> 
+                    <strong >Data is Successfully Saved!</strong> 
                 </div>
 
                 <table class="table table-sm table-bordered mt-2 mb-0" style="width:260px;">
                     <tr>
-                        <td style="width:130px;">名前</td>
+                        <td style="width:130px;">Name</td>
                         <td style="width:130px;">{{emp_name}}</td>
                     </tr>
                     <tr>
-                        <td>名前(フリガナ)</td>
+                        <td>Name:(Furigana)</td><!-- 名前(フリガナ) -->
                         <td v-if="!edit">{{empData.kana_name}}</td>
                         <td v-if="edit">
                             <label class="text-danger" v-if="empData.kanaErr">{{ empData.kanaErr }}</label>
@@ -127,7 +127,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>入社日</td>
+                        <td>Entry Date</td>
                         <td v-if="!edit" class="text-right"><span v-if="empData.entry_date">{{ customFormatter(empData.entry_date) }}</span></td>
                         <td v-if="edit">
                             <label class="text-danger" v-if="empData.entryErr">{{ empData.entryErr }}</label>
@@ -135,7 +135,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>生年月日</td>
+                        <td>Birthday</td><!--生年月日-->
                         <td v-if="!edit" class="text-right"><span v-if="empData.dob">{{ customFormatter(empData.dob) }}</span></td>
                         <td v-if="edit">
                             <label class="text-danger" v-if="empData.dobErr">{{ empData.dobErr }}</label>
@@ -148,22 +148,22 @@
                 <div>
                     <table class="table table-sm table-bordered">
                         <tr>
-                            <th rowspan="2" style="width:130px;">給与年月</th>
-                            <th rowspan="2" style="width:130px;">基本給</th>
-                            <th colspan="2">手当</th>
-                            <th rowspan="2">SSB負担割合(%)</th>
-                            <th rowspan="2">ポジション</th>
-                            <th rowspan="2">住所</th>
-                            <th rowspan="2">電話番号</th>
-                            <th rowspan="2">身分証番号</th>
-                            <th rowspan="2">給与振込先銀行口座</th>
-                            <th rowspan="2">家族構成</th>
-                            <th rowspan="2">配偶者や子供の有無</th>
-                            <th rowspan="2">緊急連絡先</th>
-                            <th rowspan="2">通勤手段/時間（分）</th>
+                            <th rowspan="2" style="width:130px;">Salary's year/month</th><!--給与年月 -->
+                            <th rowspan="2" style="width:130px;">Basic salary</th>
+                            <th colspan="2">Allowance</th>
+                            <th rowspan="2">SSB charge ratio (%)</th>
+                            <th rowspan="2">Position</th>
+                            <th rowspan="2">Address</th>
+                            <th rowspan="2">Phone number</th>
+                            <th rowspan="2">ID number</th>
+                            <th rowspan="2">Payroll bank account</th>
+                            <th rowspan="2">Family structure</th>
+                            <th rowspan="2">Spouse or Children?</th>
+                            <th rowspan="2">Emergency contact</th>
+                            <th rowspan="2">Commuting way / hours (minutes)</th>
                         </tr>
                         <tr>
-                            <th>通勤交通費(片道/回)</th>
+                            <th>Commuting expenses (one way / time)</th><!--通勤交通費(片道/回)-->
                             <th>JLPT</th>
                         </tr>
                         <tr v-for="detail in empDetails" :key="detail.id">
@@ -481,20 +481,20 @@ import Datepicker from 'vuejs-datepicker';
 
                 if(this.empData.kana_name == undefined || this.empData.kana_name == ''){
                     this.errorFlg = true;
-                    Vue.set(this.empData, 'kanaErr','名前(フリガナ)を入力してください。');
+                    Vue.set(this.empData, 'kanaErr','Please enter your name (Furigana).');//名前(フリガナ)を入力してください。
                 }
 
                 if(this.empData.entry_date == undefined || this.empData.entry_date == ''){
                     this.errorFlg = true;
-                    Vue.set(this.empData, 'entryErr', '入社日を入力してください。');
+                    Vue.set(this.empData, 'entryErr', 'Please enter the date of joining the company.');//入社日を入力してください。
                 }else if(!this.validateDateFormat(this.empData.entry_date)){
                     this.errorFlg = true;
-                    Vue.set(this.empData, 'entryErr', '入社日をフォーマット(MM/DD/YYYY)で入力してください。');
+                    Vue.set(this.empData, 'entryErr', 'Please enter the hire date in the format (MM / DD / YYYY).');//入社日をフォーマット(MM/DD/YYYY)で入力してください。
                 }
 
                 if(this.empData.dob == undefined || this.empData.dob == ''){
                     this.errorFlg = true;
-                    Vue.set(this.empData, 'dobErr' , '生年月日を入力してください。');
+                    Vue.set(this.empData, 'dobErr' , 'Please enter your date of birth.'); // 生年月日を入力してください。
                 }
 
                 for(let i=0; i < this.empDetails.length; i++)
@@ -517,7 +517,7 @@ import Datepicker from 'vuejs-datepicker';
                     if(this.empDetails[i].pay_month == null)
                     {
                         this.errorFlg = true;
-                        Vue.set(this.empDetails[i] , 'payMonthErr','給与年月を入力してください。');
+                        Vue.set(this.empDetails[i] , 'payMonthErr','Please enter the salary\'s year and month.');//給与年月を入力してください。
                     } else{
                         var date = new Date(this.empDetails[i].pay_month);
                         var month = date.getMonth(); //Be careful! January is 0 not 1
@@ -527,18 +527,18 @@ import Datepicker from 'vuejs-datepicker';
 
                         if(!this.validatePayMonthFormat(this.empDetails[i].pay_month)){
                             this.errorFlg = true;
-                            Vue.set(this.empDetails[i] , 'payMonthErr','給与年月をフォーマット(YYYY/MM)で入力してください。');
+                            Vue.set(this.empDetails[i] , 'payMonthErr','Please enter the salary\'s date in the format (YYYY / MM).');//給与年月をフォーマット(YYYY/MM)で入力してください。
                         }
                     }
 
                     if(this.empDetails[i].salary_amount == 0)
                     {
                         this.errorFlg = true;
-                        Vue.set(this.empDetails[i], 'salaryAmountErr', '基本給を入力してください。' );
+                        Vue.set(this.empDetails[i], 'salaryAmountErr', 'Please enter the basic salary.' );//基本給を入力してください。
                     }else if(!this.validateDecimal(this.empDetails[i].salary_amount))
                     {
                         this.errorFlg = true;
-                        Vue.set(this.empDetails[i], 'salaryAmountErr', '基本給は数を入れて下さい。' );
+                        Vue.set(this.empDetails[i], 'salaryAmountErr', 'Please enter the number for the basic salary.' );//基本給は数を入れて下さい。
                     }
 
                     if(this.empDetails[i].trans_money == '')
@@ -547,7 +547,7 @@ import Datepicker from 'vuejs-datepicker';
                     }else if(!this.validateNumber(this.empDetails[i].trans_money))
                     {
                         this.errorFlg = true;
-                        Vue.set(this.empDetails[i], 'transMoneyErr', '通勤交通費は数を入れて下さい。');
+                        Vue.set(this.empDetails[i], 'transMoneyErr', 'Please include the number of commuting expenses.');//通勤交通費は数を入れて下さい。
                     }
 
                     if(this.empDetails[i].jlpt == '')
@@ -556,7 +556,7 @@ import Datepicker from 'vuejs-datepicker';
                     }else if(!this.validateNumber(this.empDetails[i].jlpt))
                     {
                         this.errorFlg = true;
-                        Vue.set(this.empDetails[i], 'jlptErr', 'JLPTは数を入れて下さい。');
+                        Vue.set(this.empDetails[i], 'jlptErr', 'Please enter the number of JLPT.');//JLPTは数を入れて下さい。
                     }
 
                     if(this.empDetails[i].ssb == ''){
@@ -564,32 +564,32 @@ import Datepicker from 'vuejs-datepicker';
                     }else if(!this.validateNumber(this.empDetails[i].ssb))
                     {
                         this.errorFlg = true;
-                        Vue.set(this.empDetails[i], 'ssbErr', 'SSB負担割合は数を入れて下さい。');
+                        Vue.set(this.empDetails[i], 'ssbErr', 'Please enter the number of SSB charge ratios.');//SSB負担割合は数を入れて下さい。
                     }
 
                     if(this.empDetails[i].position == ''){
                         this.errorFlg = true;
-                        Vue.set(this.empDetails[i], 'positionErr', 'ポジションを入力してください。');
+                        Vue.set(this.empDetails[i], 'positionErr', 'Please enter a position.');//ポジションを入力してください。
                     }
 
                     if(this.empDetails[i].address == ''){
                         this.errorFlg = true;
-                        Vue.set(this.empDetails[i], 'addressErr', '住所を入力してください。');
+                        Vue.set(this.empDetails[i], 'addressErr', 'Please enter your address.');//住所を入力してください。
                     }
 
                     if(this.empDetails[i].phone_no == ''){
                         this.errorFlg = true;
-                        Vue.set(this.empDetails[i], 'phoneNoErr', '電話番号を入力してください。');
+                        Vue.set(this.empDetails[i], 'phoneNoErr', 'Please enter your phone number.');//電話番号を入力してください。
                     }
 
                     if(this.empDetails[i].nrc_no == ''){
                         this.errorFlg = true;
-                        Vue.set(this.empDetails[i], 'nrcNoErr', '身分証番号を入力してください。');
+                        Vue.set(this.empDetails[i], 'nrcNoErr', 'Please enter your ID number.');//身分証番号を入力してください。
                     }
 
                     if(this.empDetails[i].bank_account == ''){
                         this.errorFlg = true;
-                        Vue.set(this.empDetails[i], 'bankAccErr', '給与振込先銀行口座を入力してください。');
+                        Vue.set(this.empDetails[i], 'bankAccErr', 'Please enter the payroll bank account.');//給与振込先銀行口座を入力してください。
                     }
     
                 }
@@ -605,7 +605,7 @@ import Datepicker from 'vuejs-datepicker';
                     {
                         if(this.empDetails[i]['pay_month'] == this.empDetails[j]['pay_month'])
                         {
-                            this.duplicateErrors.push(this.empDetails[i]['pay_month']+'は重複しています。');
+                            this.duplicateErrors.push(this.empDetails[i]['pay_month']+' is duplicated.');//は重複しています。
                         }
                     }
                 }

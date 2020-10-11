@@ -5,23 +5,23 @@
                 <div class="bg-light border-right" id="sidebar-wrapper">         
                     <div id="navs" class="list-group list-group-flush">
                     <!-- <router-link to="/attendList"  class="nav-item nav-link list-group-item bg-light" ><a  href="/attendList" >出退勤一覧</a></router-link>                  -->
-                    <a href="/attendList" class="nav-item nav-link list-group-item  bg-light">出退勤一覧</a>               
-                    <a href="/salaryList" class="nav-item nav-link list-group-item  bg-light" >給与手当一覧</a>
+                    <a href="/attendList" class="nav-item nav-link list-group-item  bg-light">Attendance list</a>  <!--出退勤一覧  -->             
+                    <a href="/salaryList" class="nav-item nav-link list-group-item  bg-light" >Salary allowance list</a> <!-- 給与手当一覧 -->
                    
                     <!-- <router-link to="/holidays"  class="nav-item nav-link list-group-item bg-light" ><a  href="/holidays" >休日一覧</a></router-link> -->
-                    <a href="/holidays" class="nav-item nav-link list-group-item  bg-light" >休日一覧</a>
+                    <a href="/holidays" class="nav-item nav-link list-group-item  bg-light" >Holiday list</a> <!--休日一覧  -->
 
-                    <a href="/salaryHistory" class="nav-item nav-link list-group-item  bg-light" >給与関連個人履歴</a>
+                    <a href="/salaryHistory" class="nav-item nav-link list-group-item  bg-light" >Salary related personal history</a><!--給与関連個人履歴  -->
                     
-                    <a href="/attendManage" class="nav-item nav-link list-group-item  bg-light" >勤怠管理表</a>
+                    <a href="/attendManage" class="nav-item nav-link list-group-item  bg-light" >Attendance management output</a><!--勤怠管理表  -->
                     <!-- <router-link to="/attendManage"  class="nav-item nav-link list-group-item bg-light" ><a  href="/attendManage" >勤怠管理表</a></router-link> -->
 
-                    <a href="/setting" class="nav-item nav-link list-group-item  bg-light" >設定</a>
+                    <a href="/setting" class="nav-item nav-link list-group-item  bg-light" >Setting</a><!--設定  -->
                     <!-- <router-link to="/setting"  class="nav-item nav-link list-group-item bg-light" ><a  href="/setting" >設定</a></router-link> -->
 
                     <router-link to="/logout" class="nav-item nav-link list-group-item  bg-light" onclick="event.preventDefault();
                         document.getElementById('logout-form').submit();"
-                    ><a   >ログアウト</a>
+                    ><a   >Log out</a><!--ログアウト  -->
                         <form id="logout-form" action="/logout" method="POST" style="display: none;">
                             <input type="hidden" name="_token" :value="csrf">
                         </form>
