@@ -48,7 +48,7 @@
                         </tr>
                         <tr >
                             <td rowspan="2">Allowance</td><!-- 手当-->
-                            <td>Commuting expenses (one way / time)</td><!--通勤交通費(片道/回)-->
+                            <td>Transportation allowance (one way / time)</td><!--通勤交通費(片道/回)-->
                             <td>{{ numberFormatter(empDetail.trans_money) }}</td>
                         </tr>
                         <tr >
@@ -92,7 +92,7 @@
                             <td>{{ empDetail.emg_ph_no }}</td>
                         </tr>
                         <tr>
-                            <td colspan="2">Commuting way / hours (minutes)</td><!--通勤手段/時間（分）-->
+                            <td colspan="2">Transportation way / hours (minutes)</td><!--通勤手段/時間（分）-->
                             <td>{{ empDetail.waste_time }}</td>
                         </tr>
                     </table>
@@ -160,10 +160,10 @@
                             <th rowspan="2">Family structure</th>
                             <th rowspan="2">Spouse or Children?</th>
                             <th rowspan="2">Emergency contact</th>
-                            <th rowspan="2">Commuting way / hours (minutes)</th>
+                            <th rowspan="2">Transportation way / hours (minutes)</th>
                         </tr>
                         <tr>
-                            <th>Commuting expenses (one way / time)</th><!--通勤交通費(片道/回)-->
+                            <th>Transportation allowance (one way / time)</th><!--通勤交通費(片道/回)-->
                             <th>JLPT</th>
                         </tr>
                         <tr v-for="detail in empDetails" :key="detail.id">
@@ -547,7 +547,7 @@ import Datepicker from 'vuejs-datepicker';
                     }else if(!this.validateNumber(this.empDetails[i].trans_money))
                     {
                         this.errorFlg = true;
-                        Vue.set(this.empDetails[i], 'transMoneyErr', 'Please include the number of commuting expenses.');//通勤交通費は数を入れて下さい。
+                        Vue.set(this.empDetails[i], 'transMoneyErr', 'Please include the number of transportation allowance.');//通勤交通費は数を入れて下さい。
                     }
 
                     if(this.empDetails[i].jlpt == '')

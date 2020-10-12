@@ -184,7 +184,7 @@
                                           Basic salary<!--  基本給-->
                                         </th>
                                         <th   rowspan="2" class="text-center align-middle"  style="background-color:#FBE5D6;">
-                                            Commuting expenses<!--通勤交通費-->
+                                            Transportation allowance<!--通勤交通費-->
                                         </th>
                                         <th   rowspan="2" class="text-center align-middle"  style="background-color:#FBE5D6;">
                                             JLPT
