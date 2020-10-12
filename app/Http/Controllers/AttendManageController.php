@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Exports\AttendDetailsExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Redirect;
-use Barryvdh\Debugbar\Facade as Debugbar;
+
 
 
 class AttendManageController extends Controller
@@ -31,7 +31,7 @@ class AttendManageController extends Controller
      */
     public static function csvOutput($year)
     {
-        Debugbar::info($year);
+        
  
          $attendTime = DB::select('select emp_no from attend_details where EXTRACT(YEAR_MONTH FROM date) = :date', ['date' => $year]);
          $attendTime = json_decode(json_encode($attendTime),true);

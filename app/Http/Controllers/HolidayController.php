@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Holiday;
-use Barryvdh\Debugbar\Facade as Debugbar;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 
@@ -28,7 +27,7 @@ class HolidayController extends Controller
      */
     public function add(Request $request)
     {
-        Debugbar::info($request->all());
+       
         foreach($request->all() as $key)
         {
           if(!array_key_exists("id", $key))
