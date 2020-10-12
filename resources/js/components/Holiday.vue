@@ -26,8 +26,8 @@
                     <button type="button" class="btn btn-primary" v-if="isBtnHidden" @click="copyRow()">前年の物をコピー</button>
                 </div>
                 <div class="col-md-4 mt-3">
-                    <button type="button" class="btn btn-primary" :disabled="!btnDelete" 
-                        @click="deleteRow(deleteItems,customFormatter(customDate))">Delete</button><!--削除-->
+                    <button type="button" class="btn btn-primary" :disabled="checkDeleteBtnDisable()" 
+                        @click="deleteRow(customFormatter(customDate))">Delete</button><!--削除-->
                 </div>
             </div> 
             
@@ -42,7 +42,7 @@
                 <tbody v-sortable.tr="holidays" v-if="isRowOne">
                     <tr v-for="holiday in holidays" :key="holiday.id">
                         <td class="align-middle">
-                            <input type="checkbox" @click="select_all_via_check_box(holiday.id)" v-model="holiday.selected">
+                            <input type="checkbox" v-model="holiday.selected">
                         </td>
                         <td>
                             <span v-if="holiday.dtError" class="text-danger">Please enter the date</span><!--日付を入力してください-->
@@ -103,7 +103,7 @@ var moment = require('moment');
             return {
                 customDate: new Date(),holidays: [],seen: true, btnText: {text:'Edit'},//編集
                 isBtnHidden:false, isRowOne:true, isRowTwo: false, btnEnabled:true,
-                btnDelete:false, deleteItems: []
+                deleteItems: []
                
             }
         },
@@ -117,11 +117,21 @@ var moment = require('moment');
                 });
         },
         methods :{
+            checkDeleteBtnDisable: function(){
+                if(this.holidays.length > 0){
+                    for(let i=0; i < this.holidays.length; i++){
+                        if(this.holidays[i].selected){
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+            },
             customFormatter(date) {
                 return moment(date).format('YYYY');
             },
             addRow: function (holidays) {
-                try {                                         
+                try {                              
                     if(this.$refs.btnToggle.innerText !=='Save'){//保存
                         this.holidays.splice(holidays.length + 1, 0, {});
                         this.seen =  !this.seen;
@@ -208,18 +218,15 @@ var moment = require('moment');
                                 this.isRowOne = true;
                                 this.isRowTwo = false;
                                 this.btnEnabled = true;
-                                this.btnDelete = false;
                             }else{
                                 this.btnEnabled = false;
                                 this.isRowOne = false;
                                 this.isRowTwo = true;
-                                this.btnDelete = false;
                             }
                         }else{
                             this.isRowTwo = true;
                             this.btnEnabled = true;
                             this.isBtnHidden = false;
-                            this.btnDelete = false;
                             if(this.holidays.length != 0){
                                 this.isRowOne = true;
                                 this.isRowTwo = false;
@@ -233,7 +240,6 @@ var moment = require('moment');
             copyRow: function () {
                 this.isRowOne = true;
                 this.isRowTwo = false;
-                this.btnDelete = false;
                 this.axios
                     .get(process.env.MIX_APP_URL+'/api/holidays/copy')
                     .then(response => {
@@ -241,15 +247,7 @@ var moment = require('moment');
                         this.holidays = response.data,
                         this.btnEnabled = true;
                     });
-                },
-            select_all_via_check_box: function(id){
-                    this.deleteItems.push(id)
-                    if(this.btnDelete == true){
-                        this.btnDelete = false;
-                    }else{
-                        this.btnDelete = true
-                    }                  
-               },
+            },
             loadingAlert:function(){
                   let that=this;
                    that.$swal({
@@ -267,7 +265,14 @@ var moment = require('moment');
                         //     },
                         }) 
             },  
-            deleteRow: function(deleteItems,date){
+            deleteRow: function(date){
+                for(let i=0; i <this.holidays.length; i++){    
+                    if(this.holidays[i].selected){
+                        console.log(this.holidays[i].id)
+                        this.deleteItems.push(this.holidays[i].id);
+                    }
+                }
+
                 this.deleteItems.forEach((value, index) => {
                     if(value == 'undefined'){
                          this.holidays.splice(holidays.length - 1, 0, {});
