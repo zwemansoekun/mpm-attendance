@@ -561,8 +561,7 @@
                 let monthly=jQuery(event.target).closest('div').find('.monthly').val();                            
                 this.engineerCost(event,monthly);
             },  
-            engineerCost:function(event,monthly=''){    
-                alert(event);  alert(monthly);
+            engineerCost:function(event,monthly=''){
                     let that=this;
                     let eachmonth='',eachyear='',splitdate='';
                     if(monthly!=''){                
