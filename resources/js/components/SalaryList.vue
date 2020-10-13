@@ -2,7 +2,7 @@
     <div class="col-md-10">            
         <div class="container-fluid">
             <div class="row">
-                <div class="col-md-4"> 
+                <div class="col-md-3"> 
                     <select class="form-control" id="selectDate"  @change="dateChange($event)" name="date_selected" required focus v-model="select_date">
                         <option value="" disabled selected>Please select Year/Month</option>        
                         <option v-bind:key="date.id" v-for="date in dates">{{ date.recordedDateTime }}</option>   
@@ -14,9 +14,9 @@
                  <strong >Data is Successfully Saved!</strong> 
             </div>
             <div class="row">
-                <div class="container-fluid">
-                    <table class="table table-md table-bordered mt-5" v-if="formChange" style="width:85%;">
-                        <thead>
+                <div class="col-lg-8">
+                    <table class="table table-md table-bordered mt-5" v-if="formChange" >
+                        <thead class="bg-info text-white">
                             <tr>
                                 <th scope="col" class="align-middle text-center" style="width: 25%;">Year/Month</th><!--年月-->
                                 <th scope="col" class="align-middle text-center" style="width: 25%;">Payment date</th><!--支給日-->
@@ -144,15 +144,16 @@
                     <div class="col-md-9">                      
                      
                         <form id="form1" class=""  autocomplete="on" >
+                            <span class="col-md-2 mt-4 table-borderless" style="background-color:#DEEBF7"> 
+                                {{this.paymentDate(this.select_date,1)}}     
+                            </span>
+                            <span class="col-md-2 mt-4 table-borderless"> 
+                                payment
+                            </span> 
                          
                             <div class="scrolling-wrapper  flex-row flex-nowrap">                         
                                 <table id="salaryTable" class="table table-sm table-bordered">
-                                    <span class="col-md-2 mt-4 table-borderless" style="background-color:#DEEBF7"> 
-                                            {{this.paymentDate(this.select_date,1)}}     
-                                    </span>
-                                    <span class="col-md-2 mt-4 table-borderless"> 
-                                            payment
-                                    </span>  
+                                    
                                     <tr>
                                         <th  class="border-bottom-0">
                                         
@@ -177,16 +178,16 @@
                                         </th>
                                     </tr>
                                     <tr>  
-                                        <th   class="align-middle text-center border-bottom-0 border-top-0">
+                                        <th class="align-middle text-center border-bottom-0 border-top-0 nowrap">
                                           Employee number  <!-- 従業員番号 -->
                                         </th>
-                                        <th  rowspan="2"  class="text-center align-middle"  style="background-color:#FBE5D6;">
+                                        <th rowspan="2"  class="text-center align-middle nowrap"  style="background-color:#FBE5D6;">
                                           Basic salary<!--  基本給-->
                                         </th>
-                                        <th   rowspan="2" class="text-center align-middle"  style="background-color:#FBE5D6;">
+                                        <th rowspan="2" class="text-center align-middle"  style="background-color:#FBE5D6;white-space: wrap; ">
                                             Transportation allowance<!--通勤交通費-->
                                         </th>
-                                        <th   rowspan="2" class="text-center align-middle"  style="background-color:#FBE5D6;">
+                                        <th rowspan="2" class="text-center align-middle"  style="background-color:#FBE5D6;">
                                             JLPT
                                         </th>
                                         <th  rowspan="2" class="text-center align-middle"  style="background-color:#FBE5D6;">
@@ -201,7 +202,7 @@
                                         <th   rowspan="2" class="text-center align-middle" style="background-color:#D9D9D9;">
                                             SSB
                                         </th>
-                                        <th   rowspan="2" class="text-center align-middle" style="background-color:#D9D9D9;">
+                                        <th   rowspan="2" class="text-center align-middle" style="background-color:#D9D9D9;min-width:100px !important;">
                                             Late absent early leave<!--遅刻欠勤早退-->
                                         </th> 
                                         <th  rowspan="2" class="text-center" style="background-color:#D9D9D9;">
@@ -226,9 +227,9 @@
                                         <template  v-for="(salary,key) in salaries">                                  
                                             
                                                     <tr v-bind:key="key">
-                                                        <td rowspan="2"  class="text-center align-middle">{{emp_arr[salaries[key].emp_id]}}</td>
-                                                        <td rowspan="2" class="text-center align-middle">{{name_arr[salaries[key].emp_id]}}<div>({{salaries[key].kana_name}})</div></td>
-                                                        <td style="background-color:#D9D9D9" class="text-center align-middle">Calculate value</td><!--計算値-->
+                                                        <td rowspan="2"  class="text-center align-middle nowrap">{{emp_arr[salaries[key].emp_id]}}</td>
+                                                        <td rowspan="2" class="text-center align-middle nowrap">{{name_arr[salaries[key].emp_id]}}<div>({{salaries[key].kana_name}})</div></td>
+                                                        <td style="background-color:#D9D9D9" class="text-center align-middle nowrap">Calculate value</td><!--計算値-->
                                                         <td style="background-color:#D9D9D9" class="text-right align-middle income1">{{Math.trunc(salaries[key].salary_amount).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")}}</td>
                                                         <td style="background-color:#D9D9D9" class="text-right align-middle trans_money1">{{(salaries[key].trans_money).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")}}</td>
                                                         <td style="background-color:#D9D9D9" class="text-right align-middle jlpt1">{{(salaries[key].jlpt).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")}}</td>
@@ -373,7 +374,7 @@
                                         <th rowspan="2" class="align-middle text-center" style="text-align: center;">
                                                 Amount<!--総額-->
                                         </th>
-                                        <th   class="align-middle text-center border-bottom-0" style="background-color:yellow">
+                                        <th   class="align-middle text-center border-bottom-0 nowrap" style="background-color:yellow">
                                                 Company's Charge<!--会社負担分-->
                                         </th>
                                     </tr>

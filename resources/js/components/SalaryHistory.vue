@@ -12,16 +12,16 @@
             </div>  
 
             <div class="row mt-5"  v-if="form_summary_open">
-                <div class="col-md-4">
+                <div class="col-lg-4 col-md-6">
                     <label>{{emp_no}}  {{emp_name}}</label>
                 </div>
-                <div class="col-md-4">
+                <div class="col-lg-3 col-md-6">
                     <button type="button" class="btn btn-primary float-right" @click="showHistory">Inspect history</button><!--閲覧履歴-->
                 </div>
             </div>
 
             <div class="row mt-2"  v-if="form_summary_open">
-                <div class="col-md-8">
+                <div class="col-lg-7">
                     <table class="table table-bordered">
                         <tr>
                             <td>Name:(Furigana)</td><!-- 名前(フリガナ) -->
@@ -40,7 +40,7 @@
             </div>
 
             <div class="row mt-2" v-if="form_summary_open">
-                <div class="col-md-8">
+                <div class="col-lg-7">
                     <table class="table table-bordered">
                         <tr>
                             <td colspan="2">Basic salary</td>
@@ -115,11 +115,11 @@
 
                 <table class="table table-sm table-bordered mt-2 mb-0" style="width:260px;">
                     <tr>
-                        <td style="width:130px;">Name</td>
+                        <th style="width:130px;">Name</th>
                         <td style="width:130px;">{{emp_name}}</td>
                     </tr>
                     <tr>
-                        <td>Name:(Furigana)</td><!-- 名前(フリガナ) -->
+                        <th>Name:(Furigana)</th><!-- 名前(フリガナ) -->
                         <td v-if="!edit">{{empData.kana_name}}</td>
                         <td v-if="edit">
                             <label class="text-danger" v-if="empData.kanaErr">{{ empData.kanaErr }}</label>
@@ -127,7 +127,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>Entry Date</td>
+                        <th>Entry Date</th>
                         <td v-if="!edit" class="text-right"><span v-if="empData.entry_date">{{ customFormatter(empData.entry_date) }}</span></td>
                         <td v-if="edit">
                             <label class="text-danger" v-if="empData.entryErr">{{ empData.entryErr }}</label>
@@ -135,7 +135,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>Birthday</td><!--生年月日-->
+                        <th>Birthday</th><!--生年月日-->
                         <td v-if="!edit" class="text-right"><span v-if="empData.dob">{{ customFormatter(empData.dob) }}</span></td>
                         <td v-if="edit">
                             <label class="text-danger" v-if="empData.dobErr">{{ empData.dobErr }}</label>
@@ -147,7 +147,7 @@
 <!--table-responsive text-nowrap -->
                 <div>
                     <table class="table table-sm table-bordered">
-                        <tr>
+                        <tr class="bg-info text-white">
                             <th rowspan="2" style="width:130px;">Salary's year/month</th><!--給与年月 -->
                             <th rowspan="2" style="width:130px;">Basic salary</th>
                             <th colspan="2">Allowance</th>
@@ -162,7 +162,7 @@
                             <th rowspan="2">Emergency contact</th>
                             <th rowspan="2">Transportation way / hours (minutes)</th>
                         </tr>
-                        <tr>
+                        <tr class="bg-info text-white">
                             <th>Transportation allowance (one way / time)</th><!--通勤交通費(片道/回)-->
                             <th>JLPT</th>
                         </tr>

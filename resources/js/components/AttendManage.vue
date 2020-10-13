@@ -4,7 +4,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-4" id="app"> 
-                    <datepicker  placeholder="Select Year/Month" :minimumView="'month'" 
+                    <datepicker class="datepicker1" placeholder="Select Year/Month" :minimumView="'month'" 
                         :maximumView="'month'" v-model="customDate" 
                         v-on:selected="selectedDate()" :format="customFormatter"></datepicker>
                       

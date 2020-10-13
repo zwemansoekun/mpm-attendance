@@ -4,7 +4,7 @@
             <div class="row">
                 <div class="col-md-4" id="app"> 
                     <datepicker class="datepicker1" :minimumView="'year'" :maximumView="'year'" v-model="customDate" 
-                            :format="customFormatter" id="dtPicker" 
+                            :format="customFormatter" id="dtPicker"
                              v-on:selected="selectedDate()" ></datepicker>
                 </div>  
             </div> 
@@ -32,7 +32,7 @@
             </div> 
             
             <table class="table table-bordered mt-3" style="width: 73.5%;">
-                <thead>
+                <thead class="bg-info text-white">
                     <tr>
                         <th scope="col" style="width: 10%;"></th>
                         <th scope="col" style="width: 40%;">Date</th>
