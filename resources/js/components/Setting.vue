@@ -156,7 +156,7 @@
                 if(this.setting.money == 0){
                    return this.errorMoney = 'Please enter the Exchange rate default value.';//為替レートデフォルト値を入力してください。
                 }else if(!this.validateDecimal(this.setting.money) ){
-                    return this.errorMoney = 'Please Enter the exchange rate default value in the formula.';//為替レートデフォルト値を数式で入力してください。
+                    return this.errorMoney = 'Please enter number value for the exchange rate default value.';//為替レートデフォルト値を数式で入力してください。
                 }
 
                 let that=this;
@@ -181,9 +181,9 @@
             updateAm(){
                 this.errorAm = null;
                 if(this.setting.am == 0){
-                   return this.errorAm = 'Please Enter the  AM Late Allowance Time default value.';//AM遅刻許容時間デフォルト値を入力してください。
+                   return this.errorAm = 'Please enter the  AM Late Allowance Time default value.';//AM遅刻許容時間デフォルト値を入力してください。
                 }else if(!this.validateNumber(this.setting.am) ){
-                    return this.errorAm = 'Please Enter the  AM Late Allowance Time default value in the formula.';//AM遅刻許容時間デフォルト値を数式で入力してください。
+                    return this.errorAm = 'Please enter number value for the AM Late Allowance Time default value.';//AM遅刻許容時間デフォルト値を数式で入力してください。
                 }
 
                 let that=this;
@@ -208,9 +208,9 @@
             updatePm(){
                 this.errorPm = null;
                 if(this.setting.pm == 0){
-                    return this.errorPm =  'Please Enter the  PM Late Allowance Time default value in the formula.'; //'PM遅刻許容時間デフォルト値を入力してください。';
+                    return this.errorPm =  'Please enter the PM Late Allowance Time default value.'; //'PM遅刻許容時間デフォルト値を入力してください。';
                 }else if(!this.validateNumber(this.setting.pm) ){
-                    return this.errorPm =  'Please Enter the  PM Late Allowance Time default value in the formula.';//'PM遅刻許容時間デフォルト値を数式で入力してください。';
+                    return this.errorPm =  'Please enter number value for the PM Late Allowance Time default value.';//'PM遅刻許容時間デフォルト値を数式で入力してください。';
                 }
 
                 let that=this;
@@ -238,7 +238,7 @@
                     Vue.set(delayTime,"amDelayError",true);
                     return ;
                 }else if(!this.validateNumber(delayTime.am) ){
-                    Vue.set(delayTime,"amDelayErrorMsg", "Please enter the AM late allowance time in the formula.");//AM遅刻許容時間を数式で入力してください。
+                    Vue.set(delayTime,"amDelayErrorMsg", "Please enter number value for the AM late allowance time.");//AM遅刻許容時間を数式で入力してください。
                     Vue.set(delayTime,"amDelayError",true);
                     return ;
                 }
@@ -267,7 +267,7 @@
                     Vue.set(delayTime,"pmDelayError",true); 
                     return ;
                 }else if(!this.validateNumber(delayTime.pm) ){
-                    Vue.set(delayTime,"pmDelayErrorMsg", "Please enter the PM late allowance time in the formula.");//PM遅刻許容時間を数式で入力してください。
+                    Vue.set(delayTime,"pmDelayErrorMsg", "Please enter number value for the PM late allowance time.");//PM遅刻許容時間を数式で入力してください。
                     Vue.set(delayTime,"pmDelayError",true);
                    return ;
                 }

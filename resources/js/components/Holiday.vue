@@ -54,8 +54,8 @@
                                 :format="dayMonthFormatter" :typeable="true"></datepicker>
                         </td>
                         <td>
-                            <span v-if="holiday.desError" class="text-danger">Please enter a name</span><!--名称を入力してください-->
-                            <span v-if="holiday.desDuplicateError" class="text-danger">The name is duplicated</span><!--名称は重複しています-->
+                            <span v-if="holiday.desError" class="text-danger">Please enter the description</span><!--名称を入力してください-->
+                            <span v-if="holiday.desDuplicateError" class="text-danger">The description is duplicated</span><!--名称は重複しています-->
                             <input class="form-control" v-model="holiday.description" type="text"/>
                         </td>
                     </tr>
@@ -126,6 +126,7 @@ var moment = require('moment');
                     }
                     return true;
                 }
+                return true;
             },
             customFormatter(date) {
                 return moment(date).format('YYYY');
