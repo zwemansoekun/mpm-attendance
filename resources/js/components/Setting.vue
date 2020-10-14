@@ -9,7 +9,7 @@
             <form @submit.prevent="updateMoney">
             <table class="table table-bordered">
                 <tr class="d-flex">
-                    <td class="col-6">Exchange rate default value (JPN / MMK)</td><!--為替レートデフォルト値(JPN/MMK)-->
+                    <th class="col-6 bg-info text-white" scope="row">Exchange rate default value (JPN / MMK)</th><!--為替レートデフォルト値(JPN/MMK)-->
                     <td class="col-3">
                         <label class="text-danger" v-if="errorMoney">{{ errorMoney }}</label>
                         <input class="form-control" v-model.number="setting.money">
@@ -24,7 +24,7 @@
             <table class="table table-bordered">
 
                 <tr class="d-flex">
-                    <td class="col-6">AM late allowance time default value (minutes)</td><!--AM遅刻許容時間デフォルト値（分)-->
+                    <th class="col-6 bg-info text-white" scope="row">AM late allowance time default value (minutes)</th><!--AM遅刻許容時間デフォルト値（分)-->
                      <td class="col-3">
                         <label class="text-danger" v-if="errorAm">{{ errorAm }}</label> 
                         <input type="text" class="form-control" v-model="setting.am">
@@ -34,7 +34,7 @@
                     </td>
                 </tr>
                 <tr class="d-flex">
-                    <td class="col-6">PM late allowance time default value (minutes)</td><!--PM遅刻許容時間デフォルト値（分）-->
+                    <th class="col-6 bg-info text-white" scope="row">PM late allowance time default value (minutes)</th><!--PM遅刻許容時間デフォルト値（分）-->
                      <td class="col-3">
                          <label class="text-danger" v-if="errorPm">{{ errorPm }}</label>
                         <input type="text" class="form-control" v-model="setting.pm">
@@ -47,7 +47,7 @@
             </table>
 
             <table class="table table-bordered">
-                <thead>
+                <thead class="bg-info text-white">
                     <tr>
                         <th scope="col">Year/Month</th><!--年月-->
                         <th scope="col">AM late allowance time (minutes)</th><!-- AM遅刻許容時間（分)-->
