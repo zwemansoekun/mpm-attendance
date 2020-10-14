@@ -87,7 +87,7 @@
                     </div> 
                
                     <table id="attendTable" class="table table-bordered">
-                        <thead>
+                        <thead class="bg-info text-white">
                             <tr>
                                 <td style="text-align: center;width: 10%;"></td>                          
                                 <td colspan="2" style="text-align: center;width: 30%;" >AM</td>   

@@ -31,7 +31,7 @@
                                 <td class="align-middle text-center">
                                     {{ paymentDate(d.month)}}
                                 </td>
-                                <td class="align-middle text-center">
+                                <td class="align-middle">
                                     <div class="row" v-if="d.moneyDelayError">
                                         <div class="col text-danger">{{d.moneyDelayErrorMsg}}</div>
                                     </div>
@@ -101,7 +101,7 @@
                              <div class="modal-body">
                                 <div class="container-fluid">                           
                                     <table class="table table-md table-bordered">
-                                        <thead>                      
+                                        <thead class="bg-info text-white">                      
                                             <th class="align-middle text-center">
                                                 <input class="align-middle text-center check-all" style="width:1.5em;height:1.5em;" type='checkbox' @click='checkAll()' v-model='isCheckAll'> 
                                             </th>
@@ -164,13 +164,13 @@
                                         <th rowspan="3" class="align-middle text-center">
 
                                         </th>
-                                        <th colspan="5"  style="background-color:#FBE5D6" class="align-middle text-center">
+                                        <th colspan="5"  style="background-color:#FBE5D6" class="align-middle text-center nowrap">
                                           Before deduction <!-- 控除前 -->
                                         </th>
-                                        <th colspan="3"   style="background-color:#D9D9D9" class="align-middle text-center">
+                                        <th colspan="3"   style="background-color:#D9D9D9" class="align-middle text-center nowrap">
                                           Deduction amount<!--控除額-->
                                         </th>
-                                        <th colspan="3"  style="background-color:#D9D9D9" class="align-middle text-center">
+                                        <th colspan="3"  style="background-color:#D9D9D9" class="align-middle text-center nowrap">
                                           Other adjustments (in case of deduction-)<!-- その他調整(控除の場合-) -->
                                         </th>
                                         <th rowspan="2" style="text-align: center;background-color:#DAE3F3"  class="align-middle text-center border-bottom-0">
@@ -179,7 +179,7 @@
                                     </tr>
                                     <tr>  
                                         <th class="align-middle text-center border-bottom-0 border-top-0 nowrap">
-                                          Employee number  <!-- 従業員番号 -->
+                                          Employee No.  <!-- 従業員番号 -->
                                         </th>
                                         <th rowspan="2"  class="text-center align-middle nowrap"  style="background-color:#FBE5D6;">
                                           Basic salary<!--  基本給-->
@@ -660,7 +660,7 @@
                     Vue.set(delayTime,"moneyDelayError",true);
                     return ;
                 }else if(!this.validateDecimal(delayTime.money) ){
-                    Vue.set(delayTime,"moneyDelayErrorMsg", "Please enter JPN / MMK as a formula.");//JPN/MMKを数式で入力してください。
+                    Vue.set(delayTime,"moneyDelayErrorMsg", "Please enter number value.");//JPN/MMKを数式で入力してください。
                     Vue.set(delayTime,"moneyDelayError",true);
                     return ;
                 }

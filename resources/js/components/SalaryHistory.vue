@@ -486,10 +486,10 @@ import Datepicker from 'vuejs-datepicker';
 
                 if(this.empData.entry_date == undefined || this.empData.entry_date == ''){
                     this.errorFlg = true;
-                    Vue.set(this.empData, 'entryErr', 'Please enter the date of joining the company.');//入社日を入力してください。
+                    Vue.set(this.empData, 'entryErr', 'Please enter the entry date.');//入社日を入力してください。
                 }else if(!this.validateDateFormat(this.empData.entry_date)){
                     this.errorFlg = true;
-                    Vue.set(this.empData, 'entryErr', 'Please enter the hire date in the format (MM / DD / YYYY).');//入社日をフォーマット(MM/DD/YYYY)で入力してください。
+                    Vue.set(this.empData, 'entryErr', 'Please enter the entry date in the format (MM / DD / YYYY).');//入社日をフォーマット(MM/DD/YYYY)で入力してください。
                 }
 
                 if(this.empData.dob == undefined || this.empData.dob == ''){
@@ -517,7 +517,7 @@ import Datepicker from 'vuejs-datepicker';
                     if(this.empDetails[i].pay_month == null)
                     {
                         this.errorFlg = true;
-                        Vue.set(this.empDetails[i] , 'payMonthErr','Please enter the salary\'s year and month.');//給与年月を入力してください。
+                        Vue.set(this.empDetails[i] , 'payMonthErr','Please enter the salary\'s year/month.');//給与年月を入力してください。
                     } else{
                         var date = new Date(this.empDetails[i].pay_month);
                         var month = date.getMonth(); //Be careful! January is 0 not 1
@@ -527,7 +527,7 @@ import Datepicker from 'vuejs-datepicker';
 
                         if(!this.validatePayMonthFormat(this.empDetails[i].pay_month)){
                             this.errorFlg = true;
-                            Vue.set(this.empDetails[i] , 'payMonthErr','Please enter the salary\'s date in the format (YYYY / MM).');//給与年月をフォーマット(YYYY/MM)で入力してください。
+                            Vue.set(this.empDetails[i] , 'payMonthErr','Please enter the salary\'s year/month in the format (YYYY / MM).');//給与年月をフォーマット(YYYY/MM)で入力してください。
                         }
                     }
 
@@ -547,7 +547,7 @@ import Datepicker from 'vuejs-datepicker';
                     }else if(!this.validateNumber(this.empDetails[i].trans_money))
                     {
                         this.errorFlg = true;
-                        Vue.set(this.empDetails[i], 'transMoneyErr', 'Please include the number of transportation allowance.');//通勤交通費は数を入れて下さい。
+                        Vue.set(this.empDetails[i], 'transMoneyErr', 'Please enter the number for transportation allowance.');//通勤交通費は数を入れて下さい。
                     }
 
                     if(this.empDetails[i].jlpt == '')
