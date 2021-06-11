@@ -1,80 +1,197 @@
 <template>
-    <div class="col-md-10"> 
-        <div class="container">
+    <div class="col-md-12 py-4"> 
+        <div class="container-fluid">
+            
             <div class="row">
-                <div class="col-md-4" id="app"> 
+                <div class="col-12">
+                    <h4 class="card-title"> Holiday List </h4>
+                    <hr class="underline_title">
+                </div> 
+                <div class="col-md-5" id="app"> 
                     <datepicker class="datepicker1" :minimumView="'year'" :maximumView="'year'" v-model="customDate" 
                             :format="customFormatter" id="dtPicker"
-                             v-on:selected="selectedDate()" ></datepicker>
+                             v-on:selected="selectedDate()"></datepicker>
                 </div>  
             </div> 
         </div>   
                
-        <div class="container mt-5">
+        <div class="container-fluid mt-3">
             <div class="row">
-                <div class="col-md-4"> {{customFormatter(customDate)}}</div>
+                <div class="col-md-4"> <label class="select_year">{{customFormatter(customDate)}}</label></div>
                     <input type="hidden" name="dtInput" :value="customDate">
             </div>
 
             <div class="row">
-                <div class="col-md-4 mt-3">
-                    <button type="button" class="btn btn-primary" ref="btnToggle" @click="addRow(holidays)" 
+                <div class="col-md-4">
+                    <button type="button" class="btn btn_edit" ref="btnToggle" @click="addRow(holidays)" 
                         :disabled="!btnEnabled" >{{btnText.text}}
                     </button>
                 </div>
-                <div class="col-md-4 mt-3">
-                    <button type="button" class="btn btn-primary" v-if="isBtnHidden" @click="copyRow()">前年の物をコピー</button>
+                <div class="col-md-4">
+                    <button type="button" class="btn btn_copy" v-if="isBtnHidden" @click="copyRow()">前年の物をコピー</button>
                 </div>
-                <div class="col-md-4 mt-3">
-                    <button type="button" class="btn btn-primary" :disabled="checkDeleteBtnDisable()" 
+                <div class="col-md-4">
+                    <button type="button" class="btn btn_del" :disabled="checkDeleteBtnDisable()" 
                         @click="deleteRow(customFormatter(customDate))">Delete</button><!--削除-->
                 </div>
             </div> 
             
-            <table class="table table-bordered mt-3" style="width: 73.5%;">
-                <thead class="bg-info text-white">
-                    <tr>
-                        <th scope="col" style="width: 10%;"></th>
-                        <th scope="col" style="width: 40%;">Date</th>
-                        <th scope="col" style="width: 50%;">Description</th>
-                    </tr>
-                </thead>
-                <tbody v-sortable.tr="holidays" v-if="isRowOne">
-                    <tr v-for="holiday in holidays" :key="holiday.id">
-                        <td class="align-middle">
-                            <input type="checkbox" v-model="holiday.selected">
-                        </td>
-                        <td>
-                            <span v-if="holiday.dtError" class="text-danger">Please enter the date</span><!--日付を入力してください-->
-                            <span v-if="holiday.dtDuplicateError" class="text-danger">Duplicate dates</span><!--日付は重複しています -->
-                            <span v-if="holiday.yearError" class="text-danger">
-                                {{customFormatter(customDate)}} Please enter your holiday <!--の休日を入力してください-->
-                            </span>
-                            <datepicker class="datepicker1" :minimumView="'day'" :maximumView="'month'" v-model="holiday.date" 
-                                :format="dayMonthFormatter" :typeable="true"></datepicker>
-                        </td>
-                        <td>
-                            <span v-if="holiday.desError" class="text-danger">Please enter the description</span><!--名称を入力してください-->
-                            <span v-if="holiday.desDuplicateError" class="text-danger">The description is duplicated</span><!--名称は重複しています-->
-                            <input class="form-control" v-model="holiday.description" type="text"/>
-                        </td>
-                    </tr>
-                </tbody>
+            <div class="row justify-content-center">
+                <div class="col-lg-12">
+                    <table class="table mt-3" style="width: 80.5%; background-color:#87a484;">
+                        <thead class="text-white" style="background-color:#6c8369;">
+                            <tr style="line-height:35px;"> 
+                                <th scope="col" style="width: 10%;"></th>
+                                <th scope="col" style="width: 40%;"><span class="tbl_title">Date</span></th>
+                                <th scope="col" style="width: 50%;"><span class="tbl_title">Description</span></th>
+                            </tr>
+                        </thead>
+                        <tbody v-sortable.tr="holidays" v-if="isRowOne">
+                            <tr v-for="holiday in holidays" :key="holiday.id">
+                                <td class="align-middle">
+                                    <input type="checkbox" v-model="holiday.selected">
+                                </td>
+                                <td>
+                                    <span v-if="holiday.dtError" class="text-danger">Please enter the date</span><!--日付を入力してください-->
+                                    <span v-if="holiday.dtDuplicateError" class="text-danger">Duplicate dates</span><!--日付は重複しています -->
+                                    <span v-if="holiday.yearError" class="text-danger">
+                                        {{customFormatter(customDate)}} Please enter your holiday <!--の休日を入力してください-->
+                                    </span>
+                                    <datepicker class="datepicker1" :minimumView="'day'" :maximumView="'month'" v-model="holiday.date" 
+                                        :format="dayMonthFormatter" :typeable="true"></datepicker>
+                                </td>
+                                <td>
+                                    <span v-if="holiday.desError" class="text-danger">Please enter the description</span><!--名称を入力してください-->
+                                    <span v-if="holiday.desDuplicateError" class="text-danger">The description is duplicated</span><!--名称は重複しています-->
+                                    <input class="form-control description" v-model="holiday.description" type="text"/>
+                                </td>
+                            </tr>
+                        </tbody>
                 
-                <tbody  v-if="isRowTwo">
-                    <tr>
-                        <td><input type="checkbox"></td>
-                        <td><input class="form-control"  type="text" value=""/></td>
-                        <td><input class="form-control"  type="text" value=""/></td>
-                    </tr>
-                </tbody>
-            </table>
+                        <tbody  v-if="isRowTwo">
+                            <tr>
+                                <td><input type="checkbox"></td>
+                                <td><input class="form-control"  type="text" value=""/></td>
+                                <td><input class="form-control"  type="text" value=""/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </template>
 
 <style >
-.datepicker1 input{
+
+.datepicker1 input, input[type=text].description {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 15px;
+        background-color: #fff;
+        height: 50px;
+        width: 100%;
+        padding: 12px 20px;
+        margin: 0px 0;
+        display: inline-block;
+        border: 1px solid white;
+        border-radius: 4px;
+        box-sizing: border-box;
+        color:black;
+    
+}
+
+#dtPicker {
+    background-color: white;
+    border:1px solid gray;
+}
+#dtPicker:hover {
+    background-color:silver;
+    border:1px solid gray;
+    color:black;
+    transition: 0.5s;
+    animation-delay: 0.8s;
+    -webkit-animation-delay:0.8s;
+}
+input[type=checkbox] {
+    margin-left: 25px;
+}
+
+.datepicker1 input:hover, input[type=text].description:hover {
+    border:1px solid silver;
+    background-color: #bfbfbf;
+    color:black;
+    /* letter-spacing: 1px; */
+    /* transition: 0.5s;
+    animation-delay: 0.8s;
+    -webkit-animation-delay:0.8s; */
+}
+
+
+
+
+
+#app {
+    margin:20px 0px;
+}
+.btn_del:disabled,
+.btn_del[disabled]{
+  border: 2px solid red;
+  background-color: #fff;
+  color: red;
+  cursor: pointer;
+}
+
+.description {
+    font-family: arial;
+    font-size: 15px;
+}
+
+/* input[type=text].description {
+      border: 1px solid white;
+      background-color: silver;
+      color:black;
+      border-radius: 0px;
+} */
+
+span.tbl_title{
+    font-family: arial;
+    font-size: 16px;
+}
+
+label.select_year {
+    font-family: verdana;
+    font-size:18px;
+    color:black;
+    margin-left: 15px;
+}
+
+.btn_del, .btn_edit, .btn_copy {
+    /* border-radius: 20px; */
+    padding:12px 32px;
+    border:2px solid white;
+    background-color:red;
+    color:white;
+    font-family: verdana;
+    font-size:14px;
+}
+
+.btn_copy {
+    background-color: #008844;
+    color:white;
+}
+
+.btn_edit {
+    background-color:#005b96;
+    color:#fff;
+    border:1px solid #005b96;
+}
+
+.btn_edit:hover, .btn_del:hover, .btn_copy:hover {
+    color:#fff;
+    cursor:pointer;
+}
+
+/* .datepicker1 input{
     height: calc(1.6em + 0.75rem + 2px);
     padding: 0.375rem 0.75rem;
     font-size: 0.9rem;
@@ -85,7 +202,7 @@
     background-clip: padding-box;
     border: 1px solid #ced4da;
     border-radius: 0.25rem;
-}
+} */
 </style>
 
 <script>
