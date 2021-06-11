@@ -1,23 +1,18 @@
 <template>
-    <div class="col-md-12 pb-5"> 
-        <div class="container-fluid">
-            <div class="col-12 text-center">
-                <h4 class="card-title"> Attendance List </h4>
-                <hr class="underline_title mb-4">
-            </div> 
+    <div class="col-md-10"> 
+        <div class="container">
             <div class="row">
-                
-                <div class="col-md-4 ">                     
+                <div class="col-md-4">                     
                     <select class="form-control" id="selectEmployee" @change="empChange($event)"  name="employ_selected" required focus v-model="select_employee">
-                        <option value=""  disabled selected>Please select employee</option>
+                        <option value="" disabled selected>Please select employee</option>
                         <option v-bind:key="emp.id" v-for="emp in emps" v-bind:label="employeeCodeAndName(emp)"> {{ emp.id }} {{ emp.employeeId }} {{emp.name }}</option>
                     </select>                      
                 </div>         
                       
                 <div class="col-md-4 offset-md-2"> 
                     <select class="form-control" id="selectDate"  @change="dateChange($event)" name="date_selected" required focus v-model="select_date">
-                        <option value="" disabled selected> <span class="choose_one">Please select Year/Month</span> </option>
-                        <option v-bind:key="date.id" v-for="date in dates"  > <span class="choose_one">{{ date.recordedDateTime }}</span> </option>
+                        <option value="" disabled selected>Please select Year/Month</option>
+                        <option v-bind:key="date.id" v-for="date in dates"  >{{ date.recordedDateTime }}</option>
                     </select>                       
                 </div> 
             </div> 
@@ -34,28 +29,28 @@
             </div>
         </div>
 
-        <div class="alert alert-danger" role="alert" v-if="data_check_messg"  id="check-alert" style="text-align: center">
+        <div class="alert alert-danger" role="alert" v-if="data_check_messg"  id="check-alert"   style="text-align: center">
                 <button type="button" class="close" data-dismiss="alert">x</button>
-                <span class="err_msg"><strong >No data to display.</strong> </span><!--データはありませんでした。-->
+                <strong >No data to display.</strong> <!--データはありませんでした。-->
         </div>
 
         <div class="container-fluid mt-5" v-if="form_open">
-            <table class="table table-borderless ml-3">
+            <table class="table table-borderless">
                 <tr>
                     <td class="bg-danger"></td>
-                    <td><label class="lbl_inform">Late / Early Leave</label></td> <!-- 遅刻・早退-->
+                    <td>Late / early leave</td> <!-- 遅刻・早退-->
                 </tr>
                 <tr>
                     <td class="bg-warning"></td>
-                    <td><label class="lbl_inform">Late (Check if it is acceptable)</label></td><!-- 遅刻(許容範囲か要確認) -->
+                    <td>Late (check if it is acceptable)</td><!-- 遅刻(許容範囲か要確認) -->
                 </tr>
                 <tr>
                     <td style="background-color:#FBE5D6"></td>
-                    <td><label class="lbl_inform">No Stamp</label></td><!-- 打刻なし-->
+                    <td>No stamp</td><!-- 打刻なし-->
                 </tr>
                 <tr>
                     <td class="table-success"></td>
-                    <td><label class="lbl_inform">Holiday</label></td><!--休日 -->
+                    <td>holiday</td><!--休日 -->
                 </tr>
             </table>
         </div>
@@ -63,60 +58,41 @@
         <div class="container mt-5" v-if="form_open">
                             
             <div class="row">
-                    <div class="col-md-4 ml-auto">
-                        <button type="button" class="btn btn_salarycopy" onclick="this.blur();" @click="csvOutput(select_employee,select_date)">出勤簿生成</button><!--Attendance book generation-->
-                    </div>
-                    <div class="col-md-4 ml-auto offset-md-2">
-                        <button type="button" class="btn btn_cal" onclick="this.blur();" @click="allButtonClick()">All automatic calculation</button><!--全て自動計算-->
-                    </div> 
+                <div class="col-md-4">
+                    <button type="button" class="btn" style="background-color:#E7E6E6" onclick="this.blur();" @click="csvOutput(select_employee,select_date)">出勤簿生成</button><!--Attendance book generation-->
+                </div>
+                <div class="col-md-4 offset-md-2">
+                    <button type="button" class="btn" style="width: 220px;background-color:#E7E6E6;" onclick="this.blur();" @click="allButtonClick()">All automatic calculation</button><!--全て自動計算-->
+                </div> 
             </div>                 
                 <form id="form" class="" @submit.prevent="attendSave"  autocomplete="on">
-                    <div class="row my-3">
-                        <div class="col-md-4 ml-auto">
+                    <div class="row mt-3">
+                        <div class="col-md-4">
                             <input name="emp_no" ref="myButton" class="form-control input-sm date" style="text-align: center;" type="hidden" :value="`${emp_no}`">
-                            <button type="submit" class="btn btn_salaryedit" onclick="this.blur();" >Register</button><!--登録-->
+                            <button type="submit" class="btn btn-primary" onclick="this.blur();" >Register</button><!--登録-->
                         </div>
-                        <div class="col-md-4 ml-auto offset-md-2">
-                            <button type="button" class="btn btn_emptycal" onclick="this.blur();" @click="filterInput()" >Automatic calculation only in the empty</button><!--空のところだけ自動計算-->
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-5">
-                            <table class="table" style="background-color:#fff;">
-                                <tr>
-                                    <td><span class="lbl_left">Select Date </span></td><!-- 名前(フリガナ) -->
-                                    <td><span  class="lbl_left">{{this.select_date}}</span></td>
-                                </tr>
-                                <tr>
-                                    <td><span class="lbl_left">Employee No</span></td><!--入社日-->
-                                    <td><span class="lbl_left">{{emp_code}}</span></td>
-                                </tr>
-                                <tr>
-                                    <td><span class="lbl_left"> Name</span></td><!--生年月日-->
-                                    <td><span class="lbl_left">{{emp_name}}</span></td>
-                                </tr>
-                            </table>
+                        <div class="col-md-4 offset-md-2">
+                            <button type="button" class="btn" onclick="this.blur();" @click="filterInput()" style="width: 220px;color: red;background-color:#E7E6E6">Automatic calculation only in the empty</button><!--空のところだけ自動計算-->
                         </div>
                     </div>
              
-                    <!-- <div class="row mt-5">
-                        <div class="col-md-4"> Select Date :{{this.select_date}}</div>                          
+                    <div class="row mt-5">
+                        <div class="col-md-4"> {{this.select_date}}</div>                          
                     </div>  
                     <div class="row">
-                        <div class="col-md-4"> Employee No. :{{emp_code}}</div>                          
+                        <div class="col-md-4"> Employee No.{{emp_code}}</div>                          
                     </div>    
                     <div class="row">
                         <div class="col-md-4"> Name: {{emp_name}}</div>                          
-                    </div>  -->
+                    </div> 
                
                     <table id="attendTable" class="table table-bordered">
-                        <thead class="text-white" style="background-color:#6c8369;">
+                        <thead class="bg-info text-white">
                             <tr>
                                 <td style="text-align: center;width: 10%;"></td>                          
-                                <td colspan="2" style="text-align: center;width: 30%;" > <label class="time_title">AM</label></td>   
-                                <td colspan="2" style="text-align: center;width: 30%;"> <label class="time_title">PM</label></td>
-                                <td style="text-align: center;width: 15%;"> <label class="time_title">Total Hours</label></td>
+                                <td colspan="2" style="text-align: center;width: 30%;" >AM</td>   
+                                <td colspan="2" style="text-align: center;width: 30%;">PM</td>
+                                <td style="text-align: center;width: 15%;">Total Hours</td>
                                 <td style="text-align: center;width: 15%;"></td>
                             </tr>
                         </thead>
@@ -138,7 +114,7 @@
                                              
                                                 <template  v-if="key==0">
                                                 
-                                                    <td v-bind:key="'A'+key" style="text-align: center;" rowspan="2"><div style="text-align: center;"><label class="calen_date">{{dayindex+1}} {{ days[new Date(year+"/"+month+"/"+(dayindex+1)).getDay()]}}</label></div></td>
+                                                    <td v-bind:key="'A'+key" style="text-align: center;" rowspan="2"><div style="text-align: center;">{{dayindex+1}} {{ days[new Date(year+"/"+month+"/"+(dayindex+1)).getDay()]}}</div></td>
                                                    <template v-if="day[0].length==0">
                                                         <td  v-bind:key="'B'+key" colspan="2"  :style="`background-color:${checkBgColor(year,month,dayindex+1,date.am1==null)};height: 3.3em;`" ></td>
                                                         <td  v-bind:key="'D'+key" colspan="2"  :style="`background-color:${checkBgColor(year,month,dayindex+1,date.am1==null)};height: 3.3em;`" ></td>
@@ -148,22 +124,22 @@
                                                    <template v-else>
                                                           <td v-bind:key="'B'+key" style="text-align: center;" v-bind:class="`bg-${checkColor(date.am1,key)}`"  :style="`background-color:${checkBgColor(year,month,dayindex+1,date.am1==null)};height: 3.3em;`" >
                                                         <div class="am1_0"> 
-                                                            <label class="em_atrecord">{{date.am1}}</label>
+                                                            {{date.am1}}
                                                         </div>
                                                     </td>
                                                     <td v-bind:key="'C'+key" style="text-align: center;"  v-bind:class="`bg-${checkColor(date.am2,key)}`"  :style="`background-color:${checkBgColor(year,month,dayindex+1,date.am2==null)};height: 3.3em;`">
                                                         <div class="am2_1"> 
-                                                            <label class="em_atrecord">{{date.am2}}</label>
+                                                            {{date.am2}}
                                                         </div>    
                                                     </td>
                                                     <td v-bind:key="'D'+key" style="text-align: center;" v-bind:class="`bg-${checkColor(date.pm1,key)}`"  :style="`background-color:${checkBgColor(year,month,dayindex+1,date.pm1==null)};height: 3.3em;`">
                                                         <div class="pm1_2"> 
-                                                            <label class="em_atrecord">{{date.pm1}}</label>
+                                                            {{date.pm1}}
                                                         </div>
                                                     </td>
                                                     <td v-bind:key="'E'+key" style="text-align: center;" v-bind:class="`bg-${checkColor(date.pm2,key)}`"  :style="`background-color:${checkBgColor(year,month,dayindex+1,date.pm2==null)};height: 3.3em;`">
                                                         <div class="pm2_3"> 
-                                                            <label class="em_atrecord">{{date.pm2}}</label>
+                                                            {{date.pm2}}
                                                         </div>    
                                                     </td>
                                                     <td v-bind:key="'F'+key" style="text-align: center;"></td>
@@ -208,14 +184,14 @@
                                                      
                                                        
                                                         <td v-bind:key="'F'+key"  style="padding: 0px;">
-                                                            <input name="total_hours[]" class="form-control input-sm thour edit_time" style="text-align: center;" type="text" :value="`${date.total_hours}`!=undefined?date.total_hours:''">
-                                                            <input name="late_coming[]" class="form-control input-sm late_coming edit_time" style="text-align: center;" type="hidden" :value="`${date.late_coming}`!=undefined?date.late_coming:''">
-                                                            <input name="leaving_early[]" class="form-control input-sm leaving_early edit_time" style="text-align: center;" type="hidden" :value="`${date.leaving_early}`!=undefined?date.leaving_early:''">
-                                                            <input name="date[]" class="form-control input-sm date edit_time" style="text-align: center;" type="hidden" :value="`${year}-${month}-${parseInt(dayindex+1).toString().length==1?'0'+(parseInt(dayindex)+1):(parseInt(dayindex)+1)}`">
+                                                            <input name="total_hours[]" class="form-control input-sm thour" style="text-align: center;" type="text" :value="`${date.total_hours}`!=undefined?date.total_hours:''">
+                                                            <input name="late_coming[]" class="form-control input-sm late_coming" style="text-align: center;" type="hidden" :value="`${date.late_coming}`!=undefined?date.late_coming:''">
+                                                            <input name="leaving_early[]" class="form-control input-sm leaving_early" style="text-align: center;" type="hidden" :value="`${date.leaving_early}`!=undefined?date.leaving_early:''">
+                                                            <input name="date[]" class="form-control input-sm date" style="text-align: center;" type="hidden" :value="`${year}-${month}-${parseInt(dayindex+1).toString().length==1?'0'+(parseInt(dayindex)+1):(parseInt(dayindex)+1)}`">
                                                         </td>
                                                         <td v-bind:key="'G'+key"  style="padding: 0px;text-align: center;" >
-                                                            <input name="id[]" class="form-control input-sm idx edit_time" style="text-align: center;" type="hidden" :value="`${date.id?date.id:''}`">
-                                                            <button type="button" onclick="this.blur();" :id="`autobut${dayindex}`" class="btn btn_Autocal" style="background-color:#a4b967"  @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">Auto calculate</button><!--自動計算-->
+                                                            <input name="id[]" class="form-control input-sm idx" style="text-align: center;" type="hidden" :value="`${date.id?date.id:''}`">
+                                                            <button type="button" onclick="this.blur();" :id="`autobut${dayindex}`" class="btn" style="background-color:#E7E6E6"  @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">Auto calculate</button><!--自動計算-->
                                                         </td>
                                                     </template>
                                                     <template v-else>
@@ -236,18 +212,18 @@
                                                                 <template v-else>
                                                                         <td v-bind:key="'B'+key"  style="padding: 0px;">
                                                                             <template v-if="day[0].am1!== null">   
-                                                                                <input :name="`am1[]`"  @change="updateInput"  :class="`form-control input-sm am1`" id="read_time" style="text-align: center;" type="text" :value="`${date.am1}`!=undefined?date.am1:''"> 
+                                                                                <input :name="`am1[]`"  @change="updateInput"  :class="`form-control input-sm am1`"  style="text-align: center;" type="text" :value="`${date.am1}`!=undefined?date.am1:''"> 
                                                                             </template>
                                                                             <template v-else>
-                                                                                <input   class="form-control input-sm edit_time"  style="text-align: center;" type="text" readonly :value="`${date.am1}`!=undefined?date.am1:null"> 
+                                                                                <input   class="form-control input-sm"  style="text-align: center;" type="text" readonly :value="`${date.am1}`!=undefined?date.am1:null"> 
                                                                             </template> 
                                                                         </td>
                                                                         <td v-bind:key="'C'+key"  style="padding: 0px;">
                                                                             <template v-if="day[0].am2!== null">   
-                                                                                <input :name="`am2[]`"  @change="updateInput" :class="`form-control input-sm am2`" id="read_time" style="text-align: center;" type="text" :value="`${date.am2}`!=undefined?date.am2:''"> 
+                                                                                <input :name="`am2[]`"  @change="updateInput" :class="`form-control input-sm am2`"  style="text-align: center;" type="text" :value="`${date.am2}`!=undefined?date.am2:''"> 
                                                                             </template>
                                                                             <template v-else>
-                                                                                <input   class="form-control input-sm edit_time"  style="text-align: center;" type="text" readonly :value="`${date.am2}`!=undefined?date.am2:null"> 
+                                                                                <input   class="form-control input-sm"  style="text-align: center;" type="text" readonly :value="`${date.am2}`!=undefined?date.am2:null"> 
                                                                             </template> 
                                                                         </td>
                                                                 </template>        
@@ -268,30 +244,30 @@
                                                                 <template v-else>
                                                                 <td v-bind:key="'D'+key"  style="padding: 0px;">
                                                                      <template v-if="day[0].pm1!== null"> 
-                                                                        <input :name="`pm1[]`"  @change="updateInput"  :class="`form-control input-sm pm1`" id="read_time"  style="text-align: center;" type="text" :value="`${date.pm1}`!=undefined?date.pm1:''">  
+                                                                        <input :name="`pm1[]`"  @change="updateInput"  :class="`form-control input-sm pm1`"  style="text-align: center;" type="text" :value="`${date.pm1}`!=undefined?date.pm1:''">  
                                                                      </template>
                                                                      <template v-else>
-                                                                            <input   class="form-control input-sm edit_time"  style="text-align: center;" type="text" readonly :value="`${date.pm1}`!=undefined?date.pm1:null"> 
+                                                                            <input   class="form-control input-sm"  style="text-align: center;" type="text" readonly :value="`${date.pm1}`!=undefined?date.pm1:null"> 
                                                                     </template>    
                                                                 </td>
                                                                 <td v-bind:key="'E'+key"  style="padding: 0px;">
                                                                     <template v-if="day[0].pm2!== null"> 
-                                                                        <input :name="`pm2[]`"  @change="updateInput"  :class="`form-control input-sm pm2`" id="read_time"  style="text-align: center;" type="text" :value="`${date.pm2}`!=undefined?date.pm2:''"> 
+                                                                        <input :name="`pm2[]`"  @change="updateInput"  :class="`form-control input-sm pm2`"  style="text-align: center;" type="text" :value="`${date.pm2}`!=undefined?date.pm2:''"> 
                                                                     </template>
                                                                      <template v-else>
-                                                                            <input   class="form-control input-sm edit_time"  style="text-align: center;" type="text" readonly :value="`${date.pm2}`!=undefined?date.pm2:null"> 
+                                                                            <input   class="form-control input-sm"  style="text-align: center;" type="text" readonly :value="`${date.pm2}`!=undefined?date.pm2:null"> 
                                                                     </template>    
                                                                 </td>
                                                                 </template>
                                                                 <td v-bind:key="'F'+key"  style="padding: 0px;">
-                                                                    <input name="total_hours[]" class="form-control input-sm thour edit_time" style="text-align: center;" type="text" :value="`${date.total_hours}`!=undefined?date.total_hours:''">
-                                                                    <input name="late_coming[]" class="form-control input-sm late_coming edit_time" style="text-align: center;" type="hidden" :value="`${date.late_coming}`!=undefined?date.late_coming:''">
-                                                                    <input name="leaving_early[]" class="form-control input-sm leaving_early edit_time" style="text-align: center;" type="hidden" :value="`${date.leaving_early}`!=undefined?date.leaving_early:''">
-                                                                    <input name="date[]" class="form-control input-sm date edit_time" style="text-align: center;" type="hidden" :value="`${year}-${month}-${parseInt(dayindex+1).toString().length==1?'0'+(parseInt(dayindex)+1):(parseInt(dayindex)+1)}`">
+                                                                    <input name="total_hours[]" class="form-control input-sm thour" style="text-align: center;" type="text" :value="`${date.total_hours}`!=undefined?date.total_hours:''">
+                                                                    <input name="late_coming[]" class="form-control input-sm late_coming" style="text-align: center;" type="hidden" :value="`${date.late_coming}`!=undefined?date.late_coming:''">
+                                                                    <input name="leaving_early[]" class="form-control input-sm leaving_early" style="text-align: center;" type="hidden" :value="`${date.leaving_early}`!=undefined?date.leaving_early:''">
+                                                                    <input name="date[]" class="form-control input-sm date" style="text-align: center;" type="hidden" :value="`${year}-${month}-${parseInt(dayindex+1).toString().length==1?'0'+(parseInt(dayindex)+1):(parseInt(dayindex)+1)}`">
                                                                 </td>
                                                                 <td v-bind:key="'G'+key"  style="padding: 0px;text-align: center;">
-                                                                    <input name="id[]" class="form-control input-sm idx edit_time" style="text-align: center;" type="hidden" :value="`${date.id?date.id:''}`">
-                                                                    <button type="button" onclick="this.blur();" :id="`autobut${dayindex}`" class="btn btn_Autocal" style="background-color:#a4b967"  @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">Auto calculate</button>
+                                                                    <input name="id[]" class="form-control input-sm idx" style="text-align: center;" type="hidden" :value="`${date.id?date.id:''}`">
+                                                                    <button type="button" onclick="this.blur();" :id="`autobut${dayindex}`" class="btn" style="background-color:#E7E6E6"  @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">Auto calculate</button>
                                                                 </td>
                                                             
                                                             </template>
@@ -313,15 +289,15 @@
                                                                                 <input :name="`am1[]`"  @change="updateInput"  :class="`form-control input-sm am1`"  style="text-align: center;" type="text" @value="`${old(am1)}`"> 
                                                                                 </template>
                                                                                 <template v-else>
-                                                                                    <input   class="form-control input-sm edit_time"  style="text-align: center;" type="text" readonly :value="`${date.am1}`!=undefined?date.am1:null"> 
+                                                                                    <input   class="form-control input-sm"  style="text-align: center;" type="text" readonly :value="`${date.am1}`!=undefined?date.am1:null"> 
                                                                                 </template> 
                                                                             </td>
                                                                             <td v-bind:key="'C'+key"  style="padding: 0px;">
                                                                                 <template v-if="day[0].am2!==null"> 
-                                                                                <input :name="`am2[]`"  @change="updateInput" :class="`form-control input-sm am2 edit_time`"  style="text-align: center;" type="text" @value="`${old(am2)}`"> 
+                                                                                <input :name="`am2[]`"  @change="updateInput" :class="`form-control input-sm am2`"  style="text-align: center;" type="text" @value="`${old(am2)}`"> 
                                                                                 </template>
                                                                                 <template v-else>
-                                                                                    <input   class="form-control input-sm edit_time"  style="text-align: center;" type="text" readonly :value="`${date.am2}`!=undefined?date.am2:null"> 
+                                                                                    <input   class="form-control input-sm"  style="text-align: center;" type="text" readonly :value="`${date.am2}`!=undefined?date.am2:null"> 
                                                                                 </template> 
                                                                             
                                                                             </td>
@@ -336,7 +312,7 @@
                                                                                 <input :name="`pm1[]`"  @change="updateInput"  :class="`form-control input-sm pm1`"  style="text-align: center;" type="text" @value="`${old(pm1)}`">  
                                                                                 </template>
                                                                                 <template v-else>
-                                                                                    <input   class="form-control input-sm edit_time"  style="text-align: center;" type="text" readonly :value="`${date.pm1}`!=undefined?date.pm1:null"> 
+                                                                                    <input   class="form-control input-sm"  style="text-align: center;" type="text" readonly :value="`${date.pm1}`!=undefined?date.pm1:null"> 
                                                                                 </template> 
                                                                             </td>
                                                                             <td v-bind:key="'E'+key"  style="padding: 0px;">
@@ -345,20 +321,20 @@
                                                                                     <input :name="`pm2[]`"  @change="updateInput"  :class="`form-control input-sm pm2`"  style="text-align: center;" type="text" @value="`${old(pm2)}`"> 
                                                                                 </template>
                                                                                 <template v-else>
-                                                                                    <input   class="form-control input-sm edit_time"  style="text-align: center;" type="text" readonly :value="`${date.pm2}`!=undefined?date.pm2:null"> 
+                                                                                    <input   class="form-control input-sm"  style="text-align: center;" type="text" readonly :value="`${date.pm2}`!=undefined?date.pm2:null"> 
                                                                                 </template>                                                                            
                                                                             </td>
                                                                          </template>
 
                                                                         <td v-bind:key="'F'+key"  style="padding: 0px;">
-                                                                            <input name="total_hours[]" class="form-control input-sm thour edit_time" style="text-align: center;" type="text" @value="`${old(total_hours)}`">
-                                                                            <input name="late_coming[]" class="form-control input-sm late_coming edit_time" style="text-align: center;" type="hidden" :value="`${date.late_coming}`!=undefined?date.late_coming:''">
-                                                                            <input name="leaving_early[]" class="form-control input-sm leaving_early edit_time" style="text-align: center;" type="hidden" :value="`${date.leaving_early}`!=undefined?date.leaving_early:''">
+                                                                            <input name="total_hours[]" class="form-control input-sm thour" style="text-align: center;" type="text" @value="`${old(total_hours)}`">
+                                                                            <input name="late_coming[]" class="form-control input-sm late_coming" style="text-align: center;" type="hidden" :value="`${date.late_coming}`!=undefined?date.late_coming:''">
+                                                                            <input name="leaving_early[]" class="form-control input-sm leaving_early" style="text-align: center;" type="hidden" :value="`${date.leaving_early}`!=undefined?date.leaving_early:''">
                                                                             <input name="date[]" class="form-control input-sm date" style="text-align: center;" type="hidden" :value="`${year}-${month}-${parseInt(dayindex+1).toString().length==1?'0'+(parseInt(dayindex)+1):(parseInt(dayindex)+1)}`">
                                                                         </td>
                                                                         <td v-bind:key="'G'+key"  style="padding: 0px;text-align: center;">
                                                                             <!-- <input name="id[]" class="form-control input-sm idx" style="text-align: center;" type="hidden" :value="`${date.id?date.id:''}`"> -->
-                                                                            <button type="button" onclick="this.blur();" :id="`autobut${dayindex}`" class="btn btn_Autocal" style="background-color:#a4b967"  @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">Auto calculate</button>
+                                                                            <button type="button" onclick="this.blur();" :id="`autobut${dayindex}`" class="btn" style="background-color:#E7E6E6"  @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">Auto calculate</button>
                                                                         </td>
                                                                     </template> 
                                                     </template>                                                
@@ -369,7 +345,7 @@
                                 <template v-else>
                                     <!-- {{holidays[dayindex+1]==(dayindex+1) }} -->
                                     <tr v-bind:key="dayindex"  v-bind:style="`height:${day_name(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()],holidays[dayindex+1]==(dayindex+1))==('table-secondary' || 'table-success')?'3.3em':''}`" v-bind:class="`mainIndex_${dayindex} ${day_name(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()],holidays[dayindex+1]==(dayindex+1))}`">
-                                        <td  style="text-align: center;" rowspan="2"><div style="text-align: center;"><label class="calen_date">{{dayindex+1}} {{ days[new Date(year+"/"+month+"/"+(dayindex+1)).getDay()]}}</label></div></td>     
+                                        <td  style="text-align: center;" rowspan="2"><div style="text-align: center;">{{dayindex+1}} {{ days[new Date(year+"/"+month+"/"+(dayindex+1)).getDay()]}}</div></td>     
                                        
                                         <template v-if="`${day_name(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()],holidays[dayindex+1]==(dayindex+1))}`!=''">
                                             <td rowspan="2" colspan="2"></td>
@@ -391,14 +367,14 @@
                                                        <td class="paid-leave1 align-middle text-center" colspan="2" style="height:2.6em;padding:0px;"></td> 
                                                         <td class="paid-leave2 align-middle text-center" colspan="2" style="height:2.6em;padding:0px;"></td>
                                                         <td  style="padding: 0px;">
-                                                                    <input name="total_hours[]" class="form-control input-sm thour edit_time" style="text-align: center;" type="text" @value="`${old(total_hours)}`">
-                                                                    <input name="late_coming[]" class="form-control input-sm late_coming edit_time" style="text-align: center;" type="hidden" >
-                                                                    <input name="leaving_early[]" class="form-control input-sm leaving_early edit_time" style="text-align: center;" type="hidden" >
-                                                                    <input name="date[]" class="form-control input-sm date edit_time" style="text-align: center;" type="hidden" :value="`${year}-${month}-${parseInt(dayindex+1).toString().length==1?'0'+(parseInt(dayindex)+1):(parseInt(dayindex)+1)}`">
+                                                                    <input name="total_hours[]" class="form-control input-sm thour" style="text-align: center;" type="text" @value="`${old(total_hours)}`">
+                                                                    <input name="late_coming[]" class="form-control input-sm late_coming" style="text-align: center;" type="hidden" >
+                                                                    <input name="leaving_early[]" class="form-control input-sm leaving_early" style="text-align: center;" type="hidden" >
+                                                                    <input name="date[]" class="form-control input-sm date" style="text-align: center;" type="hidden" :value="`${year}-${month}-${parseInt(dayindex+1).toString().length==1?'0'+(parseInt(dayindex)+1):(parseInt(dayindex)+1)}`">
                                                         </td>
                                                         <td style="padding: 0px;text-align: center;">
                                                                     <input name="id[]" class="form-control input-sm idx" style="text-align: center;" type="hidden" >
-                                                                    <button type="button" onclick="this.blur();" :id="`autobut${dayindex}`" class="btn btn_Autocal" style="background-color:#a4b967"  @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">Auto calculate</button>
+                                                                    <button type="button" onclick="this.blur();" :id="`autobut${dayindex}`" class="btn" style="background-color:#E7E6E6"  @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">Auto calculate</button>
                                                         </td>  
                                                </template>                                   
                                     </tr>  
@@ -410,135 +386,6 @@
         </div>
     </div>    
 </template>
-
-<style>
-    span.choose_one {
-        font-family: verdana;
-        font-size: 17px;
-        color: black;
-    }
-
-    label.lbl_inform {
-            font-family: verdana;
-            font-size:16px;
-            color:black;
-        
-    }
-    .btn_salaryedit, .btn_salarycopy {
-        /* border-radius: 20px; */
-        padding:12px 32px;
-        border:2px solid white;
-        color:white;
-        font-family: verdana;
-        font-size:14px;
-        width:150px;
-        
-    }
-
-    .btn_salarycopy {
-        background-color: #005b96;
-        color:white;
-        border:1px solid #008844;
-        position: relative;
-        top:10px;
-
-    }
-
-    .btn_salaryedit {
-        background-color:#008844;
-        color:#fff;
-        border:1px solid #005b96;
-        position: relative;
-        top:20px;
-    }
-
-    .btn_cal, .btn_emptycal {
-        padding:15px 32px;
-        border:2px solid white;
-        color:white;
-        font-family: verdana;
-        font-size:14px;
-        width:250px;
-        
-    }
-
-    .btn_cal{
-        background-color: #662c2a;
-    }
-    .btn_emptycal {
-        background-color: #ff6f69;
-    }
-
-    .btn_Autocal {
-        box-shadow: none;
-        font-family: Verdana, Geneva, Tahoma, sans-serif;
-        font-size: 13px;
-        color:white;
-    }
-
-    .btn_Autocal:hover {
-        /* letter-spacing: 1px; */
-        transition: 0.5s;
-        animation-delay: 0.8s;
-        -webkit-animation-delay:0.8s;
-    }
-
-    label.time_title {
-        font-family: Verdana, Geneva, Tahoma, sans-serif;
-        padding: 5px 10px;
-        font-size: 18px;
-        color:white;
-    }
-
-    label.calen_date {
-        font-family: Verdana, Geneva, Tahoma, sans-serif;
-        color:black;
-        font-size: 16px;
-        padding: 5px 10px;
-        /* font-weight: bold; */
-    }
-
-    input[type=text].edit_time, input[type=text]#read_time {
-          background-color: #fff;
-          height: 50px;
-          width: 100%;
-          padding: 12px 20px;
-          margin: 0px 0;
-          display: inline-block;
-          border: 1px solid white;
-          border-radius: 4px;
-          box-sizing: datepicker1border-box;
-          color:black;
-          font-family: Montserrat, Helvetica Neue, sans-serif;
-          font-size: 16px;
-    }
-
-    input[type=text]#read_time {
-        font-family: Montserrat, Helvetica Neue, sans-serif;
-
-        background-color: #d7b2d4;
-        font-size: 16px;
-        color: black;
-    }
-
-    label.em_atrecord {
-        font-family: Montserrat, Helvetica Neue, sans-serif;
-        font-size: 16px;
-        color:black;
-        padding: 3px 0px;
-        /* font-style: oblique; */
-        /* font-weight: bold; */
-        
-    }
-
-    select#selectEmployee, select#selectDate {
-        font-family: Verdana, Geneva, Tahoma, sans-serif;
-        font-size:15px;
-        color: black;
-    }
-
-
-</style>
 <script>
     export default {
         data() {
@@ -631,7 +478,6 @@
                        }
                      
                    }
-
                 });   
             },
             loadingAlert:function(){
@@ -655,14 +501,12 @@
                 return value.employeeId+' '+value.name;
             },
             empChange:function(event){   
-
                 let val='';
                 if(event.target.value!=''){
                     val=event.target.value;
                     let split_name=val.split(" ");
                     this.emp_no=split_name[0];
                     this.emp_code=split_name[1];
-
                     val=val.replace(this.emp_no,'');
                     val=val.replace(this.emp_code,'');
                     this.emp_name=val;
@@ -775,7 +619,6 @@
                     })
                     .then(function (response) {
                       
-
                         // your action after success                      
                         if(response.data){
                             if(response.data.message==true){
@@ -827,7 +670,6 @@
                
             },
             updateInput:function(event){ 
-
                    let am1=null,am2=null,pm1=null,pm2=null;let total_am=0,total_pm=0;
                    am1=$(event.target).parent().parent().find('.am1').val()!=undefined?$(event.target).parent().parent().find('.am1').val().split(":"):'';
                    am2=$(event.target).parent().parent().find('.am2').val()!=undefined?$(event.target).parent().parent().find('.am2').val().split(":"):'';
@@ -835,14 +677,10 @@
                    pm2=$(event.target).parent().parent().find('.pm2').val()!=undefined?$(event.target).parent().parent().find('.pm2').val().split(":"):'';
                 
                   const {t_hr, t_min,late_coming,leaving_early}=this.totalHourCal(am1,am2,pm1,pm2,total_am,total_pm,'',''); 
-
                   let res=isNaN((parseFloat(t_hr)+parseFloat(t_min)).toFixed(2))?'':(parseFloat(t_hr)+parseFloat(t_min)).toFixed(2);
-
                 jQuery(event.target).parent().parent().find(".thour").val(Math.abs(res).toFixed(2));
-
                 jQuery(event.target).parent().parent().find(".late_coming").val(Math.abs(late_coming).toFixed(2));
                 jQuery(event.target).parent().parent().find(".leaving_early").val(Math.abs(leaving_early).toFixed(2));
-
             }, 
             allButtonClick:function(){ 
                 $('[id^=autobut]').click();
@@ -859,7 +697,6 @@
                 let class_name='';let parent_class_name='';
                 let that=this; 
                 $(function() {
-
                     jQuery(document).on("contextmenu","[class^=paid-leave1],[class^=paid-leave2]", function(e){
                             parent_class_name=jQuery(this).parent().attr('class');                            
                             // if(parent_class_name==undefined){
@@ -867,7 +704,6 @@
                             // }
                             class_name=jQuery(this).attr('class').split(' ')[0];                         
                     });
-
                     $.contextMenu({
                         selector:".paid-leave1,.paid-leave2",
                         callback: function(key, options) {
@@ -891,10 +727,8 @@
                                 }
                                
                                    jQuery("."+parent_class_name).find('[id^=autobut]').click();
-
                             }else{
                                 let dakoku=that.showTimer(parent_class_name,class_name,'dash');
-
                                 if(class_name=='paid-leave1'){
                                     jQuery("."+parent_class_name).find('.amleave').remove();
                                     if(dakoku!='dakoku')
@@ -925,7 +759,6 @@
                 }else if(index==true && cur_date>custom_date){
                     return '#FBE5D6';
                 }
-
             },
             checkColor:function(val,index){                
                 let val_split='';              
@@ -973,9 +806,7 @@
            },   
            update_call(){
                     let that=this;  
-
                     that.getHolidays();
-
                     let up_data={
                         "emp_no":this.emp_no,
                         "date":this.select_date,
@@ -993,13 +824,11 @@
                         that.data_combine=[];
                         that.check_attend_data=false;                        
                         that.get_attend_data=response.data;
-
                         that.ampm_calling(that.get_attend_data);                  
                     })
                     .catch(function (error) {
                          that.$swal.close();                      
                     }); 
-
            },   
             ampm_calling(attend_data=''){        
                      
@@ -1058,9 +887,7 @@
                         });
                     
                         that.memory=''; 
-
                         for(let i=1;i<=this.dayCount;i++){
-
                             for(let j = 0; j < that.ampm_arr.length; j++) {
                                     let connect_to_dayampm = that.ampm_arr[j];                                         
                                 for(let k = 0; k < connect_to_dayampm.length; k++) {
@@ -1156,7 +983,6 @@
                               
                         }
                     });
-
                     this.axios
                     .get(process.env.MIX_APP_URL+'/api/setting/delayTime/'+this.year+"/"+this.month)//+this.year+"/"+this.month
                     .then(response => { 
@@ -1170,7 +996,6 @@
                         that.setting_ampm.am=response.data.am;
                         that.setting_ampm.pm=response.data.pm;
                     });
-
                 }
                 that.$swal.close();
             },
@@ -1179,9 +1004,7 @@
               let am_leave='';let pm_leave=''; 
               let am1=null,am2=null,pm1=null,pm2=null;
               let t_am=null;let p_am=null; 
-
              
-
               if(day_leave==''){
                 if(jQuery("."+sec_index).find('td .amleave').val()){
                     am_leave=jQuery("."+sec_index).find('td .amleave').val();      
@@ -1191,7 +1014,6 @@
                 }  
                 am1=jQuery("."+index).find('.am1_0').text().trim();
                 am2=jQuery("."+index).find('.am2_1').text().trim();
-
                 pm1=jQuery("."+index).find('.pm1_2').text().trim();
                 pm2=jQuery("."+index).find('.pm2_3').text().trim();
                    
@@ -1204,19 +1026,15 @@
                 } 
                 am1=jQuery("."+index).prev('tr').find('[class^="mainIndex_"]').find('.am1_0').text().trim();
                 am2=jQuery("."+index).prev('tr').find('[class^="mainIndex_"]').find('.am2_1').text().trim();
-
                 pm1=jQuery("."+index).prev('tr').find('[class^="mainIndex_"]').find('.pm1_2').text().trim();
                 pm2=jQuery("."+index).prev('tr').find('[class^="mainIndex_"]').find('.pm2_3').text().trim();
                   
               }         
-
-
               if(am1=='' && am2=='' && pm1=='' && pm2=='' && am_leave==1 && pm_leave==1 ){
                     if(day_leave==''){
                         jQuery("."+sec_index).find(".thour").val('8.00');
                         return false;
                     }                   
-
               }else if(am1=='' && am2=='' && pm1=='' && pm2=='' && am_leave==2 && pm_leave==2){
                    if(day_leave==''){
                         jQuery("."+sec_index).find(".thour").val('0.00');
@@ -1229,7 +1047,6 @@
                     p_am=4;
               }
              
-
               if(day_leave=='circle' || day_leave=='dash'){           
               
                     let leave_sign=day_leave=='circle'?"〇":"-";
@@ -1262,7 +1079,6 @@
               
            
               let auto_am1,auto_am2,auto_pm1,auto_pm2;
-
                 if(day_leave==''){
                         if(!jQuery("."+sec_index).find(".am1").hasClass('checkColumn') && !jQuery("."+sec_index).find(".am2").hasClass('checkColumn')
                         && !jQuery("."+sec_index).find(".pm1").hasClass('checkColumn') && !jQuery("."+sec_index).find(".pm2").hasClass('checkColumn')){   
@@ -1323,7 +1139,6 @@
                     jQuery("."+sec_index).find(".thour").val(res==0?"0.00":Math.abs(res).toFixed(2));
                     jQuery("."+sec_index).find(".late_coming").val(Math.abs(late_coming).toFixed(2));
                     jQuery("."+sec_index).find(".leaving_early").val(Math.abs(leaving_early).toFixed(2));
-
                } 
                 if(  ( (am_leave==1 || am_leave==2 )&& (am1!='' || am2!='') ) || ( (pm_leave==1 || pm_leave==2 )&& (pm1!='' || pm2!='') )  ){
                         return 'dakoku';
@@ -1375,7 +1190,6 @@
                         return '';
             },  
             totalHourCal(auto_am1,auto_am2,auto_pm1,auto_pm2,total_am,total_pm,t_am,p_am){
-
                 let late_coming=0,leaving_early=0;
                 if(auto_am1!='' && auto_am1!=undefined && (  ( parseInt(auto_am1[0])==8 && 5<parseInt(auto_am1[1]) || 9<=parseInt(auto_am1[0])   )   ) ){
                     late_coming+=(+auto_am1[0] + (+auto_am1[1] / 60))-(8);  
@@ -1421,7 +1235,6 @@
                 if(ap_split===''){ 
                       return false;   
                 }
-
                 if( (name==".am2" || name==".pm2") && (ap_split[1]>0 && ap_split[1]<30 ) ){
                     // ap_split[0]=12;
                     ap_split[1]="00";     
@@ -1459,7 +1272,6 @@
                     })                 
                     .then(response=>{      
                         if(response!='' && response.data.length!=0 ){
-
                             let split_string =[]; let date;
                             split_string = select_date.split("/");
                             date = split_string[0] + split_string[1];
@@ -1467,7 +1279,6 @@
                             link.href = process.env.MIX_APP_URL+'/attendList/csvOutput/'+employee+'/'+ date;
                             document.body.appendChild(link);
                             link.click();
-
                         }else{
                                 that.$fire({
                                 title: "Fail！！",
@@ -1480,7 +1291,6 @@
                                 }); 
                         }
                     }).catch(() => console.log('error occured'))         
-
             },          
         }, 
     }
