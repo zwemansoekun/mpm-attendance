@@ -1,12 +1,9 @@
 <template>
-     <div class="col-md-12 py-4"> 
+     <div class="col-md-10"> 
         <div class="container-fulid">
-            <div class="col-12 text-center">
-                <h4 class="card-title"> Salary History </h4>
-                <hr class="underline_title">
-            </div> 
+             
             <div class="row">
-                <div class="col-md-5"> 
+                <div class="col-md-3"> 
                     <select class="form-control" id="selectEmployee" name="employ_selected" required focus v-model="select_employee">
                         <option value="" disabled selected>Please select employee</option>        
                         <option v-bind:key="emp.id" v-for="emp in emps" v-bind:label="employeeCodeAndName(emp)"> {{ emp.id }} {{ emp.employeeId }} {{emp.name }}</option>
@@ -16,95 +13,95 @@
 
             <div class="row mt-5"  v-if="form_summary_open">
                 <div class="col-lg-4 col-md-6">
-                    <label class="emp_name">{{emp_no}}  {{emp_name}}</label>
+                    <label>{{emp_no}}  {{emp_name}}</label>
                 </div>
-                <div class="col-lg-4 col-md-6">
-                    <button type="button" class="btn inspect_his" @click="showHistory">Inspect history</button><!--閲覧履歴-->
+                <div class="col-lg-3 col-md-6">
+                    <button type="button" class="btn btn-primary float-right" @click="showHistory">Inspect history</button><!--閲覧履歴-->
                 </div>
             </div>
 
-            <div class="row mt-2 justify-content-center"  v-if="form_summary_open">
-                <div class="col-lg-6 ">
-                    <table class="table table-hover">
+            <div class="row mt-2"  v-if="form_summary_open">
+                <div class="col-lg-7">
+                    <table class="table table-bordered">
                         <tr>
-                            <td><span class="lbl_left">Name:(Furigana)</span></td><!-- 名前(フリガナ) -->
-                            <td style="width: 250px;"><span  class="lbl_left">{{empData.kana_name}}</span></td>
+                            <td>Name:(Furigana)</td><!-- 名前(フリガナ) -->
+                            <td style="width: 250px;"><span>{{empData.kana_name}}</span></td>
                         </tr>
                         <tr>
-                            <td><span class="lbl_left">Entry Date</span></td><!--入社日-->
-                            <td><span v-if="empData.entry_date" class="lbl_left">{{ customFormatter(empData.entry_date) }}</span></td>
+                            <td>Entry Date</td><!--入社日-->
+                            <td><span v-if="empData.entry_date">{{ customFormatter(empData.entry_date) }}</span></td>
                         </tr>
                         <tr>
-                            <td><span class="lbl_left"> Birthday</span></td><!--生年月日-->
-                            <td><span v-if="empData.dob" class="lbl_left">{{ customFormatter(empData.dob) }}</span></td>
+                            <td>Birthday</td><!--生年月日-->
+                            <td><span v-if="empData.dob">{{ customFormatter(empData.dob) }}</span></td>
                         </tr>
                     </table>
                 </div>
             </div>
 
             <div class="row mt-2" v-if="form_summary_open">
-                <div class="col-lg-8">
-                    <table class="table table-bordered table-dark" style="padding-left:30px; margin-left:15px; background-color:#6c8369;">
+                <div class="col-lg-7">
+                    <table class="table table-bordered">
                         <tr>
-                            <td colspan="2"> <label class="lbl_name">Basic salary</label></td>
-                            <td style="width:400px;"><label class="lbl_name">{{ numberFormatter(empDetail.salary_amount) }}</label></td>
+                            <td colspan="2">Basic salary</td>
+                            <td style="width: 250px;">{{ numberFormatter(empDetail.salary_amount) }}</td>
                         </tr>
                         <tr >
-                            <td rowspan="2"><label class="lbl_name">Allowance</label></td><!-- 手当-->
-                            <td><label class="lbl_name">Transportation allowance (one way / time)</label></td><!--通勤交通費(片道/回)-->
-                            <td><label class="lbl_name">{{ numberFormatter(empDetail.trans_money) }}</label></td>
+                            <td rowspan="2">Allowance</td><!-- 手当-->
+                            <td>Transportation allowance (one way / time)</td><!--通勤交通費(片道/回)-->
+                            <td>{{ numberFormatter(empDetail.trans_money) }}</td>
                         </tr>
                         <tr >
-                            <td><label class="lbl_name">JLPT</label></td>
-                            <td><label class="lbl_name">{{ numberFormatter(empDetail.jlpt) }}</label></td>
+                            <td>JLPT</td>
+                            <td>{{ numberFormatter(empDetail.jlpt) }}</td>
                         </tr>
                         <tr>
-                            <td colspan="2"><label class="lbl_name">SSB charge ratio (0 or 2%)</label></td><!--SSB負担割合（0又は2%)-->
-                            <td><label class="lbl_name">{{ numberFormatter(empDetail.ssb) }}</label></td>
+                            <td colspan="2">SSB charge ratio (0 or 2%)</td><!--SSB負担割合（0又は2%)-->
+                            <td>{{ numberFormatter(empDetail.ssb) }}</td>
                         </tr>
                         <tr>
-                            <td colspan="2"><label class="lbl_name">Position</label></td><!--ポジション-->  
-                            <td><label class="lbl_name">{{ empDetail.position }}</label></td>
+                            <td colspan="2">Position</td><!--ポジション-->  
+                            <td>{{ empDetail.position }}</td>
                         </tr>
                         <tr>
-                            <td colspan="2"><label class="lbl_name">Address</label></td><!--住所-->
-                            <td><label class="lbl_name">{{ empDetail.address }}</label></td>
+                            <td colspan="2">Address</td><!--住所-->
+                            <td>{{ empDetail.address }}</td>
                         </tr>
                         <tr>
-                            <td colspan="2"><label class="lbl_name">Phone number</label></td><!--電話番号-->
-                            <td><label class="lbl_name">{{ empDetail.phone_no }}</label></td>
+                            <td colspan="2">Phone number</td><!--電話番号-->
+                            <td>{{ empDetail.phone_no }}</td>
                         </tr>
                         <tr>
-                            <td colspan="2"><label class="lbl_name">ID number</label></td><!--身分証番号-->
-                            <td><label class="lbl_name">{{ empDetail.nrc_no }}</label></td>
+                            <td colspan="2">ID number</td><!--身分証番号-->
+                            <td>{{ empDetail.nrc_no }}</td>
                         </tr>
                         <tr>
-                            <td colspan="2"><label class="lbl_name">Payroll Bank Account</label></td><!--給与振込先銀行口座-->
-                            <td><label class="lbl_name">{{ empDetail.bank_account }}</label></td>
+                            <td colspan="2">Payroll bank account</td><!--給与振込先銀行口座-->
+                            <td>{{ empDetail.bank_account }}</td>
                         </tr>
                         <tr>
-                            <td colspan="2"><label class="lbl_name">Family Structure</label></td><!--家族構成-->
-                            <td><label class="lbl_name">{{ empDetail.member }}</label></td>
+                            <td colspan="2">Family structure</td><!--家族構成-->
+                            <td>{{ empDetail.member }}</td>
                         </tr>
                         <tr>
-                            <td colspan="2"><label class="lbl_name">Spouse or Children</label></td><!--配偶者や子供の有無-->
-                            <td><label class="lbl_name">{{ empDetail.child }}</label></td>
+                            <td colspan="2">Spouse or Children?</td><!--配偶者や子供の有無-->
+                            <td>{{ empDetail.child }}</td>
                         </tr>
                         <tr>
-                            <td colspan="2"><label class="lbl_name">Emergency contact</label></td><!--緊急連絡先-->
-                            <td><label class="lbl_name">{{ empDetail.emg_ph_no }}</label></td>
+                            <td colspan="2">Emergency contact</td><!--緊急連絡先-->
+                            <td>{{ empDetail.emg_ph_no }}</td>
                         </tr>
                         <tr>
-                            <td colspan="2"><label class="lbl_name">Transportation way / hours (minutes)</label></td><!--通勤手段/時間（分）-->
-                            <td><label class="lbl_name">{{ empDetail.waste_time }}</label></td>
+                            <td colspan="2">Transportation way / hours (minutes)</td><!--通勤手段/時間（分）-->
+                            <td>{{ empDetail.waste_time }}</td>
                         </tr>
                     </table>
                 </div>
             </div>
 
             <div v-if="form_detail_open" class="mt-5">
-                <button type="button" class="btn btn_EditInfor ml-3" @click="newHistoryCreate" v-if="!edit"> Edit </button>
-                <button type="button" class="btn btn_EditFinish ml-3" @click="updateEmpDetail" v-if="edit">Edit finish</button>
+                <button type="button" class="btn btn-primary" @click="newHistoryCreate" v-if="!edit">Edit</button>
+                <button type="button" class="btn btn-primary" @click="updateEmpDetail" v-if="edit">Edit finish</button>
 
                 <div class="alert alert-danger mt-3" role="alert" v-if="duplicateErrors.length > 0">
                     <ul v-for="error in duplicateErrors" :key="error">
@@ -116,30 +113,30 @@
                     <strong >Data is Successfully Saved!</strong> 
                 </div>
 
-                <table class="table table-hover my-5 mb-0 col-lg-6 ml-3" id="firsttbl">
+                <table class="table table-sm table-bordered mt-2 mb-0" style="width:260px;">
                     <tr>
-                        <th style="width:130px;"><span class="lbl_left">Name </span></th>
-                        <td style="width:130px;"><span class="lbl_left">{{emp_name}}</span></td>
+                        <th style="width:130px;">Name</th>
+                        <td style="width:130px;">{{emp_name}}</td>
                     </tr>
                     <tr>
-                        <th><span class="lbl_left">Name:(Furigana)</span></th><!-- 名前(フリガナ) -->
-                        <td v-if="!edit"><span class="lbl_left">{{empData.kana_name}}</span></td>
+                        <th>Name:(Furigana)</th><!-- 名前(フリガナ) -->
+                        <td v-if="!edit">{{empData.kana_name}}</td>
                         <td v-if="edit">
                             <label class="text-danger" v-if="empData.kanaErr">{{ empData.kanaErr }}</label>
                             <input type="text" class="form-control form-control-sm" v-model="empData.kana_name">
                         </td>
                     </tr>
                     <tr>
-                        <th><span class="lbl_left">Entry Date</span></th>
-                        <td v-if="!edit" class="text-left"><span v-if="empData.entry_date" class="lbl_left">{{ customFormatter(empData.entry_date) }}</span></td>
+                        <th>Entry Date</th>
+                        <td v-if="!edit" class="text-right"><span v-if="empData.entry_date">{{ customFormatter(empData.entry_date) }}</span></td>
                         <td v-if="edit">
                             <label class="text-danger" v-if="empData.entryErr">{{ empData.entryErr }}</label>
                             <input type="date" class="form-control form-control-sm" v-model="empData.entry_date">
                         </td>
                     </tr>
                     <tr>
-                        <th><span class="lbl_left">Birthday</span></th><!--生年月日-->
-                        <td v-if="!edit" class="text-left"><span v-if="empData.dob" class="lbl_left">{{ customFormatter(empData.dob) }}</span></td>
+                        <th>Birthday</th><!--生年月日-->
+                        <td v-if="!edit" class="text-right"><span v-if="empData.dob">{{ customFormatter(empData.dob) }}</span></td>
                         <td v-if="edit">
                             <label class="text-danger" v-if="empData.dobErr">{{ empData.dobErr }}</label>
                             <input type="date" class="form-control form-control-sm" v-model="empData.dob">
@@ -148,30 +145,30 @@
                 </table>
 
 <!--table-responsive text-nowrap -->
-                <div class="col-lg-12 scrolling-wrapper flex-row flex-nowrap mx-0">
-                    <table class="table table-sm table-bordered" id="secondtbl" style="margin:0px; padding:0px;">
-                        <tr class="text-white" style="background-color:#6c8369; height:100px;">
-                            <th rowspan="2" class="align-middle text-center" style="min-width:200px;"> <label class="tbl_title"> Salary's Year/Month </label> </th><!--給与年月 -->
-                            <th rowspan="2" class="align-middle text-center" style="min-width:200px;"> <label class="tbl_title"> Basic Salary  </label></th>
-                            <th colspan="2" class="align-middle text-center" style="min-width:200px;"> <label class="tbl_title"> Allowance </label></th>
-                            <th rowspan="2" class="align-middle text-center" style="min-width:200px;"> <label class="tbl_title text-center"> SSB Charge Ratio (%) </label></th>
-                            <th rowspan="2" class="align-middle text-center" style="min-width:200px;"> <label class="tbl_title"> Position </label></th>
-                            <th rowspan="2" class="align-middle text-center" style="min-width:200px;"> <label class="tbl_title"> Address </label></th>
-                            <th rowspan="2" class="align-middle text-center" style="min-width:200px;"> <label class="tbl_title"> Phone Number </label></th>
-                            <th rowspan="2" class="align-middle text-center" style="min-width:200px;"> <label class="tbl_title"> ID Number </label></th>
-                            <th rowspan="2" class="align-middle text-center" style="min-width:200px;"> <label class="tbl_title"> Payroll Bank Account </label></th>
-                            <th rowspan="2" class="align-middle text-center" style="min-width:200px;"> <label class="tbl_title"> Family Structure </label></th>
-                            <th rowspan="2" class="align-middle text-center" style="min-width:200px;"> <label class="tbl_title"> Spouse or Children? </label></th>
-                            <th rowspan="2" class="align-middle text-center" style="min-width:200px;"> <label class="tbl_title"> Emergency Contact </label></th>
-                            <th rowspan="2" class="align-middle text-center" style="min-width:200px;"> <label class="tbl_title"> Transportation Way / Hours (Minutes) </label></th>
+                <div>
+                    <table class="table table-sm table-bordered">
+                        <tr class="bg-info text-white">
+                            <th rowspan="2" style="width:130px;">Salary's year/month</th><!--給与年月 -->
+                            <th rowspan="2" style="width:130px;">Basic salary</th>
+                            <th colspan="2">Allowance</th>
+                            <th rowspan="2">SSB charge ratio (%)</th>
+                            <th rowspan="2">Position</th>
+                            <th rowspan="2">Address</th>
+                            <th rowspan="2">Phone number</th>
+                            <th rowspan="2">ID number</th>
+                            <th rowspan="2">Payroll bank account</th>
+                            <th rowspan="2">Family structure</th>
+                            <th rowspan="2">Spouse or Children?</th>
+                            <th rowspan="2">Emergency contact</th>
+                            <th rowspan="2">Transportation way / hours (minutes)</th>
                         </tr>
-                        <tr class="text-white" style="background-color:#6c8369;">
-                            <th><label class="tbl_title" style="padding:3px 5px; min-width:250px; text-align:center;">Transportation Allowance (One Way / Time)</label></th><!--通勤交通費(片道/回)-->
-                            <th><label class="tbl_title" style="min-width:100px; text-align:center;">JLPT</label></th>
+                        <tr class="bg-info text-white">
+                            <th>Transportation allowance (one way / time)</th><!--通勤交通費(片道/回)-->
+                            <th>JLPT</th>
                         </tr>
-                        <tr v-for="detail in empDetails" :key="detail.id" class="text-right">
+                        <tr v-for="detail in empDetails" :key="detail.id">
                             <td v-if="!edit">
-                                <span v-if="!edit" class="sectbl_info"> {{ yearMonthFormatter(detail.pay_month) }}</span>
+                                <span v-if="!edit">{{ yearMonthFormatter(detail.pay_month) }}</span>
                             </td>
                             <td class="align-bottom" v-if="edit">
                                 <label class="text-danger" v-if="detail.payMonthErr">{{ detail.payMonthErr }}</label>
@@ -179,10 +176,10 @@
                             </td>  
 
                             <td class="text-right" v-if="!edit && !detail.color">
-                                <span v-if="!edit" class="sectbl_info">{{ numberFormatter(detail.salary_amount) }}</span>
+                                <span v-if="!edit">{{ numberFormatter(detail.salary_amount) }}</span>
                             </td>
                             <td class="text-right bg-info" v-if="!edit && detail.color">
-                                <span v-if="!edit" class="sectbl_info">{{ numberFormatter(detail.salary_amount) }}</span>
+                                <span v-if="!edit">{{ numberFormatter(detail.salary_amount) }}</span>
                             </td>
                             <td class="text-right align-bottom" v-if="edit">
                                 <label class="text-danger" v-if="detail.salaryAmountErr">{{ detail.salaryAmountErr }}</label>
@@ -190,7 +187,7 @@
                             </td>
 
                             <td class="text-right" v-if="!edit">
-                                <span v-if="!edit" class="sectbl_info">{{numberFormatter(detail.trans_money) }}</span>
+                                <span v-if="!edit">{{numberFormatter(detail.trans_money) }}</span>
                             </td>
                             <td class="align-bottom" v-if="edit">
                                 <label class="text-danger" v-if="detail.transMoneyErr">{{ detail.transMoneyErr }}</label>
@@ -198,7 +195,7 @@
                             </td>
 
                             <td class="text-right" v-if="!edit">
-                                <span v-if="!edit" class="sectbl_info">{{ numberFormatter(detail.jlpt) }}</span>
+                                <span v-if="!edit">{{ numberFormatter(detail.jlpt) }}</span>
                             </td>
                             <td class="align-bottom" v-if="edit">
                                 <label class="text-danger" v-if="detail.jlptErr">{{ detail.jlptErr }}</label>
@@ -206,7 +203,7 @@
                             </td>
 
                             <td class="text-right" v-if="!edit">
-                                <span v-if="!edit" class="sectbl_info">{{ numberFormatter(detail.ssb) }}</span>
+                                <span v-if="!edit">{{ numberFormatter(detail.ssb) }}</span>
                             </td>
                             <td class="align-bottom" v-if="edit">
                                 <label class="text-danger" v-if="detail.ssbErr">{{ detail.ssbErr }}</label>
@@ -214,7 +211,7 @@
                             </td>
 
                             <td v-if="!edit">
-                                <span v-if="!edit" class="sectbl_info">{{ detail.position }}</span>
+                                <span v-if="!edit">{{ detail.position }}</span>
                             </td>
                             <td class="align-bottom" v-if="edit">
                                 <label class="text-danger" v-if="detail.positionErr">{{ detail.positionErr }}</label>
@@ -222,7 +219,7 @@
                             </td>
 
                             <td v-if="!edit">
-                                <p v-if="!edit" class="sectbl_info" style="text-align:left;">{{ detail.address }}</p>
+                                <span v-if="!edit">{{ detail.address }}</span>
                             </td>
                             <td class="align-bottom" v-if="edit">
                                 <label class="text-danger" v-if="detail.addressErr">{{ detail.addressErr }}</label>
@@ -230,7 +227,7 @@
                             </td>
 
                             <td v-if="!edit">
-                                <span v-if="!edit" class="sectbl_info">{{ detail.phone_no }}</span>
+                                <span v-if="!edit">{{ detail.phone_no }}</span>
                             </td>
                             <td class="align-bottom" v-if="edit">
                                 <label class="text-danger" v-if="detail.phoneNoErr">{{ detail.phoneNoErr }}</label>
@@ -238,7 +235,7 @@
                             </td>
 
                             <td v-if="!edit">
-                                <span v-if="!edit" class="sectbl_info">{{ detail.nrc_no }}</span>
+                                <span v-if="!edit">{{ detail.nrc_no }}</span>
                             </td>
                              <td class="align-bottom" v-if="edit">
                                 <label class="text-danger" v-if="detail.nrcNoErr">{{ detail.nrcNoErr }}</label>
@@ -246,7 +243,7 @@
                             </td>
 
                             <td class="text-right" v-if="!edit">
-                                <span v-if="!edit" class="sectbl_info">{{ detail.bank_account }}</span>
+                                <span v-if="!edit">{{ detail.bank_account }}</span>
                             </td>
                             <td class="align-bottom" v-if="edit">
                                 <label class="text-danger" v-if="detail.bankAccErr">{{ detail.bankAccErr }}</label>
@@ -254,7 +251,7 @@
                             </td>
 
                             <td v-if="!edit">
-                                <span v-if="!edit" class="sectbl_info">{{ detail.member }}</span>
+                                <span v-if="!edit">{{ detail.member }}</span>
                             </td>
                             <td class="align-bottom" v-if="edit">
                                 <label class="text-danger" v-if="detail.memberErr">{{ detail.memberErr }}</label>
@@ -262,7 +259,7 @@
                             </td>
 
                             <td v-if="!edit">
-                                <span v-if="!edit" class="sectbl_info">{{ detail.child }}</span>
+                                <span v-if="!edit">{{ detail.child }}</span>
                             </td>
                             <td class="align-bottom" v-if="edit">
                                 <label class="text-danger" v-if="detail.childErr">{{ detail.childErr }}</label>
@@ -270,7 +267,7 @@
                             </td>
 
                             <td v-if="!edit">
-                                <span v-if="!edit" class="sectbl_info">{{ detail.emg_ph_no }}</span>
+                                <span v-if="!edit">{{ detail.emg_ph_no }}</span>
                             </td>
                             <td class="align-bottom" v-if="edit">
                                 <label class="text-danger" v-if="detail.emgPhErr">{{ detail.emgPhErr }}</label>
@@ -278,7 +275,7 @@
                             </td>
 
                             <td v-if="!edit">
-                                <span v-if="!edit" class="sectbl_info">{{ detail.waste_time }}</span>
+                                <span v-if="!edit">{{ detail.waste_time }}</span>
                             </td>
                             <td class="align-bottom" v-if="edit">
                                 <label class="text-danger" v-if="detail.wasteTimeErr">{{ detail.wasteTimeErr }}</label>
@@ -295,161 +292,18 @@
     </div>
 </template>
 <style >
-    .btn_EditInfor, .btn_EditFinish {
-        background-color: #088da5;
-        letter-spacing: 1px;
-        color:white;
-        box-shadow: none;
-    }
-
-    .btn_EditFinish {
-        background-color: #4c5890;
-    }
-    .card-title{
-        font-family: verdana;
-        font-size: 25px;
-        color:#00004c;
-        padding: 3px 5px;
-        text-transform: uppercase;
-        text-align: center;
-    }
-    .underline_title {
-        width: 6%;
-        border:3px solid #adc075;
-        margin:0px auto;
-        margin-bottom: 15px;
-    }
-    .datepicker input{
-        height: calc(1.5em + 0.5rem + 2px);
-        padding: 0.25rem 0.5rem;
-        font-size: 0.7875rem;
-        line-height: 1.5;
-        border-radius: 0.2rem;
-        color: #495057;
-        background-color: #fff;
-        background-clip: padding-box;
-        border: 1px solid #ced4da;
-        font-weight: 400;
-    }
-
-    select#selectEmployee {
-      background-color: white;
-      height: 50px;
-      width: 100%;
-      padding: 12px 20px;
-      margin: 8px 0;
-      display: inline-block;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      box-sizing: border-box;
-      margin-left:15px;
-    }
-
-    label.emp_name {
-        font-family: verdana;
-        font-size:18px;
-        color:black;
-        margin-left: 30px;
-    }
-
-    .inspect_his {
-        background-color: #088da5;
-        color:#fff;
-        font-family: arial;
-        font-size:15px;
-        position: relative;
-        bottom: 20px;
-        padding:12px 32px;
-        border:2px solid white;
-        box-shadow: none;
-    }
-
-    btn.inspect_his:hover {
-        background-color: #f5f5dc;
-    }
-
-    span.lbl_left, label.lbl_name {
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: 17px;
-        color:#fff;
-        text-align: center;
-        font-weight: bold;
-        padding-left:20px;
-    }
-
-    span.lbl_left {
-        color:#3e5869;
-    }
-
-    label.tbl_title {
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: 17px;
-        color:white;
-        padding:5px 25px;
-        font-weight: bold;
-        text-align: center;
-    }
-
-    span.sectbl_info, p.sectbl_info {
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: 17px;
-        color:black;
-        padding:10px 0px;
-        margin-right:10px;
-        text-align: right;
-    }
-
-    p.sectbl_info {
-        padding:0px 10px;
-        margin-right:0px;
-        text-align: justify;
-    }
-
-    
-
-    table#firsttbl input[type=text], table#firsttbl input[type=date],
-    table#secondtbl input[type=text]
-    {
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: 16px;
-        background-color:white;
-        width: 90%;
-        padding: 12px 10px;
-        display: inline-block;
-        border: 1px solid silver;
-        border-radius: 5px;
-        margin:0 10px;
-        box-sizing: datepicker1border-box;
-        color:black;
-    }
-
-    table#firsttbl input[type=text]:hover, table#firsttbl input[type=date]:hover,
-    table#secondtbl input[type=text]:hover, table#secondtbl .datepicker input:hover
-    {
-        background-color: silver;
-    }
-
-    table#secondtbl .datepicker input {
-          background-color: #fff;
-          height: 45px;
-          width: 90%;
-          padding: 12px 20px;
-          margin:0 5px;
-          display: inline-block;
-          border: 1px solid silver;
-          border-radius: 4px;
-          box-sizing: datepicker1border-box;
-          color:black;
-    
-    }
-
-    table#secondtbl label {
-        font-family: Verdana, Geneva, Tahoma, sans-serif;
-        font-size:15px;
-        padding:3px 5px;
-        text-align: left;
-    }
-    
+.datepicker input{
+    height: calc(1.5em + 0.5rem + 2px);
+    padding: 0.25rem 0.5rem;
+    font-size: 0.7875rem;
+    line-height: 1.5;
+    border-radius: 0.2rem;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    font-weight: 400;
+}
 </style>
 
 <script>
@@ -670,7 +524,6 @@ import Datepicker from 'vuejs-datepicker';
                         var year = date.getFullYear();
                                 
                         this.empDetails[i].pay_month = year+"/"+((month + 1) <10 ? '0'+(month + 1) : (month + 1));
-
                         if(!this.validatePayMonthFormat(this.empDetails[i].pay_month)){
                             this.errorFlg = true;
                             Vue.set(this.empDetails[i] , 'payMonthErr','Please enter the salary\'s year/month in the format (YYYY / MM).');//給与年月をフォーマット(YYYY/MM)で入力してください。
