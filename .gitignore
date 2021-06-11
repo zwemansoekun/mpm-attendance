@@ -16,3 +16,6 @@ public/css
 public/js
 package-lock.json
 /public/mix-manifest.json   
+.history
+composer.lock
+public/mix-manifest.json
