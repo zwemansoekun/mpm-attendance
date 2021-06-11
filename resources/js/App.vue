@@ -45,15 +45,9 @@
                 csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             }
          },    
-        // created() {             
-        //         let path=window.location.pathname;
-        //         if(path!=''){                  
-        //             jQuery(document).ready(function(){
-        //                 if(path=="/attendList" || path=="/salaryList" ||  path=="/holidays" || path=="/salaryHistory" || path=="/attendManage" || path=="/setting" )
-        //                   jQuery('a[href="'+path+'"]').attr('data-target',1)
-        //             });
-        //         }
-        // },
+        created() {             
+                this.colorChange();
+        },
         methods :{
             colorChange: function(){              
                 let path=window.location.pathname;
