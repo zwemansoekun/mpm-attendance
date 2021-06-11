@@ -410,6 +410,7 @@
                 data_check_messg:false,
                 error_check_messg:false,
                 default_ampm:{"am":'',"pm":''},
+                setting_ampm:{"am":'',"pm":''},
                 name_of_day:true,             
                 errors:null,
                 get_attend_data:[],
@@ -773,15 +774,14 @@
                 }
 
             },
-            checkColor:function(val,index){  
-               
+            checkColor:function(val,index){                
                 let val_split='';              
                    
                 if( (index==0 || index==2) && val!=null){                   
                       val_split=val!==''?val.split(":"):'';
-                      if(val_split!='' && ( (val_split[0]==8 && val_split[1]>0 && val_split[1]<6) || (val_split[0]==13 && val_split[1]>0 && val_split[1]<16) ) ){
+                      if(val_split!='' && ( (val_split[0]==8 && val_split[1]>0 && val_split[1]<=(this.default_ampm.am!=null?this.default_ampm.am:this.setting_ampm.am)) || (val_split[0]==13 && val_split[1]>0 && val_split[1]<=(this.default_ampm.pm!=null?this.default_ampm.pm:this.setting_ampm.pm)) ) ){
                           return 'warning';
-                      }else if(val_split!='' && ((val_split[0]==8 &&  val_split[1]>5) || (val_split[0]==13 &&  val_split[1]>15) )){
+                      }else if(val_split!='' && ((val_split[0]==8 &&  val_split[1]>(this.default_ampm.am!=null?this.default_ampm.am:this.setting_ampm.am)) || (val_split[0]==13 &&  val_split[1]>(this.default_ampm.pm!=null?this.default_ampm.pm:this.setting_ampm.pm)) )){
                           return 'danger';
                       }else  
                            return '';
@@ -1009,6 +1009,13 @@
                     .then(response => { 
                           that.default_ampm.am=response.data.am;
                           that.default_ampm.pm=response.data.pm;
+                    });
+                    
+                    this.axios
+                    .get(process.env.MIX_APP_URL+'/api/settings')
+                    .then(response => {                         
+                        that.setting_ampm.am=response.data.am;
+                        that.setting_ampm.pm=response.data.pm;
                     });
 
                 }

@@ -27,7 +27,7 @@ use Illuminate\Support\Facades\Route;
 // Route::group(['middleware' => 'auth'], function()
 // {
 Route::get('/setting/delayTime/{year}/{month}','SettingController@delayTime')->where(['year' => '[0-9]+', 'month' =>'[0-9]+']);
-
+Route::get('/settings',  'SettingController@index');
 
 // Route::get('/delayTimes',  'DelayTimeController@index');
 // Route::post('/delayTime/updateAm/{id}',  'DelayTimeController@saveAm');
