@@ -3,7 +3,7 @@ import Setting from './components/Setting.vue';
 import Holiday from './components/Holiday.vue';
 import SalaryHistory from './components/SalaryHistory.vue';
 import AttendManage from './components/AttendManage.vue';
-import salaryList from './components/salaryList.vue';
+import salaryList from './components/SalaryList.vue';
 
 export const routes = [
     {

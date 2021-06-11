@@ -1,96 +1,220 @@
 <template>
-    <div class="col-md-10">
-            
-        <div class="container">
-            <div class="alert alert-success" role="alert" v-if="data_check_messg">
-                 <strong >Data is Successfully Saved!</strong> 
-            </div>
-            <!-- //form -->
-            <form @submit.prevent="updateMoney">
-            <table class="table table-bordered">
-                <tr class="d-flex">
-                    <th class="col-6 bg-info text-white" scope="row">Exchange rate default value (JPN / MMK)</th><!--為替レートデフォルト値(JPN/MMK)-->
-                    <td class="col-3">
-                        <label class="text-danger" v-if="errorMoney">{{ errorMoney }}</label>
-                        <input class="form-control" v-model.number="setting.money">
-                    </td>
-                    <td class="col-3 text-center">
-                        <button type="submit" class="btn btn-primary" onclick="this.blur();">Edit</button>
-                    </td>
-                </tr>
-            </table>
-            </form>
 
-            <table class="table table-bordered">
+                    
+                    <div class="col-md-12 py-4">
+                        <div class="row">
+                            <div class="col-12 mb-3">
+                                <h4 class="card-title"> Setting List </h4>
+                                <hr class="underline_title">
+                            </div> 
+                         </div>
+                        <div class="container-fluid">
 
-                <tr class="d-flex">
-                    <th class="col-6 bg-info text-white" scope="row">AM late allowance time default value (minutes)</th><!--AM遅刻許容時間デフォルト値（分)-->
-                     <td class="col-3">
-                        <label class="text-danger" v-if="errorAm">{{ errorAm }}</label> 
-                        <input type="text" class="form-control" v-model="setting.am">
-                    </td>
-                    <td class="col-3 text-center">
-                        <button class="btn btn-primary" @click="updateAm" onclick="this.blur();">Edit</button>
-                    </td>
-                </tr>
-                <tr class="d-flex">
-                    <th class="col-6 bg-info text-white" scope="row">PM late allowance time default value (minutes)</th><!--PM遅刻許容時間デフォルト値（分）-->
-                     <td class="col-3">
-                         <label class="text-danger" v-if="errorPm">{{ errorPm }}</label>
-                        <input type="text" class="form-control" v-model="setting.pm">
-                    </td>
-                    <td class="col-3 text-center">
-                        <button class="btn btn-primary" @click="updatePm" onclick="this.blur();">Edit</button>
-                    </td>
-                </tr>
-                
-            </table>
-
-            <table class="table table-bordered">
-                <thead class="bg-info text-white">
-                    <tr>
-                        <th scope="col">Year/Month</th><!--年月-->
-                        <th scope="col">AM late allowance time (minutes)</th><!-- AM遅刻許容時間（分)-->
-                        <th scope="col">PM late allowance time (minutes)</th><!-- PM遅刻許容時間（分）-->
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="d in attendDelays" :key="d.id">
-                        <td>
-                            {{ d.month}}
-                        </td>
-                        <td>
-                            <div class="row" v-if="d.amDelayError">
-                                <div class="col text-danger">{{d.amDelayErrorMsg}}</div>
-                            </div>
                             <div class="row">
-                                <div class="col">
-                                    <input type="text" class="form-control" v-model="d.am">
-                                </div>
-                                <div class="col"><button class="btn btn-primary" @click="updateDelayAm(d.id ,d)" onclick="this.blur();">Edit</button></div>
-                            </div>
+                                <div class="col-md-10">
+                                    <div class="alert bg-success" role="alert" v-if="data_check_messg">
+                                        <span class="success_msg"><strong >Data is Successfully Saved!</strong> </span>
+                                    </div>
+                                    <!-- //form -->
+                                    <form @submit.prevent="updateMoney">
+                                    <table class="table table-bordered" style="background-color:#678a93;">
+                                        <tr class="d-flex">
+                                            <th class="col-6 text-white" scope="row"><label class="exg_title">Exchange rate default value (JPN / MMK)</label></th><!--為替レートデフォルト値(JPN/MMK)-->
+                                            <td class="col-3">
+                                                <label class="text-danger" v-if="errorMoney">{{ errorMoney }}</label>
+                                                <input class="form-control" id="exg_money" v-model.number="setting.money">
+                                            </td>
+                                            <td class="col-3 text-center">
+                                                <button type="submit" class="btn btn_EDIT mt-3" onclick="this.blur();">Edit</button>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    </form>
                             
-                        </td>
-                        <td>
-                            <div class="row" v-if="d.pmDelayError">
-                                <div class="col text-danger">{{d.pmDelayErrorMsg}}</div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <input type="text" class="form-control" v-model="d.pm">
+                                    <table class="table table-bordered mb-5" style="background-color:#678a93;">
+
+                                        <tr class="d-flex">
+                                            <th class="col-6 text-white" scope="row"><label class="exg_title">AM late allowance time default value (minutes)</label></th><!--AM遅刻許容時間デフォルト値（分)-->
+                                            <td class="col-3">
+                                                <label class="text-danger" v-if="errorAm">{{ errorAm }}</label> 
+                                                <input type="text" class="form-control" id="allowance_time" v-model="setting.am">
+                                            </td>
+                                            <td class="col-3 text-center">
+                                                <button class="btn btn_EDIT mt-3" @click="updateAm" onclick="this.blur();">Edit</button>
+                                            </td>
+                                        </tr>
+                                        <tr class="d-flex">
+                                            <th class="col-6  text-white" scope="row"><label class="exg_title"> Late allowance time default value (minutes)</label></th><!--PM遅刻許容時間デフォルト値（分）-->
+                                            <td class="col-3">
+                                                <label class="text-danger" v-if="errorPm">{{ errorPm }}</label>
+                                                <input type="text" class="form-control" id="allowancepm_time" v-model="setting.pm">
+                                            </td>
+                                            <td class="col-3 text-center">
+                                                <button class="btn btn_EDIT mt-3" @click="updatePm" onclick="this.blur();">Edit</button>
+                                            </td>
+                                        </tr>
+                                
+                                    </table>
+                            
+                                    <table class="table table-bordered">
+                                        <thead class="text-white" style="background-color:#678a93;">
+                                            <tr>
+                                                <th scope="col"><label class="lbl_title">Year/Month</label></th><!--年月-->
+                                                <th scope="col"><label class="lbl_title">AM late allowance time (minutes)</label></th><!-- AM遅刻許容時間（分)-->
+                                                <th scope="col"><label class="lbl_title">PM late allowance time (minutes)</label></th><!-- PM遅刻許容時間（分）-->
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="d in attendDelays" :key="d.id">
+                                                <td>
+                                                    <span class="c_month">{{ d.month}}</span>
+                                                </td>
+                                                <td>
+                                                    <div class="row" v-if="d.amDelayError">
+                                                        <div class="col text-danger">{{d.amDelayErrorMsg}}</div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <input type="text" class="form-control am_late" v-model="d.am">
+                                                        </div>
+                                                        <div class="col"><button class="btn btn_editTime mt-2" @click="updateDelayAm(d.id ,d)" onclick="this.blur();">Edit</button></div>
+                                                    </div>
+                                            
+                                                </td>
+                                                <td>
+                                                    <div class="row" v-if="d.pmDelayError">
+                                                        <div class="col text-danger">{{d.pmDelayErrorMsg}}</div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <input type="text" class="form-control pm_late" v-model="d.pm">
+                                                        </div>
+                                                        <div class="col"><button class="btn btn_editTime mt-2" @click="updateDelayPm(d.id ,d)" onclick="this.blur();">Edit</button></div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
-                                <div class="col"><button class="btn btn-primary" @click="updateDelayPm(d.id ,d)" onclick="this.blur();">Edit</button></div>
                             </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
 
-        </div>
-       
-    </div>    
+                        </div>
+                    
+                    </div> 
+
+                
 </template>
+<style>
 
+    .success_msg {
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        font-size: 17px;
+        padding:5px 20px;
+    }
+    label.exg_title {
+        font-family: verdana;
+        color:black;
+        font-size: 16px;
+        color:white;
+        line-height: 65px;
+        margin-left: 20px;
+        font-weight: bold;
+    }
+    #exg_money, #allowance_time, #allowancepm_time {
+font-size: 16px;
+          background-color:#3d5258;
+          border: 1px solid white;
+          color:white;
+          height: 50px;
+          width: 100%;
+          padding: 12px 20px;
+          margin: 8px 0;
+          display: inline-block;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          box-sizing: border-box;
+    }
+    #exg_money:hover, #allowance_time:hover, #allowancepm_time:hover {
+      border:1px solid silver;
+      background-color: #407294;
+      color:white;
+      /* letter-spacing: 1px; */
+    }
+
+    .btn_EDIT{
+        padding:12px 32px;
+        border:1px solid #84836b;
+        background-color:#3d5258;
+        color:white;
+        box-shadow: none;
+
+    }
+
+    .btn_EDIT:hover{
+        background-color: #407294;
+        transition: 0.5s;
+        animation-delay: 0.8s;
+        -webkit-animation-delay:0.8s;
+        border:1px solid black;
+        /* letter-spacing: 1px; */
+    }
+
+    label.lbl_title {
+        font-family: verdana;
+        color:#fff;
+        font-size: 14px;
+        padding:5px 13px;
+    }
+
+    span.c_month {
+        font-family: verdana;
+        color:black;
+        font-size: 16px;
+        padding:5px 13px;
+    }
+
+    .am_late, .pm_late {
+        font-size: 16px;
+        background-color:#fff;
+          border: 1px solid white;
+          color:black;
+          height: 50px;
+          width: 100%;
+          padding: 12px 20px;
+          margin: 8px 0;
+          display: inline-block;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          box-sizing: border-box;
+          margin-left: 15px;
+    }
+
+    .am_late:hover, .pm_late:hover {
+        transition: 0.5s;
+        animation-delay: 0.8s;
+        -webkit-animation-delay:0.8s;
+        background-color: #407294;
+        color:#fff;
+    }
+
+    .btn_editTime{
+        padding:12px 32px;
+        border: 1px solid white;
+        background-color:#407294;
+        color:#fff;
+        padding: 15px 30px;
+        letter-spacing: 1px;
+        box-shadow: none;
+    }
+
+    .btn_editTime:hover {
+        transition: 0.5s;
+        animation-delay: 0.8s;
+        -webkit-animation-delay:0.8s;
+        border: 1px solid black;
+        /* border: 1px solid black;; */
+    }
+</style>
 <script>
        
 

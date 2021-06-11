@@ -27,7 +27,7 @@ Route::group(['middleware' => 'auth'], function()
 {
 
 Route::get('/',  function () {
-      return view('layouts.app');
+      return view('layouts.app1');
 });
 
 Route::get('/attendList/csvOutput/{employee}/{date}','AttendController@csvOutput')->where('date', '[0-9]+');
@@ -65,7 +65,7 @@ Route::post('/employeeDetail/updateAll', 'EmployeeDetailController@updateAll');
 Route::get('/holiday/{yearmonth}', 'HolidayController@holiday')->where('yearmonth', '[0-9 -]+');
 
 Route::get('{any}', function () {
-        return view('layouts.app');
+        return view('layouts.app1');
 })->where('any', '.*');
 
 });

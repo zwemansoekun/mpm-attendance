@@ -1,18 +1,23 @@
 <template>
-    <div class="col-md-10"> 
-        <div class="container">
+    <div class="col-md-12 pb-5"> 
+        <div class="container-fluid">
+            <div class="col-12 text-center">
+                <h4 class="card-title"> Attendance List </h4>
+                <hr class="underline_title mb-4">
+            </div> 
             <div class="row">
-                <div class="col-md-4">                     
+                
+                <div class="col-md-4 ">                     
                     <select class="form-control" id="selectEmployee" @change="empChange($event)"  name="employ_selected" required focus v-model="select_employee">
-                        <option value="" disabled selected>Please select employee</option>
+                        <option value=""  disabled selected>Please select employee</option>
                         <option v-bind:key="emp.id" v-for="emp in emps" v-bind:label="employeeCodeAndName(emp)"> {{ emp.id }} {{ emp.employeeId }} {{emp.name }}</option>
                     </select>                      
                 </div>         
                       
                 <div class="col-md-4 offset-md-2"> 
                     <select class="form-control" id="selectDate"  @change="dateChange($event)" name="date_selected" required focus v-model="select_date">
-                        <option value="" disabled selected>Please select Year/Month</option>
-                        <option v-bind:key="date.id" v-for="date in dates"  >{{ date.recordedDateTime }}</option>
+                        <option value="" disabled selected> <span class="choose_one">Please select Year/Month</span> </option>
+                        <option v-bind:key="date.id" v-for="date in dates"  > <span class="choose_one">{{ date.recordedDateTime }}</span> </option>
                     </select>                       
                 </div> 
             </div> 
@@ -29,28 +34,28 @@
             </div>
         </div>
 
-        <div class="alert alert-danger" role="alert" v-if="data_check_messg"  id="check-alert"   style="text-align: center">
+        <div class="alert alert-danger" role="alert" v-if="data_check_messg"  id="check-alert" style="text-align: center">
                 <button type="button" class="close" data-dismiss="alert">x</button>
-                <strong >No data to display.</strong> <!--データはありませんでした。-->
+                <span class="err_msg"><strong >No data to display.</strong> </span><!--データはありませんでした。-->
         </div>
 
         <div class="container-fluid mt-5" v-if="form_open">
-            <table class="table table-borderless">
+            <table class="table table-borderless ml-3">
                 <tr>
                     <td class="bg-danger"></td>
-                    <td>Late / early leave</td> <!-- 遅刻・早退-->
+                    <td><label class="lbl_inform">Late / Early Leave</label></td> <!-- 遅刻・早退-->
                 </tr>
                 <tr>
                     <td class="bg-warning"></td>
-                    <td>Late (check if it is acceptable)</td><!-- 遅刻(許容範囲か要確認) -->
+                    <td><label class="lbl_inform">Late (Check if it is acceptable)</label></td><!-- 遅刻(許容範囲か要確認) -->
                 </tr>
                 <tr>
                     <td style="background-color:#FBE5D6"></td>
-                    <td>No stamp</td><!-- 打刻なし-->
+                    <td><label class="lbl_inform">No Stamp</label></td><!-- 打刻なし-->
                 </tr>
                 <tr>
                     <td class="table-success"></td>
-                    <td>holiday</td><!--休日 -->
+                    <td><label class="lbl_inform">Holiday</label></td><!--休日 -->
                 </tr>
             </table>
         </div>
@@ -58,41 +63,60 @@
         <div class="container mt-5" v-if="form_open">
                             
             <div class="row">
-                <div class="col-md-4">
-                    <button type="button" class="btn" style="background-color:#E7E6E6" onclick="this.blur();" @click="csvOutput(select_employee,select_date)">出勤簿生成</button><!--Attendance book generation-->
-                </div>
-                <div class="col-md-4 offset-md-2">
-                    <button type="button" class="btn" style="width: 220px;background-color:#E7E6E6;" onclick="this.blur();" @click="allButtonClick()">All automatic calculation</button><!--全て自動計算-->
-                </div> 
+                    <div class="col-md-4 ml-auto">
+                        <button type="button" class="btn btn_salarycopy" onclick="this.blur();" @click="csvOutput(select_employee,select_date)">出勤簿生成</button><!--Attendance book generation-->
+                    </div>
+                    <div class="col-md-4 ml-auto offset-md-2">
+                        <button type="button" class="btn btn_cal" onclick="this.blur();" @click="allButtonClick()">All automatic calculation</button><!--全て自動計算-->
+                    </div> 
             </div>                 
                 <form id="form" class="" @submit.prevent="attendSave"  autocomplete="on">
-                    <div class="row mt-3">
-                        <div class="col-md-4">
+                    <div class="row my-3">
+                        <div class="col-md-4 ml-auto">
                             <input name="emp_no" ref="myButton" class="form-control input-sm date" style="text-align: center;" type="hidden" :value="`${emp_no}`">
-                            <button type="submit" class="btn btn-primary" onclick="this.blur();" >Register</button><!--登録-->
+                            <button type="submit" class="btn btn_salaryedit" onclick="this.blur();" >Register</button><!--登録-->
                         </div>
-                        <div class="col-md-4 offset-md-2">
-                            <button type="button" class="btn" onclick="this.blur();" @click="filterInput()" style="width: 220px;color: red;background-color:#E7E6E6">Automatic calculation only in the empty</button><!--空のところだけ自動計算-->
+                        <div class="col-md-4 ml-auto offset-md-2">
+                            <button type="button" class="btn btn_emptycal" onclick="this.blur();" @click="filterInput()" >Automatic calculation only in the empty</button><!--空のところだけ自動計算-->
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-5">
+                            <table class="table" style="background-color:#fff;">
+                                <tr>
+                                    <td><span class="lbl_left">Select Date </span></td><!-- 名前(フリガナ) -->
+                                    <td><span  class="lbl_left">{{this.select_date}}</span></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="lbl_left">Employee No</span></td><!--入社日-->
+                                    <td><span class="lbl_left">{{emp_code}}</span></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="lbl_left"> Name</span></td><!--生年月日-->
+                                    <td><span class="lbl_left">{{emp_name}}</span></td>
+                                </tr>
+                            </table>
                         </div>
                     </div>
              
-                    <div class="row mt-5">
-                        <div class="col-md-4"> {{this.select_date}}</div>                          
+                    <!-- <div class="row mt-5">
+                        <div class="col-md-4"> Select Date :{{this.select_date}}</div>                          
                     </div>  
                     <div class="row">
-                        <div class="col-md-4"> Employee No.{{emp_code}}</div>                          
+                        <div class="col-md-4"> Employee No. :{{emp_code}}</div>                          
                     </div>    
                     <div class="row">
                         <div class="col-md-4"> Name: {{emp_name}}</div>                          
-                    </div> 
+                    </div>  -->
                
                     <table id="attendTable" class="table table-bordered">
-                        <thead class="bg-info text-white">
+                        <thead class="text-white" style="background-color:#6c8369;">
                             <tr>
                                 <td style="text-align: center;width: 10%;"></td>                          
-                                <td colspan="2" style="text-align: center;width: 30%;" >AM</td>   
-                                <td colspan="2" style="text-align: center;width: 30%;">PM</td>
-                                <td style="text-align: center;width: 15%;">Total Hours</td>
+                                <td colspan="2" style="text-align: center;width: 30%;" > <label class="time_title">AM</label></td>   
+                                <td colspan="2" style="text-align: center;width: 30%;"> <label class="time_title">PM</label></td>
+                                <td style="text-align: center;width: 15%;"> <label class="time_title">Total Hours</label></td>
                                 <td style="text-align: center;width: 15%;"></td>
                             </tr>
                         </thead>
@@ -114,7 +138,7 @@
                                              
                                                 <template  v-if="key==0">
                                                 
-                                                    <td v-bind:key="'A'+key" style="text-align: center;" rowspan="2"><div style="text-align: center;">{{dayindex+1}} {{ days[new Date(year+"/"+month+"/"+(dayindex+1)).getDay()]}}</div></td>
+                                                    <td v-bind:key="'A'+key" style="text-align: center;" rowspan="2"><div style="text-align: center;"><label class="calen_date">{{dayindex+1}} {{ days[new Date(year+"/"+month+"/"+(dayindex+1)).getDay()]}}</label></div></td>
                                                    <template v-if="day[0].length==0">
                                                         <td  v-bind:key="'B'+key" colspan="2"  :style="`background-color:${checkBgColor(year,month,dayindex+1,date.am1==null)};height: 3.3em;`" ></td>
                                                         <td  v-bind:key="'D'+key" colspan="2"  :style="`background-color:${checkBgColor(year,month,dayindex+1,date.am1==null)};height: 3.3em;`" ></td>
@@ -124,22 +148,22 @@
                                                    <template v-else>
                                                           <td v-bind:key="'B'+key" style="text-align: center;" v-bind:class="`bg-${checkColor(date.am1,key)}`"  :style="`background-color:${checkBgColor(year,month,dayindex+1,date.am1==null)};height: 3.3em;`" >
                                                         <div class="am1_0"> 
-                                                            {{date.am1}}
+                                                            <label class="em_atrecord">{{date.am1}}</label>
                                                         </div>
                                                     </td>
                                                     <td v-bind:key="'C'+key" style="text-align: center;"  v-bind:class="`bg-${checkColor(date.am2,key)}`"  :style="`background-color:${checkBgColor(year,month,dayindex+1,date.am2==null)};height: 3.3em;`">
                                                         <div class="am2_1"> 
-                                                            {{date.am2}}
+                                                            <label class="em_atrecord">{{date.am2}}</label>
                                                         </div>    
                                                     </td>
                                                     <td v-bind:key="'D'+key" style="text-align: center;" v-bind:class="`bg-${checkColor(date.pm1,key)}`"  :style="`background-color:${checkBgColor(year,month,dayindex+1,date.pm1==null)};height: 3.3em;`">
                                                         <div class="pm1_2"> 
-                                                            {{date.pm1}}
+                                                            <label class="em_atrecord">{{date.pm1}}</label>
                                                         </div>
                                                     </td>
                                                     <td v-bind:key="'E'+key" style="text-align: center;" v-bind:class="`bg-${checkColor(date.pm2,key)}`"  :style="`background-color:${checkBgColor(year,month,dayindex+1,date.pm2==null)};height: 3.3em;`">
                                                         <div class="pm2_3"> 
-                                                            {{date.pm2}}
+                                                            <label class="em_atrecord">{{date.pm2}}</label>
                                                         </div>    
                                                     </td>
                                                     <td v-bind:key="'F'+key" style="text-align: center;"></td>
@@ -184,14 +208,14 @@
                                                      
                                                        
                                                         <td v-bind:key="'F'+key"  style="padding: 0px;">
-                                                            <input name="total_hours[]" class="form-control input-sm thour" style="text-align: center;" type="text" :value="`${date.total_hours}`!=undefined?date.total_hours:''">
-                                                            <input name="late_coming[]" class="form-control input-sm late_coming" style="text-align: center;" type="hidden" :value="`${date.late_coming}`!=undefined?date.late_coming:''">
-                                                            <input name="leaving_early[]" class="form-control input-sm leaving_early" style="text-align: center;" type="hidden" :value="`${date.leaving_early}`!=undefined?date.leaving_early:''">
-                                                            <input name="date[]" class="form-control input-sm date" style="text-align: center;" type="hidden" :value="`${year}-${month}-${parseInt(dayindex+1).toString().length==1?'0'+(parseInt(dayindex)+1):(parseInt(dayindex)+1)}`">
+                                                            <input name="total_hours[]" class="form-control input-sm thour edit_time" style="text-align: center;" type="text" :value="`${date.total_hours}`!=undefined?date.total_hours:''">
+                                                            <input name="late_coming[]" class="form-control input-sm late_coming edit_time" style="text-align: center;" type="hidden" :value="`${date.late_coming}`!=undefined?date.late_coming:''">
+                                                            <input name="leaving_early[]" class="form-control input-sm leaving_early edit_time" style="text-align: center;" type="hidden" :value="`${date.leaving_early}`!=undefined?date.leaving_early:''">
+                                                            <input name="date[]" class="form-control input-sm date edit_time" style="text-align: center;" type="hidden" :value="`${year}-${month}-${parseInt(dayindex+1).toString().length==1?'0'+(parseInt(dayindex)+1):(parseInt(dayindex)+1)}`">
                                                         </td>
                                                         <td v-bind:key="'G'+key"  style="padding: 0px;text-align: center;" >
-                                                            <input name="id[]" class="form-control input-sm idx" style="text-align: center;" type="hidden" :value="`${date.id?date.id:''}`">
-                                                            <button type="button" onclick="this.blur();" :id="`autobut${dayindex}`" class="btn" style="background-color:#E7E6E6"  @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">Auto calculate</button><!--自動計算-->
+                                                            <input name="id[]" class="form-control input-sm idx edit_time" style="text-align: center;" type="hidden" :value="`${date.id?date.id:''}`">
+                                                            <button type="button" onclick="this.blur();" :id="`autobut${dayindex}`" class="btn btn_Autocal" style="background-color:#a4b967"  @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">Auto calculate</button><!--自動計算-->
                                                         </td>
                                                     </template>
                                                     <template v-else>
@@ -212,18 +236,18 @@
                                                                 <template v-else>
                                                                         <td v-bind:key="'B'+key"  style="padding: 0px;">
                                                                             <template v-if="day[0].am1!== null">   
-                                                                                <input :name="`am1[]`"  @change="updateInput"  :class="`form-control input-sm am1`"  style="text-align: center;" type="text" :value="`${date.am1}`!=undefined?date.am1:''"> 
+                                                                                <input :name="`am1[]`"  @change="updateInput"  :class="`form-control input-sm am1`" id="read_time" style="text-align: center;" type="text" :value="`${date.am1}`!=undefined?date.am1:''"> 
                                                                             </template>
                                                                             <template v-else>
-                                                                                <input   class="form-control input-sm"  style="text-align: center;" type="text" readonly :value="`${date.am1}`!=undefined?date.am1:null"> 
+                                                                                <input   class="form-control input-sm edit_time"  style="text-align: center;" type="text" readonly :value="`${date.am1}`!=undefined?date.am1:null"> 
                                                                             </template> 
                                                                         </td>
                                                                         <td v-bind:key="'C'+key"  style="padding: 0px;">
                                                                             <template v-if="day[0].am2!== null">   
-                                                                                <input :name="`am2[]`"  @change="updateInput" :class="`form-control input-sm am2`"  style="text-align: center;" type="text" :value="`${date.am2}`!=undefined?date.am2:''"> 
+                                                                                <input :name="`am2[]`"  @change="updateInput" :class="`form-control input-sm am2`" id="read_time" style="text-align: center;" type="text" :value="`${date.am2}`!=undefined?date.am2:''"> 
                                                                             </template>
                                                                             <template v-else>
-                                                                                <input   class="form-control input-sm"  style="text-align: center;" type="text" readonly :value="`${date.am2}`!=undefined?date.am2:null"> 
+                                                                                <input   class="form-control input-sm edit_time"  style="text-align: center;" type="text" readonly :value="`${date.am2}`!=undefined?date.am2:null"> 
                                                                             </template> 
                                                                         </td>
                                                                 </template>        
@@ -244,30 +268,30 @@
                                                                 <template v-else>
                                                                 <td v-bind:key="'D'+key"  style="padding: 0px;">
                                                                      <template v-if="day[0].pm1!== null"> 
-                                                                        <input :name="`pm1[]`"  @change="updateInput"  :class="`form-control input-sm pm1`"  style="text-align: center;" type="text" :value="`${date.pm1}`!=undefined?date.pm1:''">  
+                                                                        <input :name="`pm1[]`"  @change="updateInput"  :class="`form-control input-sm pm1`" id="read_time"  style="text-align: center;" type="text" :value="`${date.pm1}`!=undefined?date.pm1:''">  
                                                                      </template>
                                                                      <template v-else>
-                                                                            <input   class="form-control input-sm"  style="text-align: center;" type="text" readonly :value="`${date.pm1}`!=undefined?date.pm1:null"> 
+                                                                            <input   class="form-control input-sm edit_time"  style="text-align: center;" type="text" readonly :value="`${date.pm1}`!=undefined?date.pm1:null"> 
                                                                     </template>    
                                                                 </td>
                                                                 <td v-bind:key="'E'+key"  style="padding: 0px;">
                                                                     <template v-if="day[0].pm2!== null"> 
-                                                                        <input :name="`pm2[]`"  @change="updateInput"  :class="`form-control input-sm pm2`"  style="text-align: center;" type="text" :value="`${date.pm2}`!=undefined?date.pm2:''"> 
+                                                                        <input :name="`pm2[]`"  @change="updateInput"  :class="`form-control input-sm pm2`" id="read_time"  style="text-align: center;" type="text" :value="`${date.pm2}`!=undefined?date.pm2:''"> 
                                                                     </template>
                                                                      <template v-else>
-                                                                            <input   class="form-control input-sm"  style="text-align: center;" type="text" readonly :value="`${date.pm2}`!=undefined?date.pm2:null"> 
+                                                                            <input   class="form-control input-sm edit_time"  style="text-align: center;" type="text" readonly :value="`${date.pm2}`!=undefined?date.pm2:null"> 
                                                                     </template>    
                                                                 </td>
                                                                 </template>
                                                                 <td v-bind:key="'F'+key"  style="padding: 0px;">
-                                                                    <input name="total_hours[]" class="form-control input-sm thour" style="text-align: center;" type="text" :value="`${date.total_hours}`!=undefined?date.total_hours:''">
-                                                                    <input name="late_coming[]" class="form-control input-sm late_coming" style="text-align: center;" type="hidden" :value="`${date.late_coming}`!=undefined?date.late_coming:''">
-                                                                    <input name="leaving_early[]" class="form-control input-sm leaving_early" style="text-align: center;" type="hidden" :value="`${date.leaving_early}`!=undefined?date.leaving_early:''">
-                                                                    <input name="date[]" class="form-control input-sm date" style="text-align: center;" type="hidden" :value="`${year}-${month}-${parseInt(dayindex+1).toString().length==1?'0'+(parseInt(dayindex)+1):(parseInt(dayindex)+1)}`">
+                                                                    <input name="total_hours[]" class="form-control input-sm thour edit_time" style="text-align: center;" type="text" :value="`${date.total_hours}`!=undefined?date.total_hours:''">
+                                                                    <input name="late_coming[]" class="form-control input-sm late_coming edit_time" style="text-align: center;" type="hidden" :value="`${date.late_coming}`!=undefined?date.late_coming:''">
+                                                                    <input name="leaving_early[]" class="form-control input-sm leaving_early edit_time" style="text-align: center;" type="hidden" :value="`${date.leaving_early}`!=undefined?date.leaving_early:''">
+                                                                    <input name="date[]" class="form-control input-sm date edit_time" style="text-align: center;" type="hidden" :value="`${year}-${month}-${parseInt(dayindex+1).toString().length==1?'0'+(parseInt(dayindex)+1):(parseInt(dayindex)+1)}`">
                                                                 </td>
                                                                 <td v-bind:key="'G'+key"  style="padding: 0px;text-align: center;">
-                                                                    <input name="id[]" class="form-control input-sm idx" style="text-align: center;" type="hidden" :value="`${date.id?date.id:''}`">
-                                                                    <button type="button" onclick="this.blur();" :id="`autobut${dayindex}`" class="btn" style="background-color:#E7E6E6"  @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">Auto calculate</button>
+                                                                    <input name="id[]" class="form-control input-sm idx edit_time" style="text-align: center;" type="hidden" :value="`${date.id?date.id:''}`">
+                                                                    <button type="button" onclick="this.blur();" :id="`autobut${dayindex}`" class="btn btn_Autocal" style="background-color:#a4b967"  @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">Auto calculate</button>
                                                                 </td>
                                                             
                                                             </template>
@@ -289,15 +313,15 @@
                                                                                 <input :name="`am1[]`"  @change="updateInput"  :class="`form-control input-sm am1`"  style="text-align: center;" type="text" @value="`${old(am1)}`"> 
                                                                                 </template>
                                                                                 <template v-else>
-                                                                                    <input   class="form-control input-sm"  style="text-align: center;" type="text" readonly :value="`${date.am1}`!=undefined?date.am1:null"> 
+                                                                                    <input   class="form-control input-sm edit_time"  style="text-align: center;" type="text" readonly :value="`${date.am1}`!=undefined?date.am1:null"> 
                                                                                 </template> 
                                                                             </td>
                                                                             <td v-bind:key="'C'+key"  style="padding: 0px;">
                                                                                 <template v-if="day[0].am2!==null"> 
-                                                                                <input :name="`am2[]`"  @change="updateInput" :class="`form-control input-sm am2`"  style="text-align: center;" type="text" @value="`${old(am2)}`"> 
+                                                                                <input :name="`am2[]`"  @change="updateInput" :class="`form-control input-sm am2 edit_time`"  style="text-align: center;" type="text" @value="`${old(am2)}`"> 
                                                                                 </template>
                                                                                 <template v-else>
-                                                                                    <input   class="form-control input-sm"  style="text-align: center;" type="text" readonly :value="`${date.am2}`!=undefined?date.am2:null"> 
+                                                                                    <input   class="form-control input-sm edit_time"  style="text-align: center;" type="text" readonly :value="`${date.am2}`!=undefined?date.am2:null"> 
                                                                                 </template> 
                                                                             
                                                                             </td>
@@ -312,7 +336,7 @@
                                                                                 <input :name="`pm1[]`"  @change="updateInput"  :class="`form-control input-sm pm1`"  style="text-align: center;" type="text" @value="`${old(pm1)}`">  
                                                                                 </template>
                                                                                 <template v-else>
-                                                                                    <input   class="form-control input-sm"  style="text-align: center;" type="text" readonly :value="`${date.pm1}`!=undefined?date.pm1:null"> 
+                                                                                    <input   class="form-control input-sm edit_time"  style="text-align: center;" type="text" readonly :value="`${date.pm1}`!=undefined?date.pm1:null"> 
                                                                                 </template> 
                                                                             </td>
                                                                             <td v-bind:key="'E'+key"  style="padding: 0px;">
@@ -321,20 +345,20 @@
                                                                                     <input :name="`pm2[]`"  @change="updateInput"  :class="`form-control input-sm pm2`"  style="text-align: center;" type="text" @value="`${old(pm2)}`"> 
                                                                                 </template>
                                                                                 <template v-else>
-                                                                                    <input   class="form-control input-sm"  style="text-align: center;" type="text" readonly :value="`${date.pm2}`!=undefined?date.pm2:null"> 
+                                                                                    <input   class="form-control input-sm edit_time"  style="text-align: center;" type="text" readonly :value="`${date.pm2}`!=undefined?date.pm2:null"> 
                                                                                 </template>                                                                            
                                                                             </td>
                                                                          </template>
 
                                                                         <td v-bind:key="'F'+key"  style="padding: 0px;">
-                                                                            <input name="total_hours[]" class="form-control input-sm thour" style="text-align: center;" type="text" @value="`${old(total_hours)}`">
-                                                                            <input name="late_coming[]" class="form-control input-sm late_coming" style="text-align: center;" type="hidden" :value="`${date.late_coming}`!=undefined?date.late_coming:''">
-                                                                            <input name="leaving_early[]" class="form-control input-sm leaving_early" style="text-align: center;" type="hidden" :value="`${date.leaving_early}`!=undefined?date.leaving_early:''">
+                                                                            <input name="total_hours[]" class="form-control input-sm thour edit_time" style="text-align: center;" type="text" @value="`${old(total_hours)}`">
+                                                                            <input name="late_coming[]" class="form-control input-sm late_coming edit_time" style="text-align: center;" type="hidden" :value="`${date.late_coming}`!=undefined?date.late_coming:''">
+                                                                            <input name="leaving_early[]" class="form-control input-sm leaving_early edit_time" style="text-align: center;" type="hidden" :value="`${date.leaving_early}`!=undefined?date.leaving_early:''">
                                                                             <input name="date[]" class="form-control input-sm date" style="text-align: center;" type="hidden" :value="`${year}-${month}-${parseInt(dayindex+1).toString().length==1?'0'+(parseInt(dayindex)+1):(parseInt(dayindex)+1)}`">
                                                                         </td>
                                                                         <td v-bind:key="'G'+key"  style="padding: 0px;text-align: center;">
                                                                             <!-- <input name="id[]" class="form-control input-sm idx" style="text-align: center;" type="hidden" :value="`${date.id?date.id:''}`"> -->
-                                                                            <button type="button" onclick="this.blur();" :id="`autobut${dayindex}`" class="btn" style="background-color:#E7E6E6"  @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">Auto calculate</button>
+                                                                            <button type="button" onclick="this.blur();" :id="`autobut${dayindex}`" class="btn btn_Autocal" style="background-color:#a4b967"  @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">Auto calculate</button>
                                                                         </td>
                                                                     </template> 
                                                     </template>                                                
@@ -345,7 +369,7 @@
                                 <template v-else>
                                     <!-- {{holidays[dayindex+1]==(dayindex+1) }} -->
                                     <tr v-bind:key="dayindex"  v-bind:style="`height:${day_name(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()],holidays[dayindex+1]==(dayindex+1))==('table-secondary' || 'table-success')?'3.3em':''}`" v-bind:class="`mainIndex_${dayindex} ${day_name(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()],holidays[dayindex+1]==(dayindex+1))}`">
-                                        <td  style="text-align: center;" rowspan="2"><div style="text-align: center;">{{dayindex+1}} {{ days[new Date(year+"/"+month+"/"+(dayindex+1)).getDay()]}}</div></td>     
+                                        <td  style="text-align: center;" rowspan="2"><div style="text-align: center;"><label class="calen_date">{{dayindex+1}} {{ days[new Date(year+"/"+month+"/"+(dayindex+1)).getDay()]}}</label></div></td>     
                                        
                                         <template v-if="`${day_name(days[new Date(year+'/'+month+'/'+(dayindex+1)).getDay()],holidays[dayindex+1]==(dayindex+1))}`!=''">
                                             <td rowspan="2" colspan="2"></td>
@@ -367,14 +391,14 @@
                                                        <td class="paid-leave1 align-middle text-center" colspan="2" style="height:2.6em;padding:0px;"></td> 
                                                         <td class="paid-leave2 align-middle text-center" colspan="2" style="height:2.6em;padding:0px;"></td>
                                                         <td  style="padding: 0px;">
-                                                                    <input name="total_hours[]" class="form-control input-sm thour" style="text-align: center;" type="text" @value="`${old(total_hours)}`">
-                                                                    <input name="late_coming[]" class="form-control input-sm late_coming" style="text-align: center;" type="hidden" >
-                                                                    <input name="leaving_early[]" class="form-control input-sm leaving_early" style="text-align: center;" type="hidden" >
-                                                                    <input name="date[]" class="form-control input-sm date" style="text-align: center;" type="hidden" :value="`${year}-${month}-${parseInt(dayindex+1).toString().length==1?'0'+(parseInt(dayindex)+1):(parseInt(dayindex)+1)}`">
+                                                                    <input name="total_hours[]" class="form-control input-sm thour edit_time" style="text-align: center;" type="text" @value="`${old(total_hours)}`">
+                                                                    <input name="late_coming[]" class="form-control input-sm late_coming edit_time" style="text-align: center;" type="hidden" >
+                                                                    <input name="leaving_early[]" class="form-control input-sm leaving_early edit_time" style="text-align: center;" type="hidden" >
+                                                                    <input name="date[]" class="form-control input-sm date edit_time" style="text-align: center;" type="hidden" :value="`${year}-${month}-${parseInt(dayindex+1).toString().length==1?'0'+(parseInt(dayindex)+1):(parseInt(dayindex)+1)}`">
                                                         </td>
                                                         <td style="padding: 0px;text-align: center;">
                                                                     <input name="id[]" class="form-control input-sm idx" style="text-align: center;" type="hidden" >
-                                                                    <button type="button" onclick="this.blur();" :id="`autobut${dayindex}`" class="btn" style="background-color:#E7E6E6"  @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">Auto calculate</button>
+                                                                    <button type="button" onclick="this.blur();" :id="`autobut${dayindex}`" class="btn btn_Autocal" style="background-color:#a4b967"  @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">Auto calculate</button>
                                                         </td>  
                                                </template>                                   
                                     </tr>  
@@ -386,6 +410,135 @@
         </div>
     </div>    
 </template>
+
+<style>
+    span.choose_one {
+        font-family: verdana;
+        font-size: 17px;
+        color: black;
+    }
+
+    label.lbl_inform {
+            font-family: verdana;
+            font-size:16px;
+            color:black;
+        
+    }
+    .btn_salaryedit, .btn_salarycopy {
+        /* border-radius: 20px; */
+        padding:12px 32px;
+        border:2px solid white;
+        color:white;
+        font-family: verdana;
+        font-size:14px;
+        width:150px;
+        
+    }
+
+    .btn_salarycopy {
+        background-color: #005b96;
+        color:white;
+        border:1px solid #008844;
+        position: relative;
+        top:10px;
+
+    }
+
+    .btn_salaryedit {
+        background-color:#008844;
+        color:#fff;
+        border:1px solid #005b96;
+        position: relative;
+        top:20px;
+    }
+
+    .btn_cal, .btn_emptycal {
+        padding:15px 32px;
+        border:2px solid white;
+        color:white;
+        font-family: verdana;
+        font-size:14px;
+        width:250px;
+        
+    }
+
+    .btn_cal{
+        background-color: #662c2a;
+    }
+    .btn_emptycal {
+        background-color: #ff6f69;
+    }
+
+    .btn_Autocal {
+        box-shadow: none;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        font-size: 13px;
+        color:white;
+    }
+
+    .btn_Autocal:hover {
+        /* letter-spacing: 1px; */
+        transition: 0.5s;
+        animation-delay: 0.8s;
+        -webkit-animation-delay:0.8s;
+    }
+
+    label.time_title {
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        padding: 5px 10px;
+        font-size: 18px;
+        color:white;
+    }
+
+    label.calen_date {
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        color:black;
+        font-size: 16px;
+        padding: 5px 10px;
+        /* font-weight: bold; */
+    }
+
+    input[type=text].edit_time, input[type=text]#read_time {
+          background-color: #fff;
+          height: 50px;
+          width: 100%;
+          padding: 12px 20px;
+          margin: 0px 0;
+          display: inline-block;
+          border: 1px solid white;
+          border-radius: 4px;
+          box-sizing: datepicker1border-box;
+          color:black;
+          font-family: Montserrat, Helvetica Neue, sans-serif;
+          font-size: 16px;
+    }
+
+    input[type=text]#read_time {
+        font-family: Montserrat, Helvetica Neue, sans-serif;
+
+        background-color: #d7b2d4;
+        font-size: 16px;
+        color: black;
+    }
+
+    label.em_atrecord {
+        font-family: Montserrat, Helvetica Neue, sans-serif;
+        font-size: 16px;
+        color:black;
+        padding: 3px 0px;
+        /* font-style: oblique; */
+        /* font-weight: bold; */
+        
+    }
+
+    select#selectEmployee, select#selectDate {
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        font-size:15px;
+        color: black;
+    }
+
+
+</style>
 <script>
     export default {
         data() {
