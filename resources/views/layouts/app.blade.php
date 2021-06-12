@@ -60,15 +60,17 @@
 		<div class="container-login100">
 			<div class="wrap-login100 p-t-85 p-b-20">
                     {{-- <div id="app"> --}}
-                    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                    {{-- <nav class="navbar navbar-expand-lg navbar-light bg-light"> --}}
                     {{-- <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm"> --}}
                         {{-- <div class="container"> --}}
                             @auth
+                             <nav class="navbar navbar-expand-lg navbar-light bg-primary">
                                 <h1>
-                                    <a class="navbar-brand text-left" href="{{ url('/') }}">
+                                    <a class="navbar-brand text-left font-weight-bold" href="{{ url('/') }}">
                                         {{ config('app.name', 'Laravel') }}
                                     </a>
                                 </h1>
+                              </nav>  
                             @endauth 
 
                             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
@@ -112,7 +114,7 @@
                                 </ul>
                             </div>
                         {{-- </div> --}}
-                    </nav>
+                    {{-- </nav> --}}
                 
                     <main class="py-4">
                         @yield('content')

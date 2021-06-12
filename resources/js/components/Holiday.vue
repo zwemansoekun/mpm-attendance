@@ -248,16 +248,16 @@ var moment = require('moment');
                    that.$swal({
                         title: 'Please wait!',
                         // add a custom html tags by defining a html method.
-                        html: 'Loading......',
+                        // html: 'Loading......',
                          timer: 60,
                         showCloseButton: false,
                         showCancelButton: false,
                         showConfirmButton: false,
                         focusConfirm: false,
                         allowOutsideClick: false,
-                        //  onBeforeOpen: () => {
-                        //     that.$swal.showLoading();
-                        //     },
+                         onBeforeOpen: () => {
+                            that.$swal.showLoading();
+                            },
                         }) 
             },  
             deleteRow: function(date){

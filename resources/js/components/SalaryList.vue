@@ -63,16 +63,16 @@
                 </div>
                 <!-- <form id="form" class="" @submit.prevent="SalarySave"  autocomplete="on"> -->
                 <div class="row justify-content-md-center mt-4"> 
-                    <button type="button" @click="engineerCost" style="background-color:#E7E6E6" class="btn  mr-3" onclick="this.blur();">エンジニアコスト一覧表</button><!-- Engineer cost list -->
+                    <button type="button" @click="engineerCost"  class="btn btn-success mr-3 font-weight-bold" onclick="this.blur();">エンジニアコスト一覧表</button><!-- Engineer cost list -->
                       
-                    <button data-toggle="modal" v-if="!payslipBtnDisable" data-target="#payslip" class="btn mr-3" style="background-color:#E7E6E6" onclick="this.blur();">
+                    <button data-toggle="modal" v-if="!payslipBtnDisable" data-target="#payslip" class="btn mr-3 font-weight-bold" style="background-color:#E7E6E6" onclick="this.blur();">
                        Pay slip create <!-- 給与明細作成 -->
                     </button>
-                    <button type="button" @click="errorAlet" v-if="payslipBtnDisable" class="btn mr-3" style="background-color:#E7E6E6" onclick="this.blur();">
+                    <button type="button" @click="errorAlet" v-if="payslipBtnDisable" class="btn mr-3 font-weight-bold" style="background-color:#E7E6E6" onclick="this.blur();">
                         Pay slip create <!-- 給与明細作成 -->
                     </button>
                         
-                    <button type="submit" form="form" style="background-color:#E7E6E6" class="btn  mr-3" onclick="this.blur();">Edit</button>
+                    <button type="submit" form="form"  class="btn btn-primary mr-3" onclick="this.blur();">Edit</button>
 
                 </div>
                  <form id="form" class="" @submit.prevent="SalarySave"  autocomplete="on">
@@ -948,7 +948,7 @@
                         that.$swal({
                         title: 'Please wait!',
                         // add a custom html tags by defining a html method.
-                        html: 'Loading......',
+                        // html: 'Loading......',
                         // timer: 3000,
                         showCloseButton: false,
                         showCancelButton: false,
