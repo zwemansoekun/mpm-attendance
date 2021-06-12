@@ -511,7 +511,7 @@
             });
             
             this.axios
-                .get(process.env.MIX_APP_API_URL+'/attendances/all/date')
+                .get(process.env.MIX_APP_URL+'/attendances/all/date')
                 .then(response => {
                     this.dates=response.data;
             }); 
@@ -527,7 +527,7 @@
             });
        
             this.axios
-                .get(process.env.MIX_APP_API_URL+'/employees')
+                .get(process.env.MIX_APP_URL+'/employees')
                 .then(response => {
                     that.emps=response.data;
                    if(that.emps){
@@ -607,7 +607,7 @@
                 const link = document.createElement('a')
                 let url =  process.env.MIX_APP_URL+"/salary/export/"+ this.year+'-'+ this.month+'/'+ empArray;
                     
-                //link.href =process.env.MIX_APP_API_URL+'/salary/export/'+ this.year+'-'+ this.month+'/'+ empArray
+                //link.href =process.env.MIX_APP_URL+'/salary/export/'+ this.year+'-'+ this.month+'/'+ empArray
                 link.href = url;
                 document.body.appendChild(link)
                 link.click()

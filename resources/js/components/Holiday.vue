@@ -108,7 +108,7 @@ var moment = require('moment');
         
         created() {
             this.axios
-                .get(process.env.MIX_APP_URL+'/api/holidays')
+                .get(process.env.MIX_APP_URL+'/holidays')
                 .then(response => {
                     this.holidays = response.data;
                     
@@ -174,12 +174,12 @@ var moment = require('moment');
                           }
                         }
                         this.axios
-                        .post(process.env.MIX_APP_URL+'/api/holidays', Object.values(this.holidays))
+                        .post(process.env.MIX_APP_URL+'/holidays', Object.values(this.holidays))
                         .then(response => (
                             this.$refs.btnToggle.innerText = 'Edit',
                             this.holidays =[],
                             this.axios
-                                .get(process.env.MIX_APP_URL+'/api/holidays/findYear/'+ moment(this.customDate).format("yyyy"))
+                                .get(process.env.MIX_APP_URL+'/holidays/findYear/'+ moment(this.customDate).format("yyyy"))
                                 .then(response => (
                                     this.holidays = response.data
                                 ))
@@ -203,7 +203,7 @@ var moment = require('moment');
             returnValue: function(){
                 this.loadingAlert();
                 this.axios
-                    .get(process.env.MIX_APP_URL+'/api/holidays/findYear/'+ moment(this.customDate).format("yyyy"))
+                    .get(process.env.MIX_APP_URL+'/holidays/findYear/'+ moment(this.customDate).format("yyyy"))
                     .then(response => {
                         this.holidays = response.data;
                        if(moment(this.customDate).format("yyyy") !== moment(new Date()).format("yyyy")){
@@ -236,7 +236,7 @@ var moment = require('moment');
                 this.isRowOne = true;
                 this.isRowTwo = false;
                 this.axios
-                    .get(process.env.MIX_APP_URL+'/api/holidays/copy')
+                    .get(process.env.MIX_APP_URL+'/holidays/copy')
                     .then(response => {
                         
                         this.holidays = response.data,
@@ -273,7 +273,7 @@ var moment = require('moment');
                     }else{
                         
                         this.axios
-                            .post(process.env.MIX_APP_URL+'/api/holidays/deleteRow/'+value+'/'+date)
+                            .post(process.env.MIX_APP_URL+'/holidays/deleteRow/'+value+'/'+date)
                             .then(response => {
                                 this.holidays = response.data;
                         });
