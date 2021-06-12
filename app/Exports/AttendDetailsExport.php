@@ -47,7 +47,7 @@ class AttendDetailsExport implements FromCollection,WithEvents, WithCustomStartC
     {
         //that is temporary code for nishimura's testing  
         //it will be use when stay at home is over.
-        $content = Api_Employees::all();// file_get_contents(env("MIX_APP_URL")."/employees");
+        $content =  file_get_contents(env("MIX_APP_AungThiHa_URL")."/employees");//Api_Employees::all();
         $empApiArray = json_decode($content, true);
        
         // APIから取得する社員情報

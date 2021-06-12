@@ -37,8 +37,8 @@ class EngineerExport implements FromCollection,WithEvents,WithStrictNullComparis
         $setting='';       
         //that is temporary code for nishimura's testing  
         //it will be use when stay at home is over.
-        // $employee =  file_get_contents(env('MIX_APP_URL')."/employees");
-        $employee=Api_Employees::all();
+        $employee =  file_get_contents(env('MIX_APP_AungThiHa_URL')."/employees");
+        // $employee=Api_Employees::all();
 
         $empArray = json_decode($employee, true);
         $tem_emp=[];$tem_salary=[];      

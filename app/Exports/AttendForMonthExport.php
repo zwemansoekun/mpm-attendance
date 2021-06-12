@@ -47,12 +47,13 @@ class AttendForMonthExport implements FromCollection,WithEvents, WithCustomStart
 
     public function collection()
     {
+        $explode=explode(" ", $this->employee);
         $attendTime = DB::select('select am1 ,pm2 ,total_hours ,date,
             am_leave, pm_leave
             from attend_details 
             where emp_no = :emp_no and 
             EXTRACT(YEAR_MONTH FROM date) = :date
-            order by date', ['date' => $this->printY,'emp_no' => substr($this->employee,0,1)]);
+            order by date', ['date' => $this->printY,'emp_no' => $explode[0]]);
         
         
         $attendTime = json_decode(json_encode($attendTime),true);
@@ -126,6 +127,7 @@ class AttendForMonthExport implements FromCollection,WithEvents, WithCustomStart
 
     public function registerEvents(): array
     {
+      
         return [
             BeforeExport::class    => function(BeforeExport $event) {
                 // 一番目見出し
@@ -164,9 +166,9 @@ class AttendForMonthExport implements FromCollection,WithEvents, WithCustomStart
                 $event->sheet->getCell('E1')->setValue("支社長");
                 $event->sheet->mergeCells('E2:E4');
                 $event->sheet->mergeCells('A6:E6');
-                
+                $explode=explode(" ", $this->employee);
                 $kanaName = DB::select('SELECT kana_name FROM employees WHERE emp_id = :empId', 
-                    ['empId' => substr($this->employee,0,1)]);
+                    ['empId' => $explode[0]]);
                 $kanaName = json_decode(json_encode($kanaName),true);
                 $kanaName=isset($kanaName[0])?$kanaName[0]['kana_name']:'';
 

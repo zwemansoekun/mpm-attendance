@@ -30,10 +30,10 @@ Route::get('/',  function () {
       return view('layouts.app');
 });
 
-Route::get('/attendances/all/date', 'Api_AttendController@index');
+// Route::get('/attendances/all/date', 'Api_AttendController@index');//mpm api
 Route::get('/attendManage/download/{year}', 'AttendManageController@download');
 Route::get('/attendList/csvOutput/{employee}/{date}','AttendController@csvOutput')->where('date', '[0-9]+');
-Route::get('/attendances/ampm/{emp_no}/{date}', 'Api_AttendController@show')->where('emp_no', '[0-9]+')->where('date', '[0-9]+');
+// Route::get('/attendances/ampm/{emp_no}/{date}', 'Api_AttendController@show')->where('emp_no', '[0-9]+')->where('date', '[0-9]+');//mpm api
 Route::post('/attendList','AttendController@store');
 Route::post('/attendList/getmonth','AttendController@getmonth');
 Route::post('/attendManage/csvOutput/{year}', 'AttendManageController@csvOutput');
@@ -58,7 +58,7 @@ Route::post('/delayTime/updateAm/{id}',  'DelayTimeController@saveAm');
 Route::post('/delayTime/updatePm/{id}',  'DelayTimeController@savePm');
 Route::post('/delayTime/updateMoney/{id}',  'DelayTimeController@saveMoney');
 
-Route::get('/employees', 'Api_EmployeesController@index');
+// Route::get('/employees', 'Api_EmployeesController@index');// mpm api
 Route::get('/employee/{emp_id}', 'EmployeeController@findByEmployee');
 Route::post('/employee/save/{id}', 'EmployeeController@save');
 
