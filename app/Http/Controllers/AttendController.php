@@ -119,8 +119,12 @@ class AttendController extends Controller
 
     public function csvOutput($employee,$date)
     {   
-     
-        $name=Api_Employees::select('name')->where('id',substr($employee,0,1))->firstOrFail();    //testing code  
-        return Excel::download(new AttendForMonthExport($employee,$date), $name->name."_".$date."_出勤簿生成.xlsx"); //   Attendance_book_generation 
+       
+        $explode=explode(" ", $employee);
+        $content = file_get_contents(env("MIX_APP_AungThiHa_URL")."/employees/".$explode[0]);
+        $empApiArray = json_decode($content, true);
+        $name = $empApiArray['name'];
+        // $name=Api_Employees::select('name')->where('id',substr($employee,0,1))->firstOrFail();    //testing code  
+        return Excel::download(new AttendForMonthExport($employee,$date), $name."_".$date."_出勤簿生成.xlsx"); //   Attendance_book_generation 
     }
 }

@@ -511,7 +511,7 @@
             });
             
             this.axios
-                .get(process.env.MIX_APP_URL+'/attendances/all/date')
+                .get(process.env.MIX_APP_AungThiHa_URL+'/attendances/all/date')
                 .then(response => {
                     this.dates=response.data;
             }); 
@@ -527,7 +527,7 @@
             });
        
             this.axios
-                .get(process.env.MIX_APP_URL+'/employees')
+                .get(process.env.MIX_APP_AungThiHa_URL+'/employees')
                 .then(response => {
                     that.emps=response.data;
                    if(that.emps){

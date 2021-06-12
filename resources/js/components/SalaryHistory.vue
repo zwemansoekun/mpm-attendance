@@ -334,7 +334,7 @@ import Datepicker from 'vuejs-datepicker';
         },
         created() {
             this.axios
-                .get(process.env.MIX_APP_URL+'/employees')
+                .get(process.env.MIX_APP_AungThiHa_URL+'/employees')
                 .then(response => {
                     this.emps=response.data;
                 });
