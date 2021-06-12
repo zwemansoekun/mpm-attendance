@@ -59,10 +59,10 @@
                             
             <div class="row">
                 <div class="col-md-4">
-                    <button type="button" class="btn" style="background-color:#E7E6E6" onclick="this.blur();" @click="csvOutput(select_employee,select_date)">出勤簿生成</button><!--Attendance book generation-->
+                    <button type="button" class="btn bg-success" style="background-color:#E7E6E6" onclick="this.blur();" @click="csvOutput(select_employee,select_date)">出勤簿生成</button><!--Attendance book generation-->
                 </div>
                 <div class="col-md-4 offset-md-2">
-                    <button type="button" class="btn" style="width: 220px;background-color:#E7E6E6;" onclick="this.blur();" @click="allButtonClick()">All automatic calculation</button><!--全て自動計算-->
+                    <button type="button" class="btn font-weight-bold" style="width: 220px;background-color:#E7E6E6;" onclick="this.blur();" @click="allButtonClick()">All automatic calculation</button><!--全て自動計算-->
                 </div> 
             </div>                 
                 <form id="form" class="" @submit.prevent="attendSave"  autocomplete="on">
@@ -72,7 +72,7 @@
                             <button type="submit" class="btn btn-primary" onclick="this.blur();" >Register</button><!--登録-->
                         </div>
                         <div class="col-md-4 offset-md-2">
-                            <button type="button" class="btn" onclick="this.blur();" @click="filterInput()" style="width: 220px;color: red;background-color:#E7E6E6">Automatic calculation only in the empty</button><!--空のところだけ自動計算-->
+                            <button type="button" class="btn font-weight-bold" onclick="this.blur();" @click="filterInput()" style="width: 220px;color: red;background-color:#E7E6E6">Automatic calculation only in the empty</button><!--空のところだけ自動計算-->
                         </div>
                     </div>
              
@@ -191,7 +191,7 @@
                                                         </td>
                                                         <td v-bind:key="'G'+key"  style="padding: 0px;text-align: center;" >
                                                             <input name="id[]" class="form-control input-sm idx" style="text-align: center;" type="hidden" :value="`${date.id?date.id:''}`">
-                                                            <button type="button" onclick="this.blur();" :id="`autobut${dayindex}`" class="btn" style="background-color:#E7E6E6"  @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">Auto calculate</button><!--自動計算-->
+                                                            <button type="button" onclick="this.blur();" :id="`autobut${dayindex}`" class="btn font-weight-bold" style="background-color:#E7E6E6"  @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">Auto calculate</button><!--自動計算-->
                                                         </td>
                                                     </template>
                                                     <template v-else>
@@ -267,7 +267,7 @@
                                                                 </td>
                                                                 <td v-bind:key="'G'+key"  style="padding: 0px;text-align: center;">
                                                                     <input name="id[]" class="form-control input-sm idx" style="text-align: center;" type="hidden" :value="`${date.id?date.id:''}`">
-                                                                    <button type="button" onclick="this.blur();" :id="`autobut${dayindex}`" class="btn" style="background-color:#E7E6E6"  @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">Auto calculate</button>
+                                                                    <button type="button" onclick="this.blur();" :id="`autobut${dayindex}`" class="btn font-weight-bold" style="background-color:#E7E6E6"  @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">Auto calculate</button>
                                                                 </td>
                                                             
                                                             </template>
@@ -334,7 +334,7 @@
                                                                         </td>
                                                                         <td v-bind:key="'G'+key"  style="padding: 0px;text-align: center;">
                                                                             <!-- <input name="id[]" class="form-control input-sm idx" style="text-align: center;" type="hidden" :value="`${date.id?date.id:''}`"> -->
-                                                                            <button type="button" onclick="this.blur();" :id="`autobut${dayindex}`" class="btn" style="background-color:#E7E6E6"  @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">Auto calculate</button>
+                                                                            <button type="button" onclick="this.blur();" :id="`autobut${dayindex}`" class="btn font-weight-bold" style="background-color:#E7E6E6"  @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">Auto calculate</button>
                                                                         </td>
                                                                     </template> 
                                                     </template>                                                
@@ -374,7 +374,7 @@
                                                         </td>
                                                         <td style="padding: 0px;text-align: center;">
                                                                     <input name="id[]" class="form-control input-sm idx" style="text-align: center;" type="hidden" >
-                                                                    <button type="button" onclick="this.blur();" :id="`autobut${dayindex}`" class="btn" style="background-color:#E7E6E6"  @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">Auto calculate</button>
+                                                                    <button type="button" onclick="this.blur();" :id="`autobut${dayindex}`" class="btn font-weight-bold" style="background-color:#E7E6E6"  @click="showTimer(`mainIndex_${dayindex}`,`index_${dayindex}`,'')">Auto calculate</button>
                                                         </td>  
                                                </template>                                   
                                     </tr>  
@@ -485,16 +485,16 @@
                    that.$swal({
                         title: 'Please wait!',
                         // add a custom html tags by defining a html method.
-                        html: 'Loading......',
+                        // html: 'Loading......',
                          timer: 300000,
                         showCloseButton: false,
                         showCancelButton: false,
                         showConfirmButton: false,
                         focusConfirm: false,
                         allowOutsideClick: false,
-                        //  onBeforeOpen: () => {
-                        //     that.$swal.showLoading();
-                        //     },
+                         onBeforeOpen: () => {
+                            that.$swal.showLoading();
+                            },
                         })   
             },  
             employeeCodeAndName: function(value){
