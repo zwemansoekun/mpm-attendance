@@ -637,7 +637,7 @@
                             }else{
                                 those.$swal.close();
                                 those.$fire({
-                                title: "Fail！！",
+                                title: "Failed!!",
                                 text: "Data cannot be registered.",
                                 type: "error",
                                 timer: 1500,
@@ -656,7 +656,7 @@
                 }else{
                   
                      those.$fire({
-                        title: "Fail！！",
+                        title: "Failed!!",
                         text: "Please fill in the data.",
                         type: "warning",
                         timer: 3000,
@@ -1281,7 +1281,7 @@
                             link.click();
                         }else{
                                 that.$fire({
-                                title: "Fail！！",
+                                title: "Failed!!",
                                 text: "No data to display.",//データはありませんでした。
                                 type: "error",
                                 timer: 3500,

@@ -545,7 +545,7 @@
             errorAlet:function(){
                 let that=this;
                 that.$fire({
-                                title: "Fail！！",
+                                title: "Failed!!",
                                 text: "No data to display.",//データはありませんでした。
                                 type: "error",
                                 timer: 3500,
@@ -585,7 +585,7 @@
                             link.click()
                         }else{
                                 that.$fire({
-                                title: "Fail！！",
+                                title: "Failed!!",
                                 text: "No data to display.",//データはありませんでした。
                                 type: "error",
                                 timer: 3500,
@@ -887,7 +887,7 @@
                     
                 }else{
                      that.$fire({
-                        title: "Fail！！",
+                        title: "Failed!!",
                         text: "Please fill in the data.",//データを記入してください。
                         type: "warning",
                         timer: 3000,
@@ -923,7 +923,7 @@
                                 });
                             }else{
                                 that.$fire({
-                                title: "Fail！！",
+                                title: "Failed!!",
                                 text: "Data cannot be registered.",
                                 type: "error",
                                 timer: 1500,
