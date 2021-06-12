@@ -130,7 +130,7 @@
             .catch(function (error) {
             });
             this.axios
-                .get(process.env.MIX_APP_API_URL+'/attendances/all/date')
+                .get(process.env.MIX_APP_URL+'/attendances/all/date')
                 .then(response => {
                     this.dates=response.data;
             });

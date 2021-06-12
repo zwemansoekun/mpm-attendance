@@ -43,7 +43,7 @@ var moment = require('moment');
                 });
             },
             returnValue: function(){
-                axios.post(process.env.MIX_APP_URL+'/api/attendManage/csvOutput/'+ moment(this.customDate).format("yyyyMM"))
+                axios.post(process.env.MIX_APP_URL+'/attendManage/csvOutput/'+ moment(this.customDate).format("yyyyMM"))
                     .then((response) => {
                         console.log(response.data);
                         if(response.data == "fail"){

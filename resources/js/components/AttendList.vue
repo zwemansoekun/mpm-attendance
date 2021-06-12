@@ -422,14 +422,14 @@
         },     
         created() {
             this.axios
-                .get(process.env.MIX_APP_API_URL+'/employees')
+                .get(process.env.MIX_APP_URL+'/employees')
                 .then(response => {
                 
                     this.emps=response.data;
                   
                 });
             this.axios
-                .get(process.env.MIX_APP_API_URL+'/attendances/all/date')
+                .get(process.env.MIX_APP_URL+'/attendances/all/date')
                 .then(response => {
              
                     this.dates=response.data.filter(function (el) {
@@ -637,7 +637,7 @@
                             }else{
                                 those.$swal.close();
                                 those.$fire({
-                                title: "Fail！！",
+                                title: "Failed!!",
                                 text: "Data cannot be registered.",
                                 type: "error",
                                 timer: 1500,
@@ -656,7 +656,7 @@
                 }else{
                   
                      those.$fire({
-                        title: "Fail！！",
+                        title: "Failed!!",
                         text: "Please fill in the data.",
                         type: "warning",
                         timer: 3000,
@@ -844,7 +844,7 @@
                    
                     this.dayCount=new Date(this.year,this.month, 0).getDate();
                     this.axios
-                    .get(process.env.MIX_APP_API_URL+"/attendances/ampm/"+this.emp_no+"/"+this.year+this.month)                 
+                    .get(process.env.MIX_APP_URL+"/attendances/ampm/"+this.emp_no+"/"+this.year+this.month)                 
                     .then(response => {                     
                         if(response.data.length===0){
                             this.form_open=false;
@@ -984,14 +984,14 @@
                         }
                     });
                     this.axios
-                    .get(process.env.MIX_APP_URL+'/api/setting/delayTime/'+this.year+"/"+this.month)//+this.year+"/"+this.month
+                    .get(process.env.MIX_APP_URL+'/setting/delayTime/'+this.year+"/"+this.month)///api/setting/delayTime/
                     .then(response => { 
                           that.default_ampm.am=response.data.am;
                           that.default_ampm.pm=response.data.pm;
                     });
                     
                     this.axios
-                    .get(process.env.MIX_APP_URL+'/api/settings')
+                    .get(process.env.MIX_APP_URL+'/settings')
                     .then(response => {                         
                         that.setting_ampm.am=response.data.am;
                         that.setting_ampm.pm=response.data.pm;
@@ -1281,7 +1281,7 @@
                             link.click();
                         }else{
                                 that.$fire({
-                                title: "Fail！！",
+                                title: "Failed!!",
                                 text: "No data to display.",//データはありませんでした。
                                 type: "error",
                                 timer: 3500,

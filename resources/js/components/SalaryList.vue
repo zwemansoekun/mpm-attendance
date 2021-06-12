@@ -511,7 +511,7 @@
             });
             
             this.axios
-                .get(process.env.MIX_APP_API_URL+'/attendances/all/date')
+                .get(process.env.MIX_APP_URL+'/attendances/all/date')
                 .then(response => {
                     this.dates=response.data;
             }); 
@@ -527,7 +527,7 @@
             });
        
             this.axios
-                .get(process.env.MIX_APP_API_URL+'/employees')
+                .get(process.env.MIX_APP_URL+'/employees')
                 .then(response => {
                     that.emps=response.data;
                    if(that.emps){
@@ -545,7 +545,7 @@
             errorAlet:function(){
                 let that=this;
                 that.$fire({
-                                title: "Fail！！",
+                                title: "Failed!!",
                                 text: "No data to display.",//データはありませんでした。
                                 type: "error",
                                 timer: 3500,
@@ -585,7 +585,7 @@
                             link.click()
                         }else{
                                 that.$fire({
-                                title: "Fail！！",
+                                title: "Failed!!",
                                 text: "No data to display.",//データはありませんでした。
                                 type: "error",
                                 timer: 3500,
@@ -607,7 +607,7 @@
                 const link = document.createElement('a')
                 let url =  process.env.MIX_APP_URL+"/salary/export/"+ this.year+'-'+ this.month+'/'+ empArray;
                     
-                //link.href =process.env.MIX_APP_API_URL+'/salary/export/'+ this.year+'-'+ this.month+'/'+ empArray
+                //link.href =process.env.MIX_APP_URL+'/salary/export/'+ this.year+'-'+ this.month+'/'+ empArray
                 link.href = url;
                 document.body.appendChild(link)
                 link.click()
@@ -887,7 +887,7 @@
                     
                 }else{
                      that.$fire({
-                        title: "Fail！！",
+                        title: "Failed!!",
                         text: "Please fill in the data.",//データを記入してください。
                         type: "warning",
                         timer: 3000,
@@ -923,7 +923,7 @@
                                 });
                             }else{
                                 that.$fire({
-                                title: "Fail！！",
+                                title: "Failed!!",
                                 text: "Data cannot be registered.",
                                 type: "error",
                                 timer: 1500,

@@ -34,7 +34,7 @@ class PaySlipsPerEmployeeSheet implements WithTitle,WithEvents
 
         //that is temporary code for nishimura's testing  
         //it will be use when stay at home is over.
-        $content =  Api_Employees::where('id',$this->employee->emp_id)->firstOrFail(); //file_get_contents(env("MIX_APP_API_URL")."/employees/".$this->employee->emp_id);
+        $content =  Api_Employees::where('id',$this->employee->emp_id)->firstOrFail(); //file_get_contents(env("MIX_APP_URL")."/employees/".$this->employee->emp_id);
         $empApiArray = json_decode($content, true);
 
         $this->empId = $empApiArray['employeeId'];
