@@ -25,7 +25,7 @@ class SettingController extends Controller
         $setting = Setting::find($id);
         
         $now = Carbon::now();
-        $monthString = $now->format("yy/m");
+        $monthString = $now->format("Y/m");
         if($monthString == $setting->create_month){
             $setting->money = $request->input('money');
             $setting->save();
@@ -46,7 +46,7 @@ class SettingController extends Controller
         $setting = Setting::find($id);
         
         $now = Carbon::now();
-        $monthString = $now->format("yy/m");
+        $monthString = $now->format("Y/m");
         if($monthString == $setting->create_month){
             $setting->am = $request->input('am');
             $setting->save();
@@ -67,7 +67,7 @@ class SettingController extends Controller
         $setting = Setting::find($id);
         
         $now = Carbon::now();
-        $monthString = $now->format("yy/m");
+        $monthString = $now->format("Y/m");
         if($monthString == $setting->create_month){
             $setting->pm = $request->input('pm');
             $setting->save();
