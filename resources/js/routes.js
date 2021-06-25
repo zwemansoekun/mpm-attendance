@@ -18,7 +18,7 @@ export const routes = [
     },
     {
         name: 'home',
-        path: '/holidays',
+        path: '/holiday',
         component: Holiday
     },  
     {

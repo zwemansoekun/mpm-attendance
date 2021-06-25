@@ -47,7 +47,7 @@ class AttendDetailsExport implements FromCollection,WithEvents, WithCustomStartC
     {
         //that is temporary code for nishimura's testing  
         //it will be use when stay at home is over.
-        $content =  file_get_contents(env("MIX_APP_AungThiHa_URL")."/employees");//Api_Employees::all();
+        $content=file_get_contents(env("MIX_APP_AungThiHa_URL")."/employees");
         $empApiArray = json_decode($content, true);
        
         // APIから取得する社員情報
@@ -175,6 +175,7 @@ class AttendDetailsExport implements FromCollection,WithEvents, WithCustomStartC
                     $unpaidHoliday += 1;
                 }
             }
+            //$j++;
         }
         $leaveSubArray = array();
         array_push($leaveSubArray,$paidHoliday);

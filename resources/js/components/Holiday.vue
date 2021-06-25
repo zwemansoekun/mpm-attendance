@@ -23,7 +23,7 @@
                     </button>
                 </div>
                 <div class="col-md-4 mt-3">
-                    <button type="button" class="btn btn-primary" v-if="isBtnHidden" @click="copyRow()">前年の物をコピー</button>
+                    <button type="button" class="btn btn-primary" v-if="isBtnHidden" @click="copyRow()">Copy </button>
                 </div>
                 <div class="col-md-4 mt-3">
                     <button type="button" class="btn btn-primary" :disabled="checkDeleteBtnDisable()" 
@@ -107,12 +107,16 @@ var moment = require('moment');
         },
         
         created() {
-            this.axios
-                .get(process.env.MIX_APP_URL+'/holidays')
-                .then(response => {
-                    this.holidays = response.data;
-                    
-                });
+         this.axios({
+                url:process.env.MIX_APP_URL+"/holidays",//(window.location.protocol!=='https:'?'http:':'https:' )+ "//" + window.location.host + "/settings",
+                method: 'get'
+            })
+            .then(function (response) {
+                that.holidays=response.data;
+                
+            })
+            .catch(function (error) {
+            });
         },
         methods :{
             checkDeleteBtnDisable: function(){
