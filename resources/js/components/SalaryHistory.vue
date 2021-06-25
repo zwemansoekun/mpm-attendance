@@ -100,6 +100,7 @@
             </div>
 
             <div v-if="form_detail_open" class="mt-5">
+                <button type="button" class="btn btn-primary" @click="formBack" >Back</button>
                 <button type="button" class="btn btn-primary" @click="newHistoryCreate" v-if="!edit">Edit</button>
                 <button type="button" class="btn btn-primary" @click="updateEmpDetail" v-if="edit">Edit finish</button>
 
@@ -428,6 +429,10 @@ import Datepicker from 'vuejs-datepicker';
                 })
                 .catch(function (error) {
                 });
+            },
+            formBack:function(event){
+                this.form_detail_open=false; 
+                this.form_summary_open = true;   
             },
             newHistoryCreate(){
                 this.edit = true;
