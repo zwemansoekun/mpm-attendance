@@ -46,6 +46,7 @@
                         </td>
                         <td>
                             <span v-if="holiday.dtError" class="text-danger">Please enter the date</span><!--日付を入力してください-->
+                            <span v-else-if="holiday.desError">{{'\xa0'}}</span>
                             <span v-if="holiday.dtDuplicateError" class="text-danger">Duplicate dates</span><!--日付は重複しています -->
                             <span v-if="holiday.yearError" class="text-danger">
                                 {{customFormatter(customDate)}} Please enter your holiday <!--の休日を入力してください-->
@@ -55,6 +56,7 @@
                         </td>
                         <td>
                             <span v-if="holiday.desError" class="text-danger">Please enter the description</span><!--名称を入力してください-->
+                             <span v-else-if="holiday.dtError">{{'\xa0'}}</span>
                             <span v-if="holiday.desDuplicateError" class="text-danger">The description is duplicated</span><!--名称は重複しています-->
                             <input class="form-control" v-model="holiday.description" type="text"/>
                         </td>
