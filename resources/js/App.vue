@@ -10,7 +10,7 @@
                      <router-link to="/salaryList" exact class="nav-item nav-link list-group-item bg-secondary" @click.native="colorChange()">Salary allowance list</router-link>    
                     <!-- <a href="/salaryList" class="nav-item nav-link list-group-item bg-secondary">Salary allowance list</a> 給与手当一覧 -->
                    
-                    <router-link to="/holidays" exact  class="nav-item nav-link list-group-item bg-secondary" @click.native="colorChange()" >Holiday list</router-link>
+                    <router-link to="/holiday" exact  class="nav-item nav-link list-group-item bg-secondary" @click.native="colorChange()" >Holiday list</router-link>
                     <!-- <a href="/holidays" class="nav-item nav-link list-group-item bg-secondary">Holiday list</a> 休日一覧  -->
 
                     <router-link to="/salaryHistory" exact  class="nav-item nav-link list-group-item bg-secondary" @click.native="colorChange()">Salary related personal history</router-link>
