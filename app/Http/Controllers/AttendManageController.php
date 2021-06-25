@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\DB;
 use App\Exports\AttendDetailsExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Redirect;
+use App\Api_Employees;
+
 
 
 
@@ -36,11 +38,13 @@ class AttendManageController extends Controller
          $attendTime = DB::select('select emp_no from attend_details where EXTRACT(YEAR_MONTH FROM date) = :date', ['date' => $year]);
          $attendTime = json_decode(json_encode($attendTime),true);
       
-        $empno = DB::select('select emp_id from employees');
-         $empno = json_decode(json_encode($empno),true);
+        //$empno = DB::select('select emp_id from employees');
+         $empno =  file_get_contents(env('MIX_APP_AungThiHa_URL')."/employees");
+     
+         $empnoArray1 = json_decode($empno, true);
         
-
-         if(count($attendTime) == 0 || count($empno) == 0 )
+         
+         if(count($attendTime) == 0 || count($empnoArray1) == 0 )
          {
             return response()->json("fail");
          }
@@ -52,10 +56,11 @@ class AttendManageController extends Controller
              array_push($attendTimeArray, $attendTime[$i]['emp_no']);
          }
 
+        
          $empnoArray = array();
-         for ($i = 0; $i < count($empno); $i++) 
+         for ($i = 0; $i < count($empnoArray1); $i++) 
          {
-             array_push($empnoArray, $empno[$i]['emp_id']);
+             array_push($empnoArray, $empnoArray1[$i]['employeeId']);
          }
 
         $found = array();
@@ -104,5 +109,6 @@ class AttendManageController extends Controller
     public function download($year)
     { 
         return Excel::download(new AttendDetailsExport($year), '勤怠管理表'.$year.'.xlsx');
+        //return null;
     }
 }
