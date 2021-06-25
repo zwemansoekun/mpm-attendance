@@ -42,7 +42,7 @@
                                         <div class="col-sm-3"><button type="button" class="btn btn-primary" @click="updateDelayMoney(d.id ,d)" onclick="this.blur();">Edit</button></div>                                   
                                         <div class="col-sm-6">
                                             <input type="hidden" class="monthly" :value="`${d.month}`">
-                                            <button type="button" class="btn btn-primary"  style="font-size: 15px;" @click="eachEngineerCost($event)" onclick="this.blur();">エンジニアコスト一覧表</button><!-- Engineer cost list -->
+                                            <button type="button" class="btn btn-primary"  style="font-size: 15px;" @click="eachEngineerCost($event)" onclick="this.blur();">Engineer cost list</button><!-- Engineer cost list -->
                                         </div>
                                     </div>
                                 </td>
@@ -61,9 +61,14 @@
                         <h4><strong>Salary allowance list　{{this.select_date}}</strong></h4>       <!--給与手当一覧 ~~ 分--> 
                     </div>
                 </div>
+                <div class="row" >
+                    <div class="col-md-4 mt-4"> 
+                         <button type="button" @click="formBack"  class="btn btn-primary mr-3 font-weight-bold" onclick="this.blur();">Back</button>
+                    </div>
+                </div>                
                 <!-- <form id="form" class="" @submit.prevent="SalarySave"  autocomplete="on"> -->
                 <div class="row justify-content-md-center mt-4"> 
-                    <button type="button" @click="engineerCost"  class="btn btn-success mr-3 font-weight-bold" onclick="this.blur();">エンジニアコスト一覧表</button><!-- Engineer cost list -->
+                    <button type="button" @click="engineerCost"  class="btn btn-success mr-3 font-weight-bold" onclick="this.blur();">Engineer cost list</button><!-- Engineer cost list -->
                       
                     <button data-toggle="modal" v-if="!payslipBtnDisable" data-target="#payslip" class="btn mr-3 font-weight-bold" style="background-color:#E7E6E6" onclick="this.blur();">
                        Pay slip create <!-- 給与明細作成 -->
@@ -559,6 +564,9 @@
                 let monthly=jQuery(event.target).closest('div').find('.monthly').val();                            
                 this.engineerCost(event,monthly);
             },  
+            formBack:function(event){
+                this.formChange=true;                
+            },
             engineerCost:function(event,monthly=''){
                     let that=this;
                     let eachmonth='',eachyear='',splitdate='';

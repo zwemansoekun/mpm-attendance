@@ -59,7 +59,7 @@
                             
             <div class="row">
                 <div class="col-md-4">
-                    <button type="button" class="btn bg-success" style="background-color:#E7E6E6" onclick="this.blur();" @click="csvOutput(select_employee,select_date)">出勤簿生成</button><!--Attendance book generation-->
+                    <button type="button" class="btn bg-success" style="background-color:#E7E6E6" onclick="this.blur();" @click="csvOutput(select_employee,select_date)">Attendance Record</button><!--Attendance book generation-->
                 </div>
                 <div class="col-md-4 offset-md-2">
                     <button type="button" class="btn font-weight-bold" style="width: 220px;background-color:#E7E6E6;" onclick="this.blur();" @click="allButtonClick()">All automatic calculation</button><!--全て自動計算-->
