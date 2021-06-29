@@ -17,6 +17,7 @@ use Maatwebsite\Excel\Concerns\FromCollection;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use Maatwebsite\Excel\Concerns\WithCustomStartCell;
 
+
 class AttendDetailsExport implements FromCollection,WithEvents, WithCustomStartCell ,WithHeadings,WithTitle
 
 {
@@ -47,8 +48,10 @@ class AttendDetailsExport implements FromCollection,WithEvents, WithCustomStartC
     {
         //that is temporary code for nishimura's testing  
         //it will be use when stay at home is over.
-        $content=file_get_contents(env("MIX_APP_AungThiHa_URL")."/employees");
+        //$content=file_get_contents("http://localhost:5000"."/employees");
+        $content = file_get_contents(env('MIX_APP_AungThiHa_URL')."/employees");
         $empApiArray = json_decode($content, true);
+       
        
         // APIから取得する社員情報
         for ($i = 0; $i < count($empApiArray); $i++) 
@@ -72,7 +75,7 @@ class AttendDetailsExport implements FromCollection,WithEvents, WithCustomStartC
         where EXTRACT(YEAR_MONTH FROM date) = :date order by emp_no,date asc', ['date' => $this->printY]);
         $this->attendTime = json_decode(json_encode($this->attendTime),true);
        
-
+        
         // attend_detailsテーブルから取得したデータを配列する
         $totalArray1 = array();
         for($i = 0; $i < count($this->attendTime) ; $i++)
@@ -84,6 +87,7 @@ class AttendDetailsExport implements FromCollection,WithEvents, WithCustomStartC
             $eachArray1["pm_leave"] =$this->attendTime[$i]["pm_leave"];
             array_push($totalArray1,$eachArray1);
         }
+        
        
         // employeesテーブルから取得した社員明細情報
         $empDetailArray = array();
@@ -120,6 +124,7 @@ class AttendDetailsExport implements FromCollection,WithEvents, WithCustomStartC
         }
         
         $j = 0; 
+        
         for($z = 0; $z < count($totalArray2); $z++)
         {
             for ($i = 1; $i <= $this->day_count; $i++)
@@ -147,6 +152,7 @@ class AttendDetailsExport implements FromCollection,WithEvents, WithCustomStartC
         $attendSumTime = json_decode(json_encode( $attendSumTime),true);
         
        // まとめ
+      
         $j = 0; $paidHoliday = 0;  $unpaidHoliday = 0; $leaveArray = array();
          for ($i = 0; $i < count($totalArray1); $i++) 
          {
@@ -158,8 +164,10 @@ class AttendDetailsExport implements FromCollection,WithEvents, WithCustomStartC
                 ($totalArray1[$i]['am_leave'] == 2 || $totalArray1[$i]['pm_leave'] == 2))
             {
                 $unpaidHoliday += 1;
-            }else if($totalArray1[$i]['emp_no'] != $totalArray2[$j]["emp_no"])
+            }
+            else if($totalArray1[$i]['emp_no'] != $totalArray2[$j]["emp_no"])
             {
+                //$j++;
                 $leaveSubArray = array();
                 array_push($leaveSubArray,$paidHoliday);
                 array_push($leaveSubArray,$unpaidHoliday);
@@ -307,7 +315,8 @@ class AttendDetailsExport implements FromCollection,WithEvents, WithCustomStartC
             array_push($empSubArray,  $monthArray[$i][0]);
             array_push($this->csvArray, $empSubArray);
         }
-       return collect($this->csvArray);
+      return collect($this->csvArray);
+     
     }
 
     /**
