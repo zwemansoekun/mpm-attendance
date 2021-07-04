@@ -18,7 +18,8 @@ use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use Maatwebsite\Excel\Concerns\WithCustomStartCell;
 
 
-class AttendDetailsExport implements FromCollection,WithEvents, WithCustomStartCell ,WithHeadings,WithTitle
+class AttendDetailsExport 
+implements FromCollection,WithEvents, WithCustomStartCell ,WithHeadings,WithTitle
 
 {
     use Exportable;
@@ -87,23 +88,47 @@ class AttendDetailsExport implements FromCollection,WithEvents, WithCustomStartC
             $eachArray1["pm_leave"] =$this->attendTime[$i]["pm_leave"];
             array_push($totalArray1,$eachArray1);
         }
-        
+     
+        $empNotDep = array();
+        for($i =0; $i< count($totalArray1); $i++)
+        {
+            if(!in_array($totalArray1[$i]["emp_no"], $empNotDep))
+            { 
+                array_push($empNotDep,$totalArray1[$i]["emp_no"]);
+            }
+        }
        
         // employeesテーブルから取得した社員明細情報
-        $empDetailArray = array();
-        $empDetailArray = DB::select('select kana_name,entry_date,emp_id,
-        case
-            when TIMESTAMPDIFF(year,DATE_ADD(entry_date, INTERVAL 3 MONTH), now() ) = 1 then 6
-            when TIMESTAMPDIFF(year,DATE_ADD(entry_date, INTERVAL 3 MONTH), now() ) > 1 then 16
-            else 0
-        end as holiday from employees order by emp_id');
+        $empDetailArray = array();  $empDetail = array();
+        for($i =0; $i< count($empNotDep); $i++)
+        {
+            $empDetailSub = array();
+            $empDetailSub = DB::select('select kana_name,entry_date,emp_id,
+            case
+                when TIMESTAMPDIFF(year,DATE_ADD(entry_date, INTERVAL 3 MONTH), now() ) = 1 then 6
+                when TIMESTAMPDIFF(year,DATE_ADD(entry_date, INTERVAL 3 MONTH), now() ) > 1 then 16
+                else 0
+            end as holiday from employees where emp_id = :emp_id' , 
+            ['emp_id' => $empNotDep[$i]]);
+            $empDetailSub = json_decode(json_encode( $empDetailSub),true);
+            if($empDetailSub != null)
+            {
+                array_push($empDetail,  $empDetailSub );
+            }
+        }
+        
+        $empNotDepDetail = array();
+        for($i =0; $i< count($empDetail); $i++)
+        {
+            if(!in_array($empDetail[$i][0]["emp_id"], $empNotDepDetail))
+            array_push($empNotDepDetail,$empDetail[$i][0]["emp_id"]);
+        }
 
-        // employeesテーブルから取得したデータを月によって日付配列を作成する
        $totalArray2 = array();
-        foreach($empDetailArray as $emp)
+       for($z =0; $z< count($empDetail); $z++)
         {
             $eachArray2 = array();
-            $eachArray2["emp_no"] = $emp->emp_id;
+            $eachArray2["emp_no"] = $empDetail[$z][0]['emp_id'];
             
             for ($i = 1; $i <= $this->day_count; $i++)
             {
@@ -113,15 +138,18 @@ class AttendDetailsExport implements FromCollection,WithEvents, WithCustomStartC
            
             for ($j = 0; $j < count($this->empArray); $j++) 
             {
-               if ($this->empArray[$j]['employeeId'] == $emp->emp_id) {
+               if ($this->empArray[$j]['employeeId'] == $empDetail[$z][0]['emp_id'])
+               {
                     $eachArray2["empNo"] = $this->empArray[$j]['employeeNo'];
-                    $eachArray2["kana_name"] = $this->empArray[$j]['name']."\n"."(".$emp->kana_name.")"; break; 
-                } 
+                    $eachArray2["kana_name"] = $this->empArray[$j]['name']."\n"."(".$empDetail[$z][0]['kana_name'].")"; break; 
+               } 
                
             }
-            $eachArray2["holiday"] = $emp->holiday;
+            $eachArray2["holiday"] = $empDetail[$z][0]['holiday'];
             array_push($totalArray2,$eachArray2);
         }
+        
+        
         
         $j = 0; 
         
@@ -143,54 +171,73 @@ class AttendDetailsExport implements FromCollection,WithEvents, WithCustomStartC
             }
          }
 
-        // 月によって各社員の時間合計
-         $attendSumTime = DB::select('select emp_no, SUM(total_hours) as total_hours 
-                from attend_details where EXTRACT(YEAR_MONTH FROM date) = :date 
-                group by emp_no order by emp_no', 
-                ['date' => $this->printY]);
-        
-        $attendSumTime = json_decode(json_encode( $attendSumTime),true);
-        
-       // まとめ
-      
+        $attendSumDetail = array();
+        for($i =0; $i< count($empDetail); $i++)
+        {
+            $attendSumDetailSub = array();
+            $attendSumDetailSub = DB::select('select emp_no, SUM(total_hours) as total_hours 
+            from attend_details where EXTRACT(YEAR_MONTH FROM date) = :date and emp_no = :emp_no
+            group by emp_no order by emp_no', 
+            ['date' => $this->printY ,'emp_no'  => $empDetail[$i][0]['emp_id']]);
+            $attendSumDetailSub  = json_decode(json_encode( $attendSumDetailSub ),true);
+            if($attendSumDetailSub  != null)
+            {
+                array_push($attendSumDetail,  $attendSumDetailSub  );
+            }
+           
+        }
+         
+        // まとめ
+
+    
         $j = 0; $paidHoliday = 0;  $unpaidHoliday = 0; $leaveArray = array();
+        
          for ($i = 0; $i < count($totalArray1); $i++) 
          {
+            
             if($totalArray1[$i]['emp_no'] == $totalArray2[$j]["emp_no"] && 
               ($totalArray1[$i]['am_leave'] == 1 || $totalArray1[$i]['pm_leave'] == 1))
             {
                 $paidHoliday += 0.5;
-            }else if($totalArray1[$i]['emp_no'] == $totalArray2[$j]["emp_no"] &&
+                
+            }
+           else if($totalArray1[$i]['emp_no'] == $totalArray2[$j]["emp_no"] &&
                 ($totalArray1[$i]['am_leave'] == 2 || $totalArray1[$i]['pm_leave'] == 2))
             {
                 $unpaidHoliday += 1;
             }
-            else if($totalArray1[$i]['emp_no'] != $totalArray2[$j]["emp_no"])
+            else if($totalArray1[$i]['emp_no'] == $totalArray2[$j]["emp_no"] && 
+            ($totalArray1[$i]['am_leave'] == null || $totalArray1[$i]['pm_leave'] == null))
             {
-                //$j++;
-                $leaveSubArray = array();
+              $paidHoliday += 0;
+              $unpaidHoliday += 0;
+            }
+            else if($totalArray1[$i]['emp_no'] != $totalArray2[$j]["emp_no"] )
+            {
+               $leaveSubArray = array();
                 array_push($leaveSubArray,$paidHoliday);
                 array_push($leaveSubArray,$unpaidHoliday);
                 array_push($leaveArray,$leaveSubArray);
-                $paidHoliday = 0;  $unpaidHoliday = 0; $j++;
-                if($totalArray1[$i]['emp_no'] == $totalArray2[$j]["emp_no"] &&
+              
+                if(in_array($totalArray1[$i]['emp_no'],$empNotDepDetail))
+                {
+                    $paidHoliday = 0;  $unpaidHoliday = 0; $j++;
+                    if($totalArray1[$i]['emp_no'] == $totalArray2[$j]["emp_no"] &&
                     ($totalArray1[$i]['am_leave'] == 1 || $totalArray1[$i]['pm_leave'] == 1))
-                {
-                    $paidHoliday += 0.5;
-                }else if($totalArray1[$i]['emp_no'] == $totalArray2[$j]["emp_no"] &&
+                    {
+                            $paidHoliday += 0.5;
+                    }else if($totalArray1[$i]['emp_no'] == $totalArray2[$j]["emp_no"] &&
                     ($totalArray1[$i]['am_leave'] == 2 || $totalArray1[$i]['pm_leave'] == 2))
-                {
-                    $unpaidHoliday += 1;
-                }
+                    {
+                        $unpaidHoliday += 1;
+                    }
+                } 
+               
             }
-            //$j++;
+           
         }
-        $leaveSubArray = array();
-        array_push($leaveSubArray,$paidHoliday);
-        array_push($leaveSubArray,$unpaidHoliday);
-        array_push($leaveArray,$leaveSubArray);
-
-         //有休計算
+    
+        //有休計算
          $yuukyuu = DB::select('select entry_date,emp_id, DATE_ADD(entry_date, INTERVAL 3 MONTH) as paid_start_date, 
          TIMESTAMPDIFF(year, DATE_ADD(entry_date, INTERVAL 3 MONTH), now() ) as working_year, 
          case when TIMESTAMPDIFF(year, DATE_ADD(entry_date, INTERVAL 3 MONTH), now() ) >=1 then 16 
@@ -251,17 +298,14 @@ class AttendDetailsExport implements FromCollection,WithEvents, WithCustomStartC
                  
                  $holidayByMonth = json_decode(json_encode($holidayByMonth),true);
                  
-          
-                
-                 if(count($holidayByMonth) == 0)
+                if(count($holidayByMonth) == 0)
                  {
-                    
-                     $sumHolidayForEach += 0;
-                     
+                    $sumHolidayForEach += 0;
                  }
                  else
                  {
-                   $sumHolidayForEach += $holidayByMonth[$z]["yuukyuu"];
+                   $sumHolidayForEach += $holidayByMonth[$j]["yuukyuu"];
+                   //$z++;
                  }
                  $start_date += 1; 
                  
@@ -270,32 +314,32 @@ class AttendDetailsExport implements FromCollection,WithEvents, WithCustomStartC
                 array_push($monthSubArray,$sumHolidayForEach);
                array_push($monthArray,$monthSubArray);
          }
-         
-       
-        // CSV出力ため配列作成する 
-        for ($i = 0; $i < count($attendSumTime); $i++) 
-        {
-            $empSubArray = array();
-            array_push($empSubArray, $i+1);
-            foreach($totalArray2 as $array2)
+
+      for ($i = 0; $i < count($totalArray2); $i++) 
+      {
+          $empSubArray = array();
+          array_push($empSubArray, $i+1);
+          foreach($totalArray2 as $array2)
+          {
+            if($attendSumDetail[$i][0]['emp_no'] == $array2['emp_no'])
             {
-                //emp_no
-                //print_r( $array2);
-                 if($attendSumTime[$i]['emp_no'] == $array2['emp_no'])
-                 {
-                    array_push($empSubArray, $array2['empNo']);
-                    array_push($empSubArray,  $array2['kana_name']);
-                    for ($j = 1; $j <= $this->day_count; $j++)
-                    {
-                        $date =date_create($this->year.'-'.$this->month.'-'.$j);
-                        $date =$date->format('Y-m-d');
-                        array_push($empSubArray, $array2[$date]);
-                    }
-                 }
-
+                  array_push($empSubArray, $array2['empNo']);
+                  array_push($empSubArray,  $array2['kana_name']);
+                  for ($j = 1; $j <= $this->day_count; $j++)
+                  {
+                      $date =date_create($this->year.'-'.$this->month.'-'.$j);
+                      $date =$date->format('Y-m-d');
+                      array_push($empSubArray, $array2[$date]);
+                  }
+                array_push($empSubArray,  $attendSumDetail[$i][0]['total_hours']);
             }
+        }
 
-            array_push($empSubArray,  $attendSumTime[$i]['total_hours']);
+          if($leaveArray == null){
+            array_push($empSubArray,  '-');
+            array_push($empSubArray,  '-');
+          }else
+          {
             if($leaveArray[$i][0] == 0)
             {
                 array_push($empSubArray,  '-');
@@ -310,12 +354,14 @@ class AttendDetailsExport implements FromCollection,WithEvents, WithCustomStartC
             }
             else
             {
-                array_push($empSubArray,  $leaveArray[$i][1]);
+                array_push($empSubArray,  $leaveArray[0][$i][1]);
             }
+        }
+
             array_push($empSubArray,  $monthArray[$i][0]);
             array_push($this->csvArray, $empSubArray);
-        }
-      return collect($this->csvArray);
+      }
+    return collect($this->csvArray);
      
     }
 
